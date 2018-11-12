@@ -1,0 +1,33 @@
+<div th:fragment="myprovinceset">
+    <div class="modal inmodal fade" id="myModalProvince" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5>省份设置</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <div class="form-group" >
+                                    <label class="col-md-2 control-label p-n">部署省份</label>
+                                    <div class="col-md-2" id="provinceMessage">
+                                         <select class="form-control" id="province" name="province"></select>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "proviceSubmitBut" >确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

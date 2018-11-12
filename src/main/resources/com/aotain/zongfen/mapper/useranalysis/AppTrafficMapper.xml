@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.useranalysis.AppTrafficMapper">
+
+    <sql id="baseColumnSql" >
+        a.stat_time AS statTime,a.usergroupno AS userGroupNo,a.apptype AS appType,a.appid AS appId,
+        a.appname AS appName,a.appusernum AS appUserNum,a.apptraffic_up AS appTrafficUp,
+        a.apptraffic_dn AS appTrafficDn,(a.apptraffic_up+a.apptraffic_dn) AS appTrafficSum,a.apppacketsnum AS appPacketsNum,
+        a.appsessionsnum AS appSessionsNum,a.appnewsessionnum AS appNewSessionNum,a.probe_type AS probeType,a.area_id AS areaId
+
+    </sql>
+
+    <sql id="sumColumnSql" >
+
+        sum(a.appusernum) AS appUserNum,sum(a.apptraffic_up)*1024 AS appTrafficUp,
+        sum(a.apptraffic_dn)*1024 AS appTrafficDn,(sum(a.apptraffic_up)+sum(a.apptraffic_dn))*1024 AS appTrafficSum,
+        sum(a.apppacketsnum) AS appPacketsNum,
+        sum(a.appsessionsnum) AS appSessionsNum,sum(a.appnewsessionnum) AS appNewSessionNum,
+        a.apptype AS appType,a.appid AS appId,a.appname AS appName,a.stat_time AS statTime
+    </sql>
+
+    <sql id="chartColumnSql" >
+        apptype AS appType,appusernum AS appUserNum,apptraffic_up AS appTrafficUp,
+        apptraffic_dn AS appTrafficDn,apppacketsnum AS appPacketsNum,appsessionsnum AS appSessionsNum,
+        appnewsessionnum AS appNewSessionNum,stat_time AS statTime
+    </sql>
+
+
+    <select id="listData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTraffic" >
+        SELECT
+        <include refid="sumColumnSql"/>,
+        b.APP_ZH_NAME AS appNameOfId,
+        c.APP_TYPE_NAME AS appTypeName
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime}
+        <if test="probeType != null">
+            AND a.probe_type = #{probeType}
+        </if>
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        <choose>
+            <when test="listType==1">
+                group by a.appType
+            </when>
+            <otherwise>
+                group by a.appId
+            </otherwise>
+        </choose>
+        order by
+        <if test="sort != null and sort != '' and sortOrder != null and sortOrder != '' ">
+            ${sort} ${sortOrder},
+        </if>
+        a.apptype asc,a.appId asc
+    </select>
+
+    <select id="listAppIdData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTraffic" >
+        SELECT
+        <include refid="sumColumnSql"/>
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time &gt;= #{startTime} and stat_time &lt;= #{endTime} AND a.probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        group by statTime
+        order by
+        <if test="sort != null and sort != '' and sortOrder != null and sortOrder != '' ">
+            ${sort} ${sortOrder},
+        </if>
+        stat_time desc
+    </select>
+
+    <select id="getFlowChartData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+            apptype AS appType,c.APP_TYPE_NAME AS appNameOfType,sum(apptraffic_up)*1024 AS appTrafficUp,sum(apptraffic_dn)*1024 AS appTrafficDn
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND appid = #{appId}
+        </if>
+        group by apptype
+        order by appTrafficUp desc,appTrafficDn desc
+        limit 0,10
+    </select>
+
+    <select id="getUserChartData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        apptype AS appType,c.APP_TYPE_NAME AS appNameOfType,sum(appusernum) AS appUserNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND appid = #{appId}
+        </if>
+        group by apptype
+        order by appUserNum desc
+        limit 0,10
+    </select>
+
+    <select id="getPacketChartData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        apptype AS appType,c.APP_TYPE_NAME AS appNameOfType,sum(apppacketsnum) AS appPacketsNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND appid = #{appId}
+        </if>
+        group by apptype
+        order by appPacketsNum desc
+        limit 0,10
+    </select>
+
+    <select id="getSessionChartData" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        apptype AS appType,c.APP_TYPE_NAME AS appNameOfType,sum(appsessionsnum) AS appSessionsNum,sum(appnewsessionnum) AS appNewSessionNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND appid = #{appId}
+        </if>
+        group by apptype
+        order by appSessionsNum desc,appNewSessionNum desc
+        limit 0,10
+    </select>
+
+    <select id="getFlowChartDataByAppType" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        a.appid AS appId,b.APP_ZH_NAME AS appNameOfId,sum(a.apptraffic_up) AS appTrafficUp,sum(a.apptraffic_dn) AS appTrafficDn
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        group by appId
+        order by appTrafficUp desc,appTrafficDn desc
+        limit 0,10
+    </select>
+
+    <select id="getUserChartDataByAppType" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        a.appid AS appId,b.APP_ZH_NAME AS appNameOfId,sum(a.appusernum) AS appUserNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND a.probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        group by appId
+        order by appUserNum desc
+        limit 0,10
+    </select>
+
+    <select id="getPacketChartDataByAppType" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        a.appid AS appId,b.APP_ZH_NAME AS appNameOfId,sum(a.apppacketsnum) AS appPacketsNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND a.probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        group by appId
+        order by appPacketsNum desc
+        limit 0,10
+    </select>
+
+    <select id="getSessionChartDataByAppType" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+        a.appid AS appId,b.APP_ZH_NAME AS appNameOfId,sum(a.appsessionsnum) AS appSessionsNum,sum(a.appnewsessionnum) AS appNewSessionNum
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time = #{statTime} AND a.probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND a.area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND a.usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND a.apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND a.appid = #{appId}
+        </if>
+        group by appId
+        order by appSessionsNum desc,appNewSessionNum desc
+        limit 0,10
+    </select>
+
+    <select id="getLineDataByAppId" parameterType="com.aotain.zongfen.model.useranalysis.AppTrafficQueryParam"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTrafficChartBean" >
+
+        SELECT
+            <include refid="sumColumnSql"/>
+        from ${tableName} a
+        inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE and a.appid = b.APP_ID
+        inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+        where stat_time &gt;= #{startTime} and stat_time &lt;= #{endTime} AND probe_type = #{probeType}
+        <if test="areaId != null and areaId != '' and areaId != -1 ">
+            AND area_id = #{areaId}
+        </if>
+        <if test="userGroupNo != null and userGroupNo != '' and userGroupNo != -1 ">
+            AND usergroupno = #{userGroupNo}
+        </if>
+        <if test="appType != null and appType != -1">
+            AND apptype = #{appType}
+        </if>
+        <if test="appId != null and appId != -1">
+            AND appid = #{appId}
+        </if>
+        group by stat_time
+        order by stat_time desc
+
+    </select>
+
+    <select id="getAppIdByName" parameterType="map" resultType="long">
+        SELECT APP_ID
+        FROM zf_v2_gen_app
+        WHERE APP_ZH_NAME = #{appIdName} and APP_TYPE = #{appType}
+    </select>
+
+    <select id="getAppTypeByName" parameterType="map" resultType="int">
+        SELECT APP_TYPE
+        FROM zf_dict_apptype
+        WHERE APP_TYPE_NAME = #{appTypeName}
+    </select>
+
+</mapper>

@@ -1,0 +1,40 @@
+<!--详情-->
+<div th:fragment="detailsnippet">
+    <!--详情-->
+    <div class="modal inmodal fade" id="triggerDetails" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="ibox-title">
+                    <h5 id="h5title">详情</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="text-right" id = "ActButtons">
+                                <form role="form" class="form-inline" id="triggerDetailForm">
+                                    <input type="hidden" name="id"/>
+                                    <input type="hidden" name="messageNo"/>
+                                    <input type="hidden" name="name"/>
+                                    <input type="hidden" name="childId"/>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <button th:if="${session.zf104001_modify}==1" type="button" class="btn btn-outline btn-warning m-l-xs aa" id="triggerDetailDelete"> <i class="fa fa-trash-o" aria-hidden="true"></i> 删除</button>
+                                        <button th:if="${session.zf104001_modify}==1" type="button" class="btn btn-outline btn-danger m-l-xs bb" id="triggerDetailAdd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+                                        <button type="button" class="btn btn-success" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+                                    </div>
+                                    <table id="triggerDetailTable" data-mobile-responsive="true" class="text-left">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

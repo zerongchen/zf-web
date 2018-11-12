@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.CommonCookieMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.common.policyapi.model.CommonCookie">
+    <id column="COOKIE_ID" jdbcType="BIGINT" property="cookieId" />
+    <result column="COOKIE_HOST_NAME" jdbcType="VARCHAR" property="cookieHostName" />
+    <result column="COOKIE_KEY_VALUE" jdbcType="VARCHAR" property="cookieKeyValue" />
+    <result column="MESSAGE_NO" jdbcType="INTEGER" property="messageNo" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    COOKIE_ID, COOKIE_HOST_NAME, COOKIE_KEY_VALUE,MESSAGE_NO,OPERATE_TYPE, MODIFY_TIME,CREATE_TIME,CREATE_OPER,MODIFY_OPER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_common_cookie
+    where COOKIE_ID = #{cookieId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_policy_common_cookie
+    where COOKIE_ID = #{cookieId,jdbcType=BIGINT}
+  </delete>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.common.policyapi.model.CommonCookie">
+    update zf_v2_policy_common_cookie
+    <set>
+      <if test="cookieHostName != null">
+        COOKIE_HOST_NAME = #{cookieHostName,jdbcType=VARCHAR},
+      </if>
+      <if test="cookieKeyValue != null">
+        COOKIE_KEY_VALUE = #{cookieKeyValue,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE = #{operateType,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where COOKIE_ID = #{cookieId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.common.policyapi.model.CommonCookie">
+    update zf_v2_policy_common_cookie
+    set COOKIE_HOST_NAME = #{cookieHostName,jdbcType=VARCHAR},
+      COOKIE_KEY_VALUE = #{cookieKeyValue,jdbcType=VARCHAR},
+      MODIFY_TIME = #{modifyTime},
+      OPERATE_TYPE = #{item.operateType},
+      MODIFY_OPER = #{modifyOper}
+    where COOKIE_ID = #{cookieId,jdbcType=BIGINT}
+    AND OPERATE_TYPE != 3
+  </update>
+  
+  <select id="isSameDate" parameterType="com.aotain.common.policyapi.model.CommonCookie" resultType="java.lang.Integer">
+  	SELECT COUNT(COOKIE_ID)
+  	FROM zf_v2_policy_common_cookie
+  	WHERE COOKIE_HOST_NAME = #{cookieHostName,jdbcType=VARCHAR}
+    AND COOKIE_KEY_VALUE = #{cookieKeyValue,jdbcType=VARCHAR}
+    AND OPERATE_TYPE != 3
+  </select>
+  
+   <select id="isSameDates" parameterType="com.aotain.common.policyapi.model.CommonCookie" resultType="java.lang.Integer">
+  	SELECT COUNT(COOKIE_ID)
+  	FROM zf_v2_policy_common_cookie
+  	WHERE COOKIE_HOST_NAME = #{cookieHostName,jdbcType=VARCHAR}
+    AND COOKIE_KEY_VALUE = #{cookieKeyValue,jdbcType=VARCHAR}
+    AND COOKIE_ID != #{cookieId,jdbcType=BIGINT}
+  </select>
+  
+  <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="cookieId">
+    insert into zf_v2_policy_common_cookie ( COOKIE_HOST_NAME, COOKIE_KEY_VALUE,MESSAGE_NO,OPERATE_TYPE,
+    CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME
+      )
+    values 
+    <foreach collection="list" item="item" index="index" separator=",">
+    	(#{item.cookieHostName,jdbcType=VARCHAR}, #{item.cookieKeyValue,jdbcType=VARCHAR},#{item.messageNo},
+    	#{item.operateType},#{item.createOper},#{item.modifyOper},#{item.createTime},#{item.modifyTime})
+    </foreach>
+  </insert>
+  
+  <select id="getCookieList" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_policy_common_cookie
+  	WHERE OPERATE_TYPE != 3
+  	ORDER BY MODIFY_TIME DESC
+  </select>
+  
+  <update id="deleteByIds">
+  	update zf_v2_policy_common_cookie
+  	set OPERATE_TYPE = 3
+  	WHERE COOKIE_ID IN (
+  	<foreach collection="array" item="item" index="index" separator=",">
+  		#{item}
+  	</foreach>
+  	)
+  </update>
+</mapper>

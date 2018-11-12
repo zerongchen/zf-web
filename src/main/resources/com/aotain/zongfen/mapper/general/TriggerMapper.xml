@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.TriggerMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.Trigger">
+    <id column="TRIGGER_ID" jdbcType="INTEGER" property="triggerId" />
+    <result column="TRIGGER_NAME" jdbcType="VARCHAR" property="triggerName" />
+    <result column="TRIGGER_FLAG" jdbcType="TINYINT" property="triggerFlag" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="OPERATE_TYPE" jdbcType="TINYINT" property="operateType" />
+    <result column="TRIGGER_TYPE" jdbcType="TINYINT" property="triggerType" />
+  </resultMap>
+  
+  <resultMap id="TriggerDTOMap" type="com.aotain.zongfen.dto.general.TriggerDTO">
+    <id column="TRIGGER_ID" jdbcType="INTEGER" property="triggerId" />
+    <result column="TRIGGER_NAME" jdbcType="VARCHAR" property="triggerName" />
+    <result column="TRIGGER_FLAG" jdbcType="TINYINT" property="triggerFlag" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="OPERATE_TYPE" jdbcType="TINYINT" property="operateType" />
+    <result column="TRIGGER_TYPE" jdbcType="TINYINT" property="triggerType" />
+    <collection property="relation" ofType="com.aotain.zongfen.model.general.TriggerRelation">
+      <result column="TRIGGER_HOST_LISTID" jdbcType="INTEGER" property="triggerHostListid" />
+      <result column="TRIGGER_KW_LISTID" jdbcType="INTEGER" property="triggerKwListid" />
+    </collection>
+    
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    TRIGGER_ID, TRIGGER_NAME, TRIGGER_FLAG, CREATE_OPER, MODIFY_OPER, CREATE_TIME, MODIFY_TIME, 
+    OPERATE_TYPE,TRIGGER_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_trigger
+    where TRIGGER_ID = #{triggerId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_gen_trigger
+    where TRIGGER_ID = #{triggerId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.Trigger">
+    insert into zf_v2_gen_trigger (TRIGGER_ID, TRIGGER_NAME, TRIGGER_FLAG, 
+      CREATE_OPER, MODIFY_OPER, CREATE_TIME, 
+      MODIFY_TIME, OPERATE_TYPE,TRIGGER_TYPE)
+    values (#{triggerId,jdbcType=INTEGER}, #{triggerName,jdbcType=VARCHAR}, #{triggerFlag,jdbcType=TINYINT}, 
+      #{createOper,jdbcType=VARCHAR}, #{modifyOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{operateType,jdbcType=TINYINT}, #{triggerType,jdbcType=TINYINT})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="triggerId" parameterType="com.aotain.zongfen.model.general.Trigger">
+    insert into zf_v2_gen_trigger
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="triggerId != null">
+        TRIGGER_ID,
+      </if>
+      <if test="triggerName != null">
+        TRIGGER_NAME,
+      </if>
+      <if test="triggerFlag != null">
+        TRIGGER_FLAG,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+        CREATE_TIME,
+        MODIFY_TIME,
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="triggerType != null">
+        TRIGGER_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="triggerId != null">
+        #{triggerId,jdbcType=INTEGER},
+      </if>
+      <if test="triggerName != null">
+        #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerFlag != null">
+        #{triggerFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <choose>
+        <when test="createTime != null">
+          #{createTime,jdbcType=TIMESTAMP},
+        </when>
+        <otherwise>
+          SYSDATE(),
+        </otherwise>
+      </choose>
+        SYSDATE(),
+      <if test="operateType != null">
+        #{operateType,jdbcType=TINYINT},
+      </if>
+      <if test="triggerType != null">
+        #{triggerType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.general.Trigger">
+    update zf_v2_gen_trigger
+    <set>
+      <if test="triggerName != null">
+        TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR},
+      </if>
+      <if test="triggerFlag != null">
+        TRIGGER_FLAG = #{triggerFlag,jdbcType=TINYINT},
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE = #{operateType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where TRIGGER_ID = #{triggerId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.general.Trigger">
+    update zf_v2_gen_trigger
+    set TRIGGER_NAME = #{triggerName,jdbcType=VARCHAR},
+      TRIGGER_FLAG = #{triggerFlag,jdbcType=TINYINT},
+      CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+      MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      OPERATE_TYPE = #{operateType,jdbcType=TINYINT}
+    where TRIGGER_ID = #{triggerId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getTrigger" parameterType="com.aotain.zongfen.model.general.Trigger" resultMap="TriggerDTOMap">
+    SELECT t1.TRIGGER_ID as TRIGGER_ID , TRIGGER_NAME, TRIGGER_FLAG, CREATE_OPER, MODIFY_OPER, CREATE_TIME, MODIFY_TIME,OPERATE_TYPE,
+    t1.TRIGGER_TYPE ,t2.TRIGGER_HOST_LISTID , t2.TRIGGER_KW_LISTID
+    FROM zf_v2_gen_trigger t1 LEFT JOIN zf_v2_gen_trigger_relation t2 ON t1.TRIGGER_ID = t2.TRIGGER_ID
+    WHERE  OPERATE_TYPE = 0
+    <if test="triggerName!=null">
+      AND TRIGGER_NAME LIKE  CONCAT(CONCAT('%', #{triggerName}, '%'))
+    </if>
+    <if test="triggerFlag!=null">
+      AND TRIGGER_FLAG = #{triggerFlag}
+    </if>
+    order by MODIFY_TIME desc
+  </select>
+  
+  <update id="delete" parameterType="java.util.List">
+  
+    <foreach collection="list" item="item" separator=";" >
+      
+      UPDATE zf_v2_gen_trigger
+      <trim prefix="set" suffixOverrides=",">
+        <choose>
+          <when test="item.triggerFlag == 1">
+            TRIGGER_FLAG = 0,
+          </when>
+          <otherwise>
+            OPERATE_TYPE = 1,
+          </otherwise>
+        </choose>
+      </trim>
+      WHERE TRIGGER_ID =#{item.triggerId}
+    </foreach>
+    
+  </update>
+  
+  <select id="countByTriggerName" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM zf_v2_gen_trigger WHERE TRIGGER_NAME=#{triggerName}
+  </select>
+  
+  <select id="getTriggerByType" parameterType="java.util.List" resultMap="TriggerDTOMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_gen_trigger
+  	WHERE OPERATE_TYPE != 3 
+  	AND (
+  		<foreach collection="list" item="item" separator="or">
+  			TRIGGER_TYPE = #{item}
+  		</foreach>
+  	)
+  </select>
+  
+</mapper>

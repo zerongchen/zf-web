@@ -1,0 +1,58 @@
+<div th:fragment="myfile">
+
+<div class="modal inmodal fade modaladd " id="detailFile" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="wrapper wrapper-content">
+    <div class="row">
+    	 <div class="col-sm-12">
+	        <div class="text-right">
+	            <form role="form" class="form-inline" id="searchFileForm">
+	                <div class="form-group m-r-sm">
+	                    <label>文件状态</label>
+	                    <select class="form-control" name="status" id="statusFile" >
+	                    	<option value="-1">请选择</option>
+	                    	<option value="0">生成文件</option>
+	                    	<option value="1">上报失败</option>
+	                    	<option value="2">上报成功</option>
+	                    </select>
+	                </div>
+					<div class="checkbox">   
+	                 <button type="button"  class="btn btn-primary" id="searchFormFileButton" >查询</button>
+	                 <button type="button" class="btn btn-success" data-dismiss="modal" name="returnFileBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+	                </div>
+	            </form>
+	        </div>
+      	</div>
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- example toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="table-file-toolbar" role="group">
+					                 </div>
+                                        <table id="detail-table" data-mobile-responsive="true" class="text-left"></table>
+                                        <input id="monitorTaskIdFile" name="monitorTaskId" type="hidden"  />
+                                        <input id="taskTypeFile" name="taskType" type="hidden"  />
+                                        <input id="taskIdFile" name="taskId" type="hidden"  />
+                                        
+                                        <input id="countFile" name="count" type="hidden" />
+                   						<input id="titleFile" name="title" type="hidden" />
+                   						<input id="contentFile" name="content" type="hidden" />
+                   						<input id="paramsFile" name="params" type="hidden" />
+                                </div>
+                            </div>
+                            <!-- end example toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+    </div>
+  </div>
+</div>
+
+</div>
+

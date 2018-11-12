@@ -1,0 +1,172 @@
+<div th:fragment="myaddorupdate">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="h5title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <input type="hidden" id="messageNo" name="messageNo"/>
+                                <input type="hidden" id="definedId" name="definedId"/>
+                                <div class="form-group" id="messageName">
+                                    <label class="col-md-2 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="messageName" class="form-control" />
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+                                <div class="form-group" id="appTypeDiv">
+                                    <label class="col-md-2 control-label p-n">应用类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="appType">
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="appIdDiv">
+                                    <label class="col-md-2 control-label p-n">子应用</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="appId">
+
+                                        </select>
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+                                <div class="form-group" id="appName">
+                                    <label class="col-md-2 control-label p-n">自定义应用名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="appName" class="form-control" />
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+
+
+                                <!--  源IP:端口     目标IP:端口   -->
+
+                                <div id="outlineDiv" name="outlineDiv">
+
+                                    <div name="ip-port-group" class="ip-port-group">
+                                        <div class="form-group" >
+                                            <label class="col-md-2 control-label p-n">类型</label>
+                                            <div class="col-md-1">
+                                                <select class="form-control"  id="protocolType_0" name="protocolType" >
+                                                    <option selected="" value="6">TCP</option>
+                                                    <option value="17">UDP</option>
+                                                </select>
+                                            </div>
+
+                                            <label class="col-md-1 control-label p-n">源IP:端口  </label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="srcIp_0"name="srcIp" class="form-control"/>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type="text" id="srcPort_0" name="srcPort" class="form-control"/>
+                                            </div>
+
+                                            <label class="col-md-1 control-label p-n">目标IP:端口  </label>
+                                            <div class="col-md-2">
+                                                <input type="text" id="destIp_0"name="destIp" class="form-control"/>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <input type="text" id="destPort_0" name="destPort" class="form-control"/>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <span class="help-block m-b-none tips">
+                                                    <a class="m-l-n m-r-sm"><i class="fa fa-plus ip-port-plus" id="ipPortAddButton" aria-hidden="true"></i></a>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div name="inlineDiv" id="inlineDiv_0">
+                                            <div class="form-group kw-group">
+                                                <input type="hidden" class="col-md-2 ">
+                                                <label class="col-md-2 control-label p-n">关键字偏移位置</label>
+                                                <div class="col-md-2">
+                                                    <select class="form-control"  id="keyWordOffSetPosition" name="keyWordOffSetPosition" >
+                                                        <option selected="" value="0">从载荷头</option>
+                                                        <option value="1">从载荷尾</option>
+                                                    </select>
+                                                </div>
+
+                                                <label class="col-md-1 control-label p-n">偏移量</label>
+                                                <div class="col-md-2">
+                                                    <input type="text" id="offSet" name="offSet" class="form-control" />
+                                                </div>
+
+                                                <label class="col-md-1 control-label p-n">关键词</label>
+                                                <div class="col-md-2">
+                                                    <input type="text" id="keyWord" name="keyWord" class="form-control" />
+                                                </div>
+                                                <div class="col-md-1">
+                                                <span class="help-block m-b-none tips">
+                                                    <a class="m-l-n m-r-sm check-plus kw"><i class="fa fa-plus kw" aria-hidden="true"></i></a>
+                                                </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <!--    用户组      -->
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="userTypeDIV">
+                                    <label class="col-md-2 control-label p-n">绑定用户</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="userType" id="userType">
+                                            <option selected="" value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="userNameDiv" style="display: none;">
+                                    <div class="form-group" >
+                                        <label class="col-md-2 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="userName" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <span class="help-block m-b-none">
+                                                <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i></a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="puserGroup" style="display: none;">
+                                    <label class="col-md-2 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <select class="form-control selectpicker" name="puserGroup" id="puserGroupid"  multiple data-live-search="true">
+                                        </select>
+                                    </div>
+                                    <a th:if="${session.zf103001_add}==1" class="help-block" id="newAddGroup">新增组</a>
+                                </div>
+                            </form>
+
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">保存</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

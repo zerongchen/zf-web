@@ -1,0 +1,47 @@
+<div th:fragment="myaddorupdate">
+    <div class="modal inmodal fade" id="myModaladdnew" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="ibox-title">
+                    <h5>新增</h5> </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateFormV2_10" role="form">
+                                <div class="form-group" id="userTypeDIV" hidden="hidden">
+                                    <label class="col-md-1 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="hidden" id="id" name="id"/>
+                                        <input type="hidden" id="messageNo" name="messageNo"/>
+                                        <input type="hidden" id="infoType" name="infoType"/>
+                                        <input type="hidden" id="messageName" name="messageName" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="form-group" name="bindMessageTypeInsert">
+                                    <label class="col-md-1 control-label p-n" id="typeName">网站</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="newRecord" class="form-control">
+                                    </div>
+                                    <div class="circle-picture help-block m-b-none">
+                                        <a href="#" class="fa fa-plus-circle text-green fa-lg"></a>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id="addSubmitBut">确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal" id="adddismissBut">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

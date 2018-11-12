@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>用户账号</label>
+                    <input type="text" name="userName" class="form-control" />
+
+                    <label>IP地址</label>
+                    <input type="text" name="userIp" class="form-control" />
+
+                </div>
+                <div class="form-group m-r-sm">
+                    <label >创建时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="searchStart">
+               		 </div>
+
+                	<div class="form-group m-r-sm">
+                    <label >到</label>
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="searchEnd">
+                	</div>
+                <div class="checkbox">
+                    <button th:if="${session.zf103002_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs"  role="group" id="commonButton">
+                                        <button th:if="${session.zf103002_add}==1" type="button" id="commonButtonNewAdd" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" > <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+                                        <button th:if="${session.zf103002_delete}==1" type="button" id="commonButtonDeleteButton" class="btn btn-outline btn-danger deleteButton"> <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+                                        <button th:if="${session.zf103002_import}==1" type="button" id="commonButtonimport" class="btn btn-outline btn-primary m-l-xs import" data-toggle="modal" data-target="#leadto"><i class="fa fa fa-plus"></i> 导入</button>
+                                    </div>
+                                    <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--导入-->
+<div class="modal inmodal modaladd fade" id="leadto" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="ibox-title">
+                <h5 >导入</h5>
+            </div>
+            <form class="form-horizontal" id="importForm">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">操作类型</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="operate" id="operateId">
+                                        <option value="">请选择</option>
+                                        <option value="0">全量</option>
+                                        <option value="1">增量</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="fileImport">
+                                <label class="col-md-2 control-label">文件</label>
+                                <div class="col-md-6">
+                                    <input type="file" class="form-control" id ="importFile" name="importFile">
+                                </div>
+
+                                <div class="col-md-3 help-block">
+                                    <a href="#" onclick='exportTemplate()' target="_self">下载导入模板</a>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <div class="col-md-offset-2 col-md-6">
+                                    <button type="button" class="btn btn-primary" id="importFormButton" >保存</button>
+                                    <a class="m-l-sm"  id="modalDismiss"  data-dismiss="modal">取消</a> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title">
+                <h5 id="title">新增</h5>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form id="addOrupdateForm">
+                            <!--<input type="hidden" name="userid"/>-->
+                            <div class="form-group" id="userNameDIV">
+                                <label class="col-md-1 control-label p-n">用户账号</label>
+                                <div class="col-md-3">
+                                    <input type="text" name="userName" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="useripInsert">
+                                <label class="col-md-1 control-label p-n">IP地址</label>
+                                <div class="col-md-3">
+                                    <input type="text" name="userips" class="form-control" />
+                                </div>
+
+                                <label class="col-md-1 control-label p-n">IP前缀</label>
+                                <div class="col-md-1">
+                                    <input type="text" name="useripPrefixs" class="form-control" />
+                                </div>
+
+                                <div class="circle-picture help-block m-b-n">
+                                <a href="#" class="fa fa-plus-circle text-green fa-lg"></a>
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group m-t">
+                            <label class="col-md-1 control-label"></label>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary" id = "addSubmitBut">确定</button>
+                                <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--詳情修改-->
+<div class="modal inmodal fade" id="userIpDetail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title">
+                <h5 >IP地址用户信息详情</h5>
+                <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12" id="ipsUpload">
+                        <div class="example-wrap text-right">
+                            <div class="example">
+                                <input type="hidden" id="messageType" value="">
+                                <table id="ipDetailList" data-mobile-responsive="true" class="text-left">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--詳情修改-->
+<div class="modal inmodal fade" id="detailModify" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title">
+                <h5>修改</h5>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form id="modifyForm">
+                            <input type="hidden" name="userid"/>
+                            <input type="hidden" name="ipId"/>
+                            <div class="form-group" >
+                                <label class="col-md-1 control-label p-n">用户账号</label>
+                                <div class="col-md-3">
+                                    <input type="text" name="userName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group" id="useripUpdate">
+                                <label class="col-md-1 control-label p-n">IP地址</label>
+                                <div class="col-md-3">
+                                    <input type="text" name="userip" class="form-control" />
+                                </div>
+
+                                <label class="col-md-1 control-label p-n">IP前缀</label>
+                                <div class="col-md-1">
+                                    <input type="text" name="useripPrefix" class="form-control" />
+                                </div>
+                            </div>
+
+                        </form>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group m-t">
+                            <label class="col-md-1 control-label"></label>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary" id = "modifyButton">确定</button>
+                                <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <input type="hidden" id="zf103002_query" th:value="${session.zf103002_query}" />
+    <input type="hidden" id="zf103002_redo" th:value="${session.zf103002_redo}" />
+    <input type="hidden" id="zf103002_modify" th:value="${session.zf103002_modify}" />
+    <input type="hidden" id="zf103002_delete" th:value="${session.zf103002_delete}" />
+</div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+<div th:include="/common/footer :: #userstaticip"></div>
+</body>
+</html>

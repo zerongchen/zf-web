@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.MonitorTaskAlarmMapper">
+    <resultMap id="MonitorTaskAlarmMap" type="com.aotain.zongfen.dto.monitor.MonitorTaskAlarmDTO">
+        <id column="ALARM_ID" jdbcType="INTEGER" property="alarmId"/>
+        <result column="MONITOR_TASK_ID" jdbcType="BIGINT" property="monitorTaskId"/>
+        <result column="TASK_ID" jdbcType="BIGINT" property="taskId"/>
+        <result column="TASK_TYPE" jdbcType="INTEGER" property="taskType"/>
+        <result column="TASK_SUBTYPE" jdbcType="INTEGER" property="taskSubtype"/>
+        <result column="ALARM_CONTENT" jdbcType="VARCHAR" property="alarmContent"/>
+        <result column="ALARM_PARAMS" jdbcType="VARCHAR" property="alarmParams"/>
+        <result column="ALARM_TIME" jdbcType="VARCHAR" property="alarmTime"/>
+        <result column="DEAL_STATUS" jdbcType="SMALLINT" property="dealStatus"/>
+        <result column="DEAL_SOLUTION" jdbcType="VARCHAR" property="dealSolution"/>
+        <result column="DEAL_USER" jdbcType="VARCHAR" property="dealUser"/>
+        <result column="DEAL_TIME" jdbcType="VARCHAR" property="dealTime"/>
+    </resultMap>
+
+    <resultMap id="socketFileMap" type="HashMap">
+        <result column="file_name" property="file_name"/>
+        <result column="cfileSize" property="cfileSize"/>
+        <result column="ufileSize" property="ufileSize"/>
+        <result column="server_ip" property="server_ip"/>
+        <result column="cfileTime" property="cfileTime"/>
+        <result column="ufileTime" property="ufileTime"/>
+        <result column="warn_type" property="warn_type"/>
+    </resultMap>
+    <resultMap id="sftpFileMap" type="HashMap">
+        <result column="file_name" property="file_name"/>
+        <result column="dpi_ip" property="dpi_ip"/>
+        <result column="software_provider" property="software_provider"/>
+        <result column="rfile_size" property="rfile_size"/>
+        <result column="ufile_size" property="ufile_size"/>
+        <result column="server_ip" property="server_ip"/>
+        <result column="filereceived_time" property="filereceived_time"/>
+        <result column="filecreate_time" property="filecreate_time"/>
+        <result column="fileupload_time" property="fileupload_time"/>
+        <result column="warn_type" property="warn_type"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    ALARM_ID, MONITOR_TASK_ID, TASK_ID, TASK_TYPE, TASK_SUBTYPE, ALARM_CONTENT, ALARM_PARAMS, 
+    date_format(ALARM_TIME,'%Y-%m-%d %H:%i:%s') as ALARM_TIME, DEAL_STATUS, DEAL_SOLUTION, 
+    DEAL_USER, date_format(DEAL_TIME,'%Y-%m-%d %H:%i:%s') as DEAL_TIME
+  </sql>
+
+    <select id="selectDealSolution" resultMap="MonitorTaskAlarmMap">
+ 	select DEAL_SOLUTION,date_format(DEAL_TIME,'%Y-%m-%d %H:%i:%s') as DEAL_TIME from zf_v2_monitor_task_alarm
+  	where TASK_TYPE = #{taskType,jdbcType=INTEGER} and TASK_SUBTYPE = #{taskSubtype,jdbcType=INTEGER}
+  	and DEAL_SOLUTION IS not NULL 
+	and DEAL_TIME IS not NULL
+  	order by DEAL_TIME desc
+ </select>
+    <select id="sftpFileMap" resultMap="MonitorTaskAlarmMap">
+ 	select DEAL_SOLUTION,date_format(DEAL_TIME,'%Y-%m-%d %H:%i:%s') as DEAL_TIME from zf_v2_monitor_task_alarm
+  	where TASK_TYPE = #{taskType,jdbcType=INTEGER} and TASK_SUBTYPE = #{taskSubtype,jdbcType=INTEGER}
+  	and DEAL_SOLUTION IS not NULL
+	and DEAL_TIME IS not NULL
+  	order by DEAL_TIME desc
+ </select>
+
+    <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.MonitorTaskAlarmDTO"
+            resultMap="MonitorTaskAlarmMap">
+        select
+        <include refid="Base_Column_List"/>
+        from zf_v2_monitor_task_alarm
+        where 1=1
+        <if test="alarmContent != null and alarmContent !='' ">
+            and ALARM_CONTENT like CONCAT("%",#{alarmContent,jdbcType=VARCHAR},"%")
+        </if>
+        <if test="alarmParams != null and alarmParams !='' ">
+            and ALARM_PARAMS like CONCAT("%",#{alarmParams,jdbcType=VARCHAR},"%")
+        </if>
+        <if test="startTime != null and startTime != '' ">
+            and DATE_FORMAT(ALARM_TIME,'%Y-%m-%d') &gt;= #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != '' ">
+            and DATE_FORMAT(ALARM_TIME,'%Y-%m-%d') &lt;= #{endTime,jdbcType=VARCHAR}
+        </if>
+        <if test="dealStatus != null and dealStatus &gt;= 0 ">
+            and DEAL_STATUS = #{dealStatus,jdbcType=SMALLINT}
+        </if>
+        <if test="monitorTaskId != null and monitorTaskId &gt;= 0 ">
+            and MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+        </if>
+        order by ALARM_TIME desc
+    </select>
+
+    <select id="select" parameterType="java.lang.Long" resultMap="MonitorTaskAlarmMap">
+        select
+        <include refid="Base_Column_List"/>
+        from zf_v2_monitor_task_alarm
+        where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskAlarm">
+        insert into zf_v2_monitor_task_alarm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="alarmId != null">
+                ALARM_ID,
+            </if>
+            <if test="monitorTaskId != null">
+                MONITOR_TASK_ID,
+            </if>
+            <if test="taskId != null">
+                TASK_ID,
+            </if>
+            <if test="taskType != null">
+                TASK_TYPE,
+            </if>
+            <if test="taskSubtype != null">
+                TASK_SUBTYPE,
+            </if>
+            <if test="alarmContent != null">
+                ALARM_CONTENT,
+            </if>
+            <if test="alarmParams != null">
+                ALARM_PARAMS,
+            </if>
+            <if test="alarmTime != null">
+                ALARM_TIME,
+            </if>
+            <if test="dealStatus != null">
+                DEAL_STATUS,
+            </if>
+            <if test="dealSolution != null">
+                DEAL_SOLUTION,
+            </if>
+            <if test="dealUser != null">
+                DEAL_USER,
+            </if>
+            <if test="dealTime != null">
+                DEAL_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="alarmId != null">
+                #{alarmId,jdbcType=INTEGER},
+            </if>
+            <if test="monitorTaskId != null">
+                #{monitorTaskId,jdbcType=BIGINT},
+            </if>
+            <if test="taskId != null">
+                #{taskId,jdbcType=BIGINT},
+            </if>
+            <if test="taskType != null">
+                #{taskType,jdbcType=INTEGER},
+            </if>
+            <if test="taskSubtype != null">
+                #{taskSubtype,jdbcType=INTEGER},
+            </if>
+            <if test="alarmContent != null">
+                #{alarmContent,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmParams != null">
+                #{alarmParams,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmTime != null">
+                #{alarmTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dealStatus != null">
+                #{dealStatus,jdbcType=SMALLINT},
+            </if>
+            <if test="dealSolution != null">
+                #{dealSolution,jdbcType=VARCHAR},
+            </if>
+            <if test="dealUser != null">
+                #{dealUser,jdbcType=VARCHAR},
+            </if>
+            <if test="dealTime != null">
+                #{dealTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskAlarm">
+        update zf_v2_monitor_task_alarm
+        <set>
+            <if test="monitorTaskId != null">
+                MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT},
+            </if>
+            <if test="taskId != null">
+                TASK_ID = #{taskId,jdbcType=BIGINT},
+            </if>
+            <if test="taskType != null">
+                TASK_TYPE = #{taskType,jdbcType=INTEGER},
+            </if>
+            <if test="taskSubtype != null">
+                TASK_SUBTYPE = #{taskSubtype,jdbcType=INTEGER},
+            </if>
+            <if test="alarmContent != null">
+                ALARM_CONTENT = #{alarmContent,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmParams != null">
+                ALARM_PARAMS = #{alarmParams,jdbcType=VARCHAR},
+            </if>
+            <if test="alarmTime != null">
+                ALARM_TIME = #{alarmTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="dealStatus != null">
+                DEAL_STATUS = #{dealStatus,jdbcType=SMALLINT},
+            </if>
+            <if test="dealSolution != null">
+                DEAL_SOLUTION = #{dealSolution,jdbcType=VARCHAR},
+            </if>
+            <if test="dealUser != null">
+                DEAL_USER = #{dealUser,jdbcType=VARCHAR},
+            </if>
+            <if test="dealTime != null">
+                DEAL_TIME = #{dealTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ALARM_ID = #{alarmId,jdbcType=INTEGER}
+    </update>
+
+
+    <select id="selectCreateException" parameterType="java.util.Map" resultMap="socketFileMap">
+        SELECT * FROM (
+        SELECT
+        t.file_name ,
+        round(t.file_size/1024,2) as cfileSize,
+        round(u.file_size/1024,2) as ufileSize,
+        u.server_ip,
+        FROM_UNIXTIME(t.file_time,'%Y-%m-%d %H:%i:%s') as cfileTime,
+        FROM_UNIXTIME(u.fileupload_time,'%Y-%m-%d %H:%i:%s') as ufileTime,
+        CASE
+        WHEN u.file_name IS NULL
+        THEN 1
+        WHEN u.fileupload_time-t.file_time>= #{timeout}
+        THEN 1
+        ELSE 0
+        END
+        as warn_type
+        FROM
+        zf_v2_monitor_createfile_detail t
+        LEFT JOIN zf_v2_monitor_uploaddfile_detail u
+        ON t.file_name = u.file_name
+        AND t.file_type = u.file_type
+        WHERE t.file_time &gt;= #{sFileTime}
+        AND t.file_time &lt; #{eFileTime}
+        AND t.file_type =#{fileType}
+        ) A WHERE warn_type != 0
+        <choose>
+            <when test='order != null'>
+                ORDER BY cfileTime ${order}
+            </when>
+            <otherwise>
+                ORDER BY cfileTime desc
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="selectReceivedException" parameterType="java.util.Map" resultMap="sftpFileMap">
+        SELECT * FROM (
+        SELECT
+        t.file_name,
+        t.dpi_ip,
+        t.software_provider,
+        round(t.file_size/1024,2) as rfile_size,
+        round(u.file_size/1024,2) as ufile_size,
+        u.server_ip,
+        FROM_UNIXTIME(t.filereceived_time,'%Y-%m-%d %H:%i:%s') as filereceived_time,
+        FROM_UNIXTIME(t.filecreate_time,'%Y-%m-%d %H:%i:%s') as filecreate_time,
+        FROM_UNIXTIME(u.fileupload_time,'%Y-%m-%d %H:%i:%s') as fileupload_time,
+        CASE
+        WHEN u.file_name IS NULL
+        THEN 1
+        ELSE 0
+        END
+        AS warn_type
+        FROM
+        zf_v2_monitor_receivedfile_detail t
+        LEFT JOIN zf_v2_monitor_uploaddfile_detail u
+        ON t.file_name = u.file_name
+        AND t.file_type = u.file_type
+        WHERE t.filereceived_time &gt;= #{sFileTime}
+        AND t.filereceived_time &lt; #{eFileTime}
+        AND t.file_type =#{fileType}
+        ) A WHERE warn_type != 0
+        <choose>
+            <when test='order != null'>
+                ORDER BY filecreate_time ${order}
+            </when>
+            <otherwise>
+                ORDER BY filecreate_time desc
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="selectUploadException" parameterType="java.util.Map" resultMap="sftpFileMap">
+        SELECT * FROM (
+        SELECT
+        t.file_name,
+        r.dpi_ip,
+        t.software_provider,
+        round(r.file_size/1024,2) as rfile_size,
+        round(t.file_size/1024,2) as ufile_size,
+        t.server_ip,
+        FROM_UNIXTIME(r.filereceived_time,'%Y-%m-%d %H:%i:%s') as filereceived_time,
+        FROM_UNIXTIME(r.filecreate_time,'%Y-%m-%d %H:%i:%s') as filecreate_time,
+        FROM_UNIXTIME(t.fileupload_time,'%Y-%m-%d %H:%i:%s') as fileupload_time,
+        (CASE
+        WHEN t.fileupload_time - r.filereceived_time >= #{timeout} THEN 2
+        WHEN r.filereceived_time - r.filecreate_time >= #{timeout} THEN 1
+        ELSE 3
+        END) AS warn_type,
+        SYSDATE() AS create_time
+        FROM
+        zf_v2_monitor_uploaddfile_detail t
+        LEFT JOIN zf_v2_monitor_receivedfile_detail r
+        ON t.file_name = r.file_name
+        AND t.file_type =#{fileType}
+        WHERE t.fileupload_time >= #{sFileTime}
+        and t.fileupload_time &lt; #{eFileTime}
+        and (t.fileupload_time - r.filereceived_time >= #{timeout}
+        OR r.filereceived_time-r.filecreate_time>= #{timeout}
+        OR t.file_size!= r.file_size)
+        ) A WHERE warn_type != 0
+        <choose>
+            <when test='order != null'>
+                ORDER BY filecreate_time ${order}
+            </when>
+            <otherwise>
+                ORDER BY filecreate_time desc
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

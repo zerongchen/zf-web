@@ -1,0 +1,97 @@
+<div th:fragment="myaddorupdatesnippet">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <!--<input type="hidden" name="modifyFlag"/>-->
+                                <input type="hidden" name="userGroupId" />
+                                <input type="hidden" name="messageNo" />
+                                <div class="form-group" id="namegroupDiv">
+                                    <label class="col-md-1 control-label p-n">用户组名</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="userGroupName" name="userGroupName" class="form-control" />
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="operationType">
+                                    <label class="col-md-1 control-label p-n">新增方式</label>
+                                    <div class="col-md-3">
+                                        <input type="radio" name="operationType" value="0" checked="checked"/>    导入
+                                        <input type="radio" name="operationType" value="1" />     手动新增
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="operateDiv">
+                                    <label class="col-md-1 control-label p-n">操作</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="operate" name="operate">
+                                            <option selected="" value="">请选择</option>
+                                            <option value="0">增加</option>
+                                            <option value="1">删除</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="usrTypeDiv" style="display: none">
+                                    <div class="form-group" >
+                                        <label class="col-md-1 control-label p-n">用户类型</label>
+                                        <div class="col-md-3">
+                                            <select name="user_type" id="usrGroupType" class="form-control user-group">
+                                                <!--<option selected="" value="">请选择</option>-->
+                                                <option value="1" selected="true">账号用户</option>
+                                                <option value="2">IP地址段用户</option>
+                                                <option value="3">DPI链路分组</option>
+                                                <option value="4">BRAS IP地址段用户组</option>
+                                            </select>
+                                        </div>
+                                        <label class="col-md-2 control-label p-n">用户名  </label>
+                                        <div class="col-md-2" name="userNameDiv">
+                                            <input type="text" id="userName_0"name="userName" class="form-control"/>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="help-block m-b-none tips">
+                                                <a class="m-l-n m-r-sm"><i class="fa fa-plus" id="userAddBtn" aria-hidden="true"></i></a>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="fileImport">
+                                    <label class="col-md-1 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <input type="file" id ="importFile" name="importFile" class="form-control" data-placement="bottom" data-toggle="tooltips"  />
+                                    </div>
+                                    <div class="col-md-3 help-block">
+                                        <a href="#" onclick='exportTemplete()' target="_self">下载导入模板</a>
+                                    </div>
+                                    <!--<div class="circle-picture">-->
+                                        <!--<a href="#" class="fa fa-plus-circle text-green fa-lg"></a>-->
+                                    <!--</div>-->
+                                </div>
+                          </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'">
+</head>
+<body class="gray-bg">
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-sm-12">
+			<div class="text-right">
+				<form role="form" class="form-inline" id="searchForm">
+				<div class="form-group m-r-sm">
+                  <label>上报时间</label>
+                		<input placeholder="开始日期" name="startTime" class="form-control" id="start" th:value="${startTime}">
+	             </div>
+	                   <div class="form-group m-r-sm">
+	                 <label>到</label>
+	                		<input placeholder="结束日期" name="endTime" class="form-control" id="end" th:value="${endTime}">
+	             </div>
+					<div class="form-group m-r-sm">
+						<label>时间粒度</label>
+						<div class="btn-group" id="dateTypeSelect">
+							<button name="btnType" class="btn btn-sm btn-success" type="button" value="2" id="dateTypeH">按小时</button>
+							<button name="btnType" class="btn btn-sm btn-white" type="button" value="3" id="dateTypeD">按天</button>
+						</div>
+					</div>
+					<div class="checkbox">
+						<button th:if="${session.zf402001_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+<div th:authorized="zf402002_query"  class="example-wrap text-right ">
+     <div class="center" id="containWidthFixed">
+         <div class="wrapper wrapper-content animated fadeInRight">
+             <div class="row">
+                 <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="radiusPcap">
+                     <div class="ibox float-e-margins m-b-none">
+                         <div class="ibox-title no-borders">
+                             <h5 >AAA数据上报监控(异常文件数:<a data-toggle="modal" id="mychart0Title" ></a>)</h5>
+                             <div class="ibox-tools" id="aaaDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                         </div>
+                         <div class="ibox-content">
+                             <div class="h250" id="mychart0" value="1023"></div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="radiusRelay">
+                     <div class="ibox float-e-margins m-b-none">
+                         <div class="ibox-title no-borders">
+                         	<h5 >HTTP GET 数据上报监控(异常文件数:<a data-toggle="modal" id="mychart1Title" ></a>)</h5>
+                             <div class="ibox-tools " id="httpGetDetail"> <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                         </div>
+                         <div class="ibox-content">
+                             <div class="h250" id="mychart1" value="768"></div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-sm-6 p-l-n p-r-sm" id="radiusPolicy">
+                     <div class="ibox float-e-margins m-b-none">
+                         <div class="ibox-title no-borders">
+                         	<h5 >应用流量流向 数据上报监控(异常文件数:<a data-toggle="modal" id="mychart2Title" ></a>)</h5>
+                             <div class="ibox-tools " id="appFlowDetail"> <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                         </div>
+                         <div class="ibox-content">
+                             <div class="h250" id="mychart2" value="452"></div>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="col-sm-6 p-l-n p-r-sm" id="radiusCreate">
+                     <div class="ibox float-e-margins m-b-none">
+                         <div class="ibox-title no-borders">
+                         	<h5 >全业务流量 数据上报监控(异常文件数:<a data-toggle="modal" id="mychart3Title" ></a>)</h5>
+                             <div class="ibox-tools " id="allFlowDetail"> <a data-toggle="modal"> <i class="fa fa-expand"></i> </a> </div>
+                         </div>
+                         <div class="ibox-content">
+                             <div class="h250" id="mychart3" value="258"></div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+</div>
+	
+	
+	<div class="modal inmodal fade" id="moreDetail" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" >
+			<div class="modal-content" >
+				<div class="ibox-title" >
+					<h5 >详情</h5>
+					<button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+				</div>
+				<div class="modal-body form-horizontal p-t-n">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="ibox ">
+								<div class="ibox-content no-borders p-n">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="example-wrap text-right">
+												<div class="example">
+													<table id="table" data-mobile-responsive="true" class="text-left"></table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal inmodal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" >
+			<div class="modal-content" >
+				<div class="ibox-title" >
+					<h5 >文件详情</h5>
+					<button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+				</div>
+				<div class="modal-body form-horizontal p-t-n">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="ibox ">
+								<div class="ibox-content no-borders p-n">
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="example-wrap text-right">
+												<div class="example">
+													<table id="detailTable" data-mobile-responsive="true" class="text-left"></table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--详情页面 -->
+	<div th:include="/monitor/dataupload/detail :: mydetail"></div>
+
+	<!--js snippet-->
+	<div th:include="/common/footer :: myfooter"></div>
+	<div th:include="/common/footer :: #monitorDataUpload"></div>
+</body>
+</html>

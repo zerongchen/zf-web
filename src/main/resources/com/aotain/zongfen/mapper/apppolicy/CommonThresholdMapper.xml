@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.CommonThresholdMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.CommonThreshold">
+    <id column="MESSAGE_NO" jdbcType="INTEGER" property="messageNo" />
+    <result column="WEB_HIT_THRESHOLD" jdbcType="DECIMAL" property="webHitThreshold" />
+    <result column="KW_THREHOLDS" jdbcType="DECIMAL" property="kwThreholds" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MESSAGE_NO, WEB_HIT_THRESHOLD, KW_THREHOLDS, MODIFY_TIME,CREATE_TIME,CREATE_OPER,MODIFY_OPER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_common
+    where COMMON_ID = #{messageNo,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_policy_common
+    where MESSAGE_NO = #{messageNo,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.apppolicy.CommonThreshold">
+    insert into zf_v2_policy_common (WEB_HIT_THRESHOLD, KW_THREHOLDS, 
+      MODIFY_TIME,CREATE_TIME,CREATE_OPER,MODIFY_OPER,MESSAGE_NO)
+    values ( #{webHitThreshold,jdbcType=DECIMAL}, #{kwThreholds,jdbcType=DECIMAL}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createOper,jdbcType=CHAR},
+      #{modifyOper,jdbcType=CHAR}, #{messageNo,jdbcType=DECIMAL})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.apppolicy.CommonThreshold">
+    update zf_v2_policy_common
+    <set>
+      <if test="webHitThreshold != null">
+        WEB_HIT_THRESHOLD = #{webHitThreshold,jdbcType=DECIMAL},
+      </if>
+      <if test="kwThreholds != null">
+        KW_THREHOLDS = #{kwThreholds,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=CHAR},
+      </if>
+    </set>
+    where MESSAGE_NO = #{messageNo,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getThreshold" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_policy_common
+  	LIMIT 1
+  </select>
+</mapper>

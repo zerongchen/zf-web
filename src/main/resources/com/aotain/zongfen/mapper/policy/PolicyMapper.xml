@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.policy.PolicyMapper">
+  <resultMap id="PolicyResultMap" type="com.aotain.zongfen.model.policy.Policy">
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_TIME_STR" jdbcType="VARCHAR" property="createTimeStr" />
+    <result column="MODIFY_TIME_STR" jdbcType="VARCHAR" property="modifyTimeStr" />
+    <result column="MESSAGE_SEQUENCENO" jdbcType="DECIMAL" property="messageSequenceno" />
+    <result column="POLICYCOUNT" jdbcType="VARCHAR" property="policyCount" />
+    <result column="BINDPOLICYCOUNT" jdbcType="VARCHAR" property="bindPolicyCount" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    MESSAGE_NO, MESSAGE_NAME, OPERATE_TYPE, MESSAGE_TYPE,
+    date_format(MODIFY_TIME, '%Y-%m-%d %H:%i:%s') as MODIFY_TIME_STR,date_format(CREATE_TIME, '%Y-%m-%d %H:%i:%s') as CREATE_TIME_STR,
+    MODIFY_OPER,CREATE_OPER, MESSAGE_SEQUENCENO
+  </sql>
+  <select id="selectByType" resultMap="PolicyResultMap">
+  	select <include refid="Base_Column_List"/> from zf_v2_policy_messageno
+  	where OPERATE_TYPE != 3 and MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL} 
+  	order by MODIFY_TIME DESC
+  </select>
+  
+   <select id="selectListForDirection" parameterType="com.aotain.zongfen.model.policy.Policy" resultMap="PolicyResultMap">
+  	select * from ( select <include refid="Base_Column_List"/> from zf_v2_policy_messageno
+	  	where OPERATE_TYPE != 3 
+	  	<if test="messageType!=null and messageType > 0 ">
+	  		and MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL} 
+	  	</if>
+	  	<if test="messageName!=null and messageName!=''">
+	  		and MESSAGE_NAME LIKE CONCAT('%',#{messageName},'%') 
+	  	</if>
+	  	<if test="messageNo != null and messageNo > 0">
+	        AND MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+	    </if>
+	order by MODIFY_TIME DESC ) A
+	left join 
+	    (select MESSAGE_NO AS messageNo,
+	      CONCAT(SUM(CASE WHEN STATUS = 1 THEN 1 ELSE 0 END),'/',SUM(CASE WHEN STATUS = 1 THEN 0 ELSE 1 END)) as POLICYCOUNT 
+	    from zf_v2_policy_status 
+	    where 1 = 1 
+	    <if test="messageNo != null and messageNo > 0">
+		   AND MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+		</if>
+		<if test="messageType != null and messageType > 0">
+			AND MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+		</if>
+	    group by MESSAGE_TYPE,MESSAGE_NO) B  
+	on A.MESSAGE_NO = B.messageNo 
+  </select>
+  
+   <select id="selectList" parameterType="com.aotain.zongfen.model.policy.Policy" resultMap="PolicyResultMap">
+  	select <include refid="Base_Column_List"/> from zf_v2_policy_messageno
+  	where OPERATE_TYPE != 3 
+  	<if test="messageType!=null and messageType > 0 ">
+  		and MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL} 
+  	</if>
+  	<if test="messageName!=null and messageName!=''">
+  		and MESSAGE_NAME LIKE CONCAT('%',#{messageName},'%') 
+  	</if>
+    <if test="searchStartTime!=null">
+        AND CREATE_TIME &gt;= #{searchStartTime}
+    </if>
+    <if test="searchEndTime!=null">
+        AND CREATE_TIME &lt; #{searchEndTime}
+    </if>
+  	order by MODIFY_TIME DESC
+  </select>
+  
+  <select id="count" parameterType="com.aotain.zongfen.model.policy.Policy" resultType="java.lang.Long">
+  	select count(1) from zf_v2_policy_messageno
+  	where OPERATE_TYPE != 3 
+  	<if test="messageType!=null and messageType > 0 ">
+  		and MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL} 
+  	</if>
+  	<if test="messageName!=null and messageName!=''">
+  		and MESSAGE_NAME LIKE CONCAT('%',#{messageName},'%') 
+  	</if>
+  </select>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.policy.Policy">
+    insert into zf_v2_policy_messageno (MESSAGE_NO, MESSAGE_NAME, OPERATE_TYPE, MESSAGE_TYPE,
+    MODIFY_TIME,CREATE_TIME,MODIFY_OPER,CREATE_OPER,MESSAGE_SEQUENCENO
+      )
+    values (#{messageNo,jdbcType=DECIMAL}, #{messageName,jdbcType=VARCHAR}, #{operateType,jdbcType=DECIMAL}, 
+       #{messageType,jdbcType=DECIMAL} ,#{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP},
+       #{modifyOper,jdbcType=VARCHAR}, #{createOper,jdbcType=VARCHAR},#{messageSequenceno,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.policy.Policy">
+    insert into zf_v2_policy_messageno
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="messageName != null">
+        MESSAGE_NAME,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="messageType != null">
+        MESSAGE_TYPE,
+      </if>
+      <if test="createOper!=null">
+        CREATE_OPER ,
+      </if>
+      <if test="modifyOper!=null">
+        MODIFY_OPER ,
+      </if>
+      <if test="createTime!=null">
+        CREATE_TIME ,
+      </if>
+      <if test="modifyTime!=null">
+        MODIFY_TIME ,
+      </if>
+      <if test="messageSequenceno!=null">
+        MESSAGE_SEQUENCENO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="messageName != null">
+        #{messageName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="messageType != null">
+        #{messageType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper!=null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper!=null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime!=null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime!=null">
+        #{modifyTime,jdbcType=TIMESTAMP} ,
+      </if>
+      <if test="messageSequenceno!=null">
+        #{messageSequenceno,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getMaxMessageNoByType" parameterType="com.aotain.zongfen.model.policy.Policy" resultType="java.lang.Long">
+    select  max(MESSAGE_NO) as MESSAGE_NO from zf_v2_policy_messageno
+    where MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+  </select>
+  
+  <update id="deletePolicyByMesNoAndType" parameterType="com.aotain.zongfen.model.policy.Policy">
+    UPDATE zf_v2_policy_messageno set 
+    <if test="messageSequenceno!=null">MESSAGE_SEQUENCENO = #{messageSequenceno},</if>
+    OPERATE_TYPE=3 WHERE MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL} and MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+  </update>
+  
+  <update id="deletePolicyByMessageNoAndType" >
+  
+    UPDATE zf_v2_policy_messageno set OPERATE_TYPE=3 where MESSAGE_TYPE=#{type} and MESSAGE_NO in
+    <foreach collection="array" item="item" separator="," open="(" close=")">
+      #{item,jdbcType=DECIMAL}
+    </foreach>
+    
+  </update>
+  
+  <update id="updatePolicyName" >
+    
+    UPDATE zf_v2_policy_messageno set MESSAGE_NAME=#{messageName} where MESSAGE_TYPE=#{messageType} and MESSAGE_NO = #{messageno}
+  
+  </update>
+  
+  <update id="updatePolicyByMessageNoAndType" parameterType="com.aotain.zongfen.model.policy.Policy">
+  	update zf_v2_policy_messageno
+  	<set>
+      <if test="messageName!=null">
+        MESSAGE_NAME = #{messageName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageSequenceno!=null">
+      	MESSAGE_SEQUENCENO = #{messageSequenceno},
+      </if>
+      <if test="operateType!=null">
+        OPERATE_TYPE = #{operateType},
+      </if>
+      <if test="modifyTime!=null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper!=null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+    </set>
+     WHERE MESSAGE_TYPE = #{messageType}
+     AND MESSAGE_NO = #{messageNo}
+  </update>
+  
+  <delete id="deleteByMessageNoAndType" parameterType="com.aotain.zongfen.model.policy.Policy">
+  	DELETE FROM zf_v2_policy_messageno
+  	WHERE MESSAGE_TYPE = #{messageType} 
+     AND MESSAGE_NO = #{messageNo}
+  </delete>
+  
+  <select id="isSamePolicyNameByType" parameterType="com.aotain.zongfen.model.policy.Policy" resultType="java.lang.Integer">
+    SELECT Count(1) FROM zf_v2_policy_messageno
+    WHERE OPERATE_TYPE!=3
+     <if test="messageType!=null">
+       AND MESSAGE_TYPE = #{messageType}
+     </if>
+     <if test="messageName!=null">
+       AND MESSAGE_NAME =#{messageName}
+     </if>
+     <if test="messageNo!=null">
+       AND MESSAGE_NO !=#{messageNo}
+     </if>
+    
+  </select>
+  
+</mapper>

@@ -1,0 +1,116 @@
+[{
+	"deviceName": "<span class='text-danger'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-danger'>192.168.1.10</span>",
+	"area": "<span class='text-danger'>广州</span>",
+	"status": "<span class='text-danger'>失败</span>",
+	"time": "<span class='text-danger'>2017-12-12 12:00</span>",
+	"statuss":"1"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-11 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-10 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 13:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:30</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+},{
+	"deviceName": "<span class='text-navy'>gz-dpi-130</span>",
+	"deviceIP": "<span class='text-navy'>192.168.1.10</span>",
+	"area": "<span class='text-navy'>广州</span>",
+	"status": "<span class='text-navy'>成功</span>",
+	"time": "<span class='text-navy'>2017-12-09 12:00</span>"
+}]

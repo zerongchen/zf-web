@@ -1,0 +1,49 @@
+<div th:fragment="mydeal">
+
+<div class="modal inmodal fade modaladd " id="dealModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="wrapper wrapper-content hper100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="ibox">
+          <div class="ibox-content">
+            <div class="footable-row-detail-inner clear">
+              <div class="pull-right">
+                <div class="hidden-xs m-b-sm" id="exampleToolbar" role="group">
+                  <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-reply-all"></i> 返回上一级</button>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <form role="form" class="form-horizontal" id="dealForm">
+                  <div class="form-group">
+                    <label class="col-md-3 control-label"><span class="text-danger">*&nbsp;</span>处理方案</label>
+                    <div class="col-md-9">
+                      <textarea id="dealSolution" name="dealSolution" class="form-control" rows="8"></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="col-md-9 col-md-offset-3">
+                      <button type="button" class="btn btn-primary" name="dealBtn" id="dealBtn">提交</button>
+                      <button type="button" class="btn btn-white" data-dismiss="modal">取消</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-8">
+                <table id="deal-table" data-mobile-responsive="true" class="table table-bordered" data-sort-order="asc">
+                <input id="taskTypeDeal" name="taskType" type="hidden"  />
+                <input id="taskSubtypeDeal" name="taskSubtype" type="hidden"  />
+                <input id="alarmIdDeal" name="alarmId" type="hidden"  />
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+

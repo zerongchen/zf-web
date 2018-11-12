@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.WebFlowManageWebTypeMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.WebFlowManageWebType">
+    <result column="WEBFLOW_ID" jdbcType="BIGINT" property="webflowId" />
+    <result column="CWEBTYPE" jdbcType="DECIMAL" property="webType" />
+  </resultMap>
+  
+  <insert id="insertList" parameterType="com.aotain.zongfen.model.apppolicy.WebFlowManageWebType">
+    insert into zf_v2_webflow_manage_webtype (WEBFLOW_ID, CWEBTYPE)
+    values <foreach collection="list" item="item" separator=",">
+    	(#{item.webflowId,jdbcType=BIGINT}, #{item.webType,jdbcType=DECIMAL})
+    </foreach> 
+  </insert>
+  
+  <select id="getListById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT WEBFLOW_ID, CWEBTYPE FROM zf_v2_webflow_manage_webtype WHERE WEBFLOW_ID =#{id}
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    DELETE from zf_v2_webflow_manage_webtype WHERE
+    WEBFLOW_ID = #{id}
+   <!--  <if test="userType!=null">
+      AND USER_TYPE =#{userType}
+    </if>
+    <if test="userGroupId!=null">
+      AND USER_GROUP_ID = #{userGroupId}
+    </if>
+    <if test="userName!=null">
+      AND USER_NAME = #{userName}
+    </if> -->
+  </delete>
+  
+  <delete id="deleteList" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+      DELETE from zf_v2_appflow_manage_usergroup WHERE
+      APPFLOW_ID = #{item.appflowId}
+      <if test="item.userType!=null">
+        AND USER_TYPE =#{item.userType}
+      </if>
+      <if test="item.userGroupId!=null">
+        AND USER_GROUP_ID = #{item.userGroupId}
+      </if>
+      <if test="item.userName!=null">
+        AND USER_NAME = #{item.userName}
+      </if>
+    </foreach>
+  </delete>
+  
+</mapper>

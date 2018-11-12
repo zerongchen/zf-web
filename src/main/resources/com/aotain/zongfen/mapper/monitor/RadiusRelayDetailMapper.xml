@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.RadiusRelayDetailMapper">
+  
+  <select id="selectListByPrimaryKey" parameterType="com.aotain.zongfen.dto.monitor.RadiusParamDTO" resultType="com.aotain.zongfen.model.monitor.RadiusRelayDetail">
+    select
+    <choose>
+      <when test="dateType==3">
+        FROM_UNIXTIME(stat_time,'%Y-%m-%d') as statTime,
+      </when>
+      <when test="dateType==2">
+        FROM_UNIXTIME(stat_time,'%Y-%m-%d %H') as statTime,
+      </when>
+      <otherwise>
+        FROM_UNIXTIME(stat_time,'%Y-%m-%d %H:%i') as statTime,
+      </otherwise>
+    </choose>
+    src_ip AS srcIp,
+    dst_ip AS dstIp,
+    sum(receivednum) AS receivednum,
+    sum(parsesuccessnum) AS parsesuccessnum,
+    sum(parsefailednum) AS parsefailednum,
+    sum(sendnum) AS sendnum,
+    sum(sendsuccessnum) AS sendsuccessnum,
+    sum(sendfailednum) AS sendfailednum
+    from zf_v2_monitor_radius_relay_detail
+    where
+    stat_time &gt;= UNIX_TIMESTAMP(#{startTime})
+    AND stat_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endTime}, ' 23:59:59'))
+    GROUP BY  <choose>
+    <when test="dateType==3">
+      FROM_UNIXTIME(stat_time,'%Y-%m-%d') ,
+    </when>
+    <when test="dateType==2">
+      FROM_UNIXTIME(stat_time,'%Y-%m-%d %H') ,
+    </when>
+    <otherwise>
+      FROM_UNIXTIME(stat_time,'%Y-%m-%d %H:%i') ,
+    </otherwise>
+  </choose>
+    src_ip,dst_ip
+    ORDER BY stat_time DESC
+  </select>
+</mapper>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.PolicyWebPushMapper">
+
+  <sql id="Base_Column_List">
+    ADV_ID, ADV_TYPE, ADV_WHITEHOSTLISTID, TRIGGER_HOSTLISTID, TRIGGER_KWLISTID, ADVFRAME_URL,
+    ADV_TOKEN, ADV_DELAY, OPERATETYPE, MESSAGE_NAME, CREATE_TIME, MODIFY_TIME, CREATE_OPER,
+    MODIFY_OPER, STATUS, MESSAGE_NO
+  </sql>
+
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo" useGeneratedKeys="true" keyProperty="advId" keyColumn="Adv_ID">
+    insert into ZF_V2_POLICY_WEBPUSH
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="advType != null">
+        ADV_TYPE,
+      </if>
+      <if test="advWhiteHostListId != null">
+        ADV_WHITEHOSTLISTID,
+      </if>
+      <if test="triggerHostListId != null">
+        TRIGGER_HOSTLISTID,
+      </if>
+
+      <if test="triggerKwListId != null">
+        TRIGGER_KWLISTID,
+      </if>
+      <if test="advFramDPIrl != null">
+        ADVFRAME_URL,
+      </if>
+      <if test="advToken != null">
+        ADV_TOKEN,
+      </if>
+      <if test="advDelay != null">
+        ADV_DELAY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="advType != null">
+        #{advType,jdbcType=DECIMAL},
+      </if>
+      <if test="advWhiteHostListId != null">
+        #{advWhiteHostListId,jdbcType=DECIMAL},
+      </if>
+      <if test="triggerHostListId != null">
+        #{triggerHostListId,jdbcType=DECIMAL},
+      </if>
+      <if test="triggerKwListId != null">
+        #{triggerKwListId,jdbcType=DECIMAL},
+      </if>
+      <if test="advFramDPIrl != null">
+        #{advFramDPIrl,jdbcType=DECIMAL},
+      </if>
+      <if test="advToken != null">
+        #{advToken,jdbcType=DECIMAL},
+      </if>
+      <if test="advDelay != null">
+        #{advDelay,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+
+
+  <select id="listData"
+          resultType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo">
+    SELECT
+    a.Adv_ID as advId,
+    a.MESSAGE_NO AS messageNo,
+    a.ADV_TYPE AS advType,
+    a.ADV_WHITEHOSTLISTID AS advWhiteHostListId,
+    a.TRIGGER_HOSTLISTID AS triggerHostListId,
+    a.TRIGGER_KWLISTID AS triggerKwListId,
+    a.ADVFRAME_URL AS advFramDPIrl,
+    a.ADV_TOKEN AS advToken,
+    a.ADV_DELAY AS advDelay,
+    b.MESSAGE_NAME AS messageName,
+    b.CREATE_TIME AS createTime,
+    b.CREATE_OPER AS createOper,
+    c.USER_TYPE AS userType,
+    c.userGroupIds AS userGroupIds,
+    c.userNames AS userNames
+    from
+    ZF_V2_POLICY_WEBPUSH a
+    INNER JOIN
+    (select * FROM zf_v2_policy_messageno WHERE MESSAGE_TYPE = 65 AND OPERATE_TYPE in (1,2)
+    <if test='startTime!=null and startTime!=""'>
+      AND CREATE_TIME &gt;= CONCAT(#{startTime}," 00:00:00")
+    </if>
+    <if test='endTime!=null and endTime!=""'>
+      AND CREATE_TIME &lt;= CONCAT(#{endTime}," 23:59:59")
+    </if>
+    <if test='messageName!=null and messageName!=""' >
+      AND MESSAGE_NAME LIKE CONCAT("%",#{messageName},"%")
+    </if>
+    ) b ON a.MESSAGE_NO = b.MESSAGE_NO
+
+    LEFT JOIN
+    (SELECT
+    BIND_MESSAGE_TYPE,
+    BIND_MESSAGE_NO,
+    USER_TYPE,
+    GROUP_CONCAT(USER_GROUP_ID)  as userGroupIds,
+    GROUP_CONCAT(USER_NAME)  as userNames
+    FROM
+    zf_v2_policy_userpolicy_bind WHERE OPERATE_TYPE!=3 GROUP BY BIND_MESSAGE_TYPE,BIND_MESSAGE_NO,USER_TYPE
+    )
+    c ON a.MESSAGE_NO = c.BIND_MESSAGE_NO and b.MESSAGE_TYPE=c.BIND_MESSAGE_TYPE
+
+    <if test='startTime!=null and startTime!=""'>
+      AND b.CREATE_TIME &gt;= CONCAT(#{startTime}," 00:00:00")
+    </if>
+    <if test='endTime!=null and endTime!=""'>
+      AND b.CREATE_TIME &lt;= CONCAT(#{endTime}," 23:59:59")
+    </if>
+    ORDER BY a.MESSAGE_NO DESC
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo"
+          resultType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo">
+    SELECT
+    a.Adv_ID as advId,
+    a.ADV_TYPE AS advType,
+    a.ADV_WHITEHOSTLISTID AS advWhiteHostListId,
+    a.TRIGGER_HOSTLISTID AS triggerHostListId,
+
+    a.TRIGGER_KWLISTID AS triggerKwListId,
+    a.ADVFRAME_URL AS advFramDPIrl,
+    a.ADV_TOKEN AS advToken,
+    a.ADV_DELAY AS advDelay,
+
+    a.MESSAGE_NO AS messageNo,
+    b.MESSAGE_NAME AS messageName,
+    b.CREATE_TIME AS createTime,
+    b.CREATE_OPER AS createOper
+    from
+    ZF_V2_POLICY_WEBPUSH a
+    INNER JOIN
+    zf_v2_policy_messageno b ON a.MESSAGE_NO = b.MESSAGE_NO
+    AND b.MESSAGE_TYPE = 65 AND b.OPERATE_TYPE in (1,2)
+    WHERE a.MESSAGE_NO = #{messageNo}
+  </select>
+
+  <delete id="deleteData" parameterType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo">
+    delete from ZF_V2_POLICY_WEBPUSH
+    where MESSAGE_NO = #{messageNo}
+  </delete>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.dto.apppolicy.WebPushStrategyVo">
+    update ZF_V2_POLICY_WEBPUSH
+    <set>
+      <if test="advType != null">
+        ADV_TYPE = #{advType,jdbcType=DECIMAL},
+      </if>
+      <if test="advWhiteHostListId != null">
+        ADV_WHITEHOSTLISTID= #{advWhiteHostListId,jdbcType=DECIMAL},
+      </if>
+      <if test="triggerHostListId != null">
+        TRIGGER_HOSTLISTID= #{triggerHostListId,jdbcType=DECIMAL},
+      </if>
+      <if test="triggerKwListId != null">
+        TRIGGER_KWLISTID= #{triggerKwListId,jdbcType=DECIMAL},
+      </if>
+      <if test="advFramDPIrl != null">
+        ADVFRAME_URL= #{advFramDPIrl,jdbcType=VARCHAR},
+      </if>
+      <if test="advToken != null">
+        ADV_TOKEN = #{advToken,jdbcType=DECIMAL},
+      </if>
+      <if test="advDelay != null">
+        ADV_DELAY = #{advDelay,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+  </update>
+
+</mapper>

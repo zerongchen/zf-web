@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiDynamicCpuMapper">
+  <resultMap id="DpiDynamicCpuMap" type="com.aotain.zongfen.model.device.DpiDynamicCpu">
+    <result column="CPU_No" jdbcType="DECIMAL" property="cpuNo" />
+    <result column="CPU_Usage" jdbcType="DECIMAL" property="cpuUsage" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_TIME_STR" jdbcType="VARCHAR" property="createTimeStr" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    CPU_No, CPU_Usage, DATE_FORMAT(CREATE_TIME,"%Y-%m-%d %H:%i:%s") as CREATE_TIME_STR
+  </sql>
+  
+   <select id="selectCPU" resultMap="DpiDynamicCpuMap">
+  	SELECT DISTINCT(CPU_No) FROM zf_v2_dev_dpi_dynamic_cpu
+  </select>
+  
+  <select id="selectByCpu" resultMap="DpiDynamicCpuMap">
+  	select <include refid="Base_Column_List" /> from zf_v2_dev_dpi_dynamic_cpu
+  	where CPU_No = #{cpuNo,jdbcType=DECIMAL}
+  	AND DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= CREATE_TIME
+  	 order by CREATE_TIME asc
+  </select>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.DpiDynamicCpu">
+    insert into zf_v2_dev_dpi_dynamic_cpu (CPU_No, CPU_Usage, CREATE_TIME
+      )
+    values (#{cpuNo,jdbcType=DECIMAL}, #{cpuUsage,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.device.DpiDynamicCpu">
+    insert into zf_v2_dev_dpi_dynamic_cpu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cpuNo != null">
+        CPU_No,
+      </if>
+      <if test="cpuUsage != null">
+        CPU_Usage,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cpuNo != null">
+        #{cpuNo,jdbcType=DECIMAL},
+      </if>
+      <if test="cpuUsage != null">
+        #{cpuUsage,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiStaticMapper">
+  <resultMap id="DpiStaticMap" type="com.aotain.zongfen.model.device.DpiStatic">
+    <id column="DeploySiteName" jdbcType="VARCHAR" property="deploysitename" />
+    <result column="SoftwareVersion" jdbcType="INTEGER" property="softwareversion" />
+    <result column="Probe_Type" jdbcType="DECIMAL" property="probeType" />
+    <result column="IDC_HouseID" jdbcType="VARCHAR" property="idcHouseid" />
+    <result column="Deploy_Mode" jdbcType="DECIMAL" property="deployMode" />
+    <result column="Total_Capability" jdbcType="INTEGER" property="totalCapability" />
+    <result column="SlotNum" jdbcType="DECIMAL" property="slotnum" />
+    <result column="PreProcSlotNum" jdbcType="DECIMAL" property="preprocslotnum" />
+    <result column="AnalysisSlotNum" jdbcType="DECIMAL" property="analysisslotnum" />
+    <result column="GPSlotNum" jdbcType="DECIMAL" property="gpslotnum" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="PORT_NUM" jdbcType="DECIMAL" property="portNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.DeploySiteName as DeploySiteName, a.SoftwareVersion as SoftwareVersion, 
+    a.Probe_Type as Probe_Type, a.IDC_HouseID as IDC_HouseID, a.Deploy_Mode as Deploy_Mode, 
+    a.Total_Capability as Total_Capability,a.SlotNum as SlotNum, a.PreProcSlotNum as PreProcSlotNum, 
+    a.AnalysisSlotNum as AnalysisSlotNum, a.GPSlotNum as GPSlotNum, a.MODIFY_TIME as MODIFY_TIME,
+    count(b.DeploySiteName) as PORT_NUM
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="DpiStaticMap">
+    select <include refid="Base_Column_List" /> from zf_v2_dev_dpi_static a
+	LEFT JOIN zf_v2_dev_dpi_static_port b ON a.DeploySiteName = b.DeploySiteName
+    where a.DeploySiteName = #{deploysitename,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectList" parameterType="com.aotain.zongfen.model.device.DpiStatic" resultMap="DpiStaticMap">
+	select <include refid="Base_Column_List" /> from zf_v2_dev_dpi_static a
+	LEFT JOIN zf_v2_dev_dpi_static_port b ON a.DeploySiteName = b.DeploySiteName
+	where 1=1
+	<if test="deploysitename != null and deploysitename != '' ">
+		and a.DeploySiteName LIKE
+		CONCAT('%',#{deploysitename,jdbcType=VARCHAR},'%')
+	</if>
+	<if test="idcHouseid != null and idcHouseid != '' ">
+		and a.IDC_HouseID LIKE CONCAT('%',#{idcHouseid,jdbcType=VARCHAR},'%')
+	</if>
+	GROUP BY a.DeploySiteName
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from zf_v2_dev_dpi_static
+    where DeploySiteName = #{deploysitename,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.DpiStatic">
+    insert into zf_v2_dev_dpi_static (DeploySiteName, SoftwareVersion, 
+      Probe_Type, IDC_HouseID, Deploy_Mode, 
+      Total_Capability, SlotNum, PreProcSlotNum, 
+      AnalysisSlotNum, GPSlotNum, MODIFY_TIME
+      )
+    values (#{deploysitename,jdbcType=VARCHAR}, #{softwareversion,jdbcType=INTEGER}, 
+      #{probeType,jdbcType=DECIMAL}, #{idcHouseid,jdbcType=VARCHAR}, #{deployMode,jdbcType=DECIMAL}, 
+      #{totalCapability,jdbcType=INTEGER}, #{slotnum,jdbcType=DECIMAL}, #{preprocslotnum,jdbcType=DECIMAL}, 
+      #{analysisslotnum,jdbcType=DECIMAL}, #{gpslotnum,jdbcType=DECIMAL}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.device.DpiStatic">
+    insert into zf_v2_dev_dpi_static
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="deploysitename != null">
+        DeploySiteName,
+      </if>
+      <if test="softwareversion != null">
+        SoftwareVersion,
+      </if>
+      <if test="probeType != null">
+        Probe_Type,
+      </if>
+      <if test="idcHouseid != null">
+        IDC_HouseID,
+      </if>
+      <if test="deployMode != null">
+        Deploy_Mode,
+      </if>
+      <if test="totalCapability != null">
+        Total_Capability,
+      </if>
+      <if test="slotnum != null">
+        SlotNum,
+      </if>
+      <if test="preprocslotnum != null">
+        PreProcSlotNum,
+      </if>
+      <if test="analysisslotnum != null">
+        AnalysisSlotNum,
+      </if>
+      <if test="gpslotnum != null">
+        GPSlotNum,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="deploysitename != null">
+        #{deploysitename,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareversion != null">
+        #{softwareversion,jdbcType=INTEGER},
+      </if>
+      <if test="probeType != null">
+        #{probeType,jdbcType=DECIMAL},
+      </if>
+      <if test="idcHouseid != null">
+        #{idcHouseid,jdbcType=VARCHAR},
+      </if>
+      <if test="deployMode != null">
+        #{deployMode,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCapability != null">
+        #{totalCapability,jdbcType=INTEGER},
+      </if>
+      <if test="slotnum != null">
+        #{slotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="preprocslotnum != null">
+        #{preprocslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="analysisslotnum != null">
+        #{analysisslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="gpslotnum != null">
+        #{gpslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.device.DpiStatic">
+    update zf_v2_dev_dpi_static
+    <set>
+      <if test="softwareversion != null">
+        SoftwareVersion = #{softwareversion,jdbcType=INTEGER},
+      </if>
+      <if test="probeType != null">
+        Probe_Type = #{probeType,jdbcType=DECIMAL},
+      </if>
+      <if test="idcHouseid != null">
+        IDC_HouseID = #{idcHouseid,jdbcType=VARCHAR},
+      </if>
+      <if test="deployMode != null">
+        Deploy_Mode = #{deployMode,jdbcType=DECIMAL},
+      </if>
+      <if test="totalCapability != null">
+        Total_Capability = #{totalCapability,jdbcType=INTEGER},
+      </if>
+      <if test="slotnum != null">
+        SlotNum = #{slotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="preprocslotnum != null">
+        PreProcSlotNum = #{preprocslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="analysisslotnum != null">
+        AnalysisSlotNum = #{analysisslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="gpslotnum != null">
+        GPSlotNum = #{gpslotnum,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where DeploySiteName = #{deploysitename,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.device.DpiStatic">
+    update zf_v2_dev_dpi_static
+    set SoftwareVersion = #{softwareversion,jdbcType=INTEGER},
+      Probe_Type = #{probeType,jdbcType=DECIMAL},
+      IDC_HouseID = #{idcHouseid,jdbcType=VARCHAR},
+      Deploy_Mode = #{deployMode,jdbcType=DECIMAL},
+      Total_Capability = #{totalCapability,jdbcType=INTEGER},
+      SlotNum = #{slotnum,jdbcType=DECIMAL},
+      PreProcSlotNum = #{preprocslotnum,jdbcType=DECIMAL},
+      AnalysisSlotNum = #{analysisslotnum,jdbcType=DECIMAL},
+      GPSlotNum = #{gpslotnum,jdbcType=DECIMAL},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP}
+    where DeploySiteName = #{deploysitename,jdbcType=VARCHAR}
+  </update>
+</mapper>

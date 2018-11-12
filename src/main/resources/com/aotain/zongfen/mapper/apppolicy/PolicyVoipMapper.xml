@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.PolicyVoipMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.PolicyVoip">
+    <id column="VOIP_ID" jdbcType="INTEGER" property="voipId" />
+    <result column="INTERFERE_TYPE" jdbcType="DECIMAL" property="interfereType" />
+    <result column="INTERFERE_DIR" jdbcType="DECIMAL" property="interfereDir" />
+    <result column="C_TIME" jdbcType="DECIMAL" property="cTime" />
+    <result column="OPERATETYPE" jdbcType="DECIMAL" property="operatetype" />
+    <result column="CREATE_OPER" jdbcType="CHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="CHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    VOIP_ID, INTERFERE_TYPE, INTERFERE_DIR, C_TIME, OPERATETYPE, CREATE_OPER, MODIFY_OPER, 
+    CREATE_TIME, MODIFY_TIME, STATUS, MESSAGE_NO
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_voip
+    where VOIP_ID = #{voipId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_policy_voip
+    where VOIP_ID = #{voipId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.apppolicy.PolicyVoip" useGeneratedKeys="true" keyProperty="voipId">
+    insert into zf_v2_policy_voip (INTERFERE_TYPE, INTERFERE_DIR, 
+      C_TIME, OPERATETYPE, CREATE_OPER, 
+      MODIFY_OPER, CREATE_TIME, MODIFY_TIME, 
+      STATUS, MESSAGE_NO)
+    values ( #{interfereType,jdbcType=DECIMAL}, #{interfereDir,jdbcType=DECIMAL}, 
+      #{cTime,jdbcType=DECIMAL}, #{operatetype,jdbcType=DECIMAL}, #{createOper,jdbcType=CHAR}, 
+      #{modifyOper,jdbcType=CHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=DECIMAL}, #{messageNo,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.apppolicy.PolicyVoip">
+    insert into zf_v2_policy_voip
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="voipId != null">
+        VOIP_ID,
+      </if>
+      <if test="interfereType != null">
+        INTERFERE_TYPE,
+      </if>
+      <if test="interfereDir != null">
+        INTERFERE_DIR,
+      </if>
+      <if test="cTime != null">
+        C_TIME,
+      </if>
+      <if test="operatetype != null">
+        OPERATETYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="voipId != null">
+        #{voipId,jdbcType=INTEGER},
+      </if>
+      <if test="interfereType != null">
+        #{interfereType,jdbcType=DECIMAL},
+      </if>
+      <if test="interfereDir != null">
+        #{interfereDir,jdbcType=DECIMAL},
+      </if>
+      <if test="cTime != null">
+        #{cTime,jdbcType=DECIMAL},
+      </if>
+      <if test="operatetype != null">
+        #{operatetype,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=CHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.apppolicy.PolicyVoip">
+    update zf_v2_policy_voip
+    <set>
+      <if test="interfereType != null">
+        INTERFERE_TYPE = #{interfereType,jdbcType=DECIMAL},
+      </if>
+      <if test="interfereDir != null">
+        INTERFERE_DIR = #{interfereDir,jdbcType=DECIMAL},
+      </if>
+      <if test="cTime != null">
+        C_TIME = #{cTime,jdbcType=DECIMAL},
+      </if>
+      <if test="operatetype != null">
+        OPERATETYPE = #{operatetype,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER = #{createOper,jdbcType=CHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where VOIP_ID = #{voipId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.apppolicy.PolicyVoip">
+    update zf_v2_policy_voip
+    set INTERFERE_TYPE = #{interfereType,jdbcType=DECIMAL},
+      INTERFERE_DIR = #{interfereDir,jdbcType=DECIMAL},
+      C_TIME = #{cTime,jdbcType=DECIMAL},
+      OPERATETYPE = #{operatetype,jdbcType=DECIMAL},
+      CREATE_OPER = #{createOper,jdbcType=CHAR},
+      MODIFY_OPER = #{modifyOper,jdbcType=CHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      STATUS = #{status,jdbcType=DECIMAL},
+      MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+    where VOIP_ID = #{voipId,jdbcType=INTEGER}
+  </update>
+  
+    <select id="getIndexList" parameterType="java.util.Map" resultType="com.aotain.zongfen.dto.apppolicy.VoipFlowDTO">
+  	SELECT b.MESSAGE_NO policyId,
+  		   b.MESSAGE_NAME policyName,
+  		   b.START_TIME startTime,
+  		   b.END_TIME endTime,
+  		   a.STATUS sataus,
+  		   a.INTERFERE_TYPE interfereType,
+  		   a.INTERFERE_DIR interfereDir,
+  		   a.CREATE_TIME createTime,
+  		   a.MODIFY_TIME updataTime,
+  		   a.MODIFY_OPER userNo,
+  		   a.C_TIME timeBar,
+  		   a.VOIP_ID voipFlowId
+  	FROM zf_v2_policy_voip a,
+  	 	 zf_v2_policy_messageno b
+  	WHERE a.MESSAGE_NO = b.MESSAGE_NO
+  	AND b.OPERATE_TYPE != 3
+  	AND b.MESSAGE_TYPE = #{messageType}
+  	<if test="policyName != null and policyName!=''">
+  	AND	b.MESSAGE_NAME LIKE CONCAT("%",#{policyName},"%")
+  	</if>
+  	<if test="status != null">
+  	 AND	a.STATUS = #{status}
+  	</if>
+  	ORDER BY a.MODIFY_TIME DESC
+  </select>
+  
+  <select id="getRecordsByMessageNo" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_policy_voip
+  	WHERE MESSAGE_NO IN
+  	<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+  		#{item}
+  	</foreach>
+  </select>
+  
+</mapper>

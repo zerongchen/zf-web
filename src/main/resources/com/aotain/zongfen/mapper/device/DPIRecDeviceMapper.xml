@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DPIRecDeviceMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.common.policyapi.model.DpiDeviceInfoStrategy">
+    <id column="DPI_ID" jdbcType="INTEGER" property="dpiId" />
+    <result column="DPI_DEV_NAME" jdbcType="VARCHAR" property="dpiDevName" />
+    <result column="DPI_IP" jdbcType="VARCHAR" property="dpiIp" />
+    <result column="DPI_PORT" jdbcType="INTEGER" property="dpiPort" />
+    <result column="DPI_SITE_NAME" jdbcType="VARCHAR" property="dpiSiteName" />
+    <result column="PROBE_TYPE" jdbcType="INTEGER" property="probeType" />
+    <result column="AREA_CODE" jdbcType="INTEGER" property="areaCode" />
+    <result column="IDC_HOUSE_ID" jdbcType="VARCHAR" property="idcHouseId" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGESEQUENCENO" jdbcType="BIGINT" property="messageSequenceNo" />
+    <result column="IPPORT" jdbcType="VARCHAR" property="ipPort"/>
+    <result column="AREANAME" jdbcType="VARCHAR" property="areaName"/>
+     <result column="RADIUS_FLAG" jdbcType="BIGINT" property="radiusFlag" />
+    <result column="POLICY_IP" jdbcType="VARCHAR" property="policyIp"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.DPI_ID, a.DPI_DEV_NAME, a.DPI_IP, a.DPI_PORT, a.DPI_SITE_NAME, a.PROBE_TYPE, a.AREA_CODE, a.IDC_HOUSE_ID, 
+     a.MESSAGE_NO,a.RADIUS_FLAG,a.POLICY_IP
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_dev_dpi_rec_info
+    where DPI_ID = #{dpiId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_dev_dpi_rec_info
+    where DPI_ID = #{dpiId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.common.policyapi.model.DpiDeviceInfoStrategy" useGeneratedKeys="true" keyProperty="dpiId">
+    insert into zf_v2_dev_dpi_rec_info (DPI_DEV_NAME, DPI_IP, 
+      DPI_PORT, DPI_SITE_NAME, PROBE_TYPE, 
+      AREA_CODE, IDC_HOUSE_ID,
+      MESSAGE_NO,POLICY_IP,RADIUS_FLAG
+      )
+    values (#{dpiDevName,jdbcType=VARCHAR}, #{dpiIp,jdbcType=VARCHAR}, 
+      #{dpiPort,jdbcType=INTEGER}, #{dpiSiteName,jdbcType=VARCHAR}, #{probeType,jdbcType=INTEGER}, 
+      #{areaCode,jdbcType=INTEGER}, #{idcHouseId,jdbcType=VARCHAR},
+      #{messageNo,jdbcType=DECIMAL},#{policyIp,jdbcType=VARCHAR},
+      #{radiusFlag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.DpiDeviceInfoStrategy">
+    insert into zf_v2_dev_dpi_rec_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dpiId != null">
+        DPI_ID,
+      </if>
+      <if test="dpiDevName != null">
+        DPI_DEV_NAME,
+      </if>
+      <if test="dpiIp != null">
+        DPI_IP,
+      </if>
+      <if test="dpiPort != null">
+        DPI_PORT,
+      </if>
+      <if test="dpiSiteName != null">
+        DPI_SITE_NAME,
+      </if>
+      <if test="probeType != null">
+        PROBE_TYPE,
+      </if>
+      <if test="areaCode != null">
+        AREA_CODE,
+      </if>
+      <if test="idcHouseId != null">
+        IDC_HOUSE_ID,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dpiId != null">
+        #{dpiId,jdbcType=INTEGER},
+      </if>
+      <if test="dpiDevName != null">
+        #{dpiDevName,jdbcType=VARCHAR},
+      </if>
+      <if test="dpiIp != null">
+        #{dpiIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dpiPort != null">
+        #{dpiPort,jdbcType=INTEGER},
+      </if>
+      <if test="dpiSiteName != null">
+        #{dpiSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="probeType != null">
+        #{probeType,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="idcHouseId != null">
+        #{idcHouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.common.policyapi.model.DpiDeviceInfoStrategy">
+    update zf_v2_dev_dpi_rec_info
+    <set>
+      <if test="dpiDevName != null">
+        DPI_DEV_NAME = #{dpiDevName,jdbcType=VARCHAR},
+      </if>
+      <if test="dpiIp != null">
+        DPI_IP = #{dpiIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dpiPort != null">
+        DPI_PORT = #{dpiPort,jdbcType=INTEGER},
+      </if>
+      <if test="dpiSiteName != null">
+        DPI_SITE_NAME = #{dpiSiteName,jdbcType=VARCHAR},
+      </if>
+      <if test="probeType != null">
+        PROBE_TYPE = #{probeType,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+        AREA_CODE = #{areaCode,jdbcType=INTEGER},
+      </if>
+      <if test="idcHouseId != null">
+        IDC_HOUSE_ID = #{idcHouseId,jdbcType=VARCHAR},
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+       <if test="policyIp  != null">
+        POLICY_IP = #{policyIp,jdbcType=VARCHAR},
+      </if>
+      <if test="radiusFlag != null">
+        RADIUS_FLAG = #{radiusFlag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where DPI_ID = #{dpiId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getSamIPCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT COUNT(a.DPI_ID)
+  	FROM zf_v2_dev_dpi_rec_info a,
+  		zf_v2_policy_messageno b
+  	WHERE a.DPI_IP = #{ip}
+  	<if test="id!=null">
+  		AND  a.DPI_ID != #{id}
+  	</if> 
+  	AND b.OPERATE_TYPE != 3
+  	AND a.MESSAGE_NO = b.MESSAGE_NO
+  	AND b.MESSAGE_TYPE = 192
+  </select>
+  
+  <select id="getSamNameCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT COUNT(a.DPI_ID)
+  	FROM zf_v2_dev_dpi_rec_info a,
+  		zf_v2_policy_messageno b
+  	WHERE a.DPI_DEV_NAME = #{name}
+  	<if test="id!=null">
+  		AND  a.DPI_ID != #{id}
+  	</if> 
+  	AND b.OPERATE_TYPE != 3
+  	AND a.MESSAGE_NO = b.MESSAGE_NO
+  	AND b.MESSAGE_TYPE = 192
+  </select>
+  
+  <select id="getInfoByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	,CONCAT(a.DPI_IP,":",a.DPI_PORT) as IPPORT,
+  	b.AREA_NAME AREANAME,
+  	c.MESSAGE_SEQUENCENO
+  	FROM zf_v2_dev_dpi_rec_info a,
+  		 zf_dict_chinaarea b,
+  		 zf_v2_policy_messageno c
+  	WHERE 1=1
+  	AND a.AREA_CODE = b.AREA_CODE
+  	<if test="deviceName!='' and deviceName!=null">
+  		AND a.DPI_DEV_NAME LIKE CONCAT("%",#{deviceName},"%")
+  	</if>
+  	AND c.OPERATE_TYPE != 3
+  	AND a.MESSAGE_NO = c.MESSAGE_NO
+  	AND c.MESSAGE_TYPE = 192
+  	ORDER BY c.MODIFY_TIME DESC
+  </select>
+  
+    <select id="getInfoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+	  	,CONCAT(a.DPI_IP,":",a.DPI_PORT) as IPPORT,
+	  	b.AREA_NAME AREANAME,
+	  	c.MESSAGE_SEQUENCENO
+  	FROM zf_v2_dev_dpi_rec_info a,
+  		 zf_dict_chinaarea b,
+  		 zf_v2_policy_messageno c
+  	WHERE 1=1
+  	AND a.AREA_CODE = b.AREA_CODE
+  	AND c.OPERATE_TYPE != 3
+  	AND a.MESSAGE_NO = c.MESSAGE_NO
+  	AND c.MESSAGE_TYPE = 192
+  	AND a.DPI_ID = #{deviceId}
+  	ORDER BY c.MODIFY_TIME DESC
+  </select>
+</mapper>

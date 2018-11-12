@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.MonitorTaskInfoMapper">
+  <resultMap id="MonitorTaskInfoMap" type="com.aotain.zongfen.dto.monitor.MonitorTaskInfoDTO">
+    <id column="MONITOR_TASK_ID" jdbcType="BIGINT" property="monitorTaskId" />
+    <result column="MONITOR_NAME" jdbcType="VARCHAR" property="monitorName" />
+    <result column="MONITOR_PARAMS" jdbcType="VARCHAR" property="monitorParams" />
+    <result column="TASK_TYPE" jdbcType="INTEGER" property="taskType" />
+    <result column="TASK_SUBTYPE" jdbcType="INTEGER" property="taskSubtype" />
+    <result column="STATUS" jdbcType="SMALLINT" property="status" />
+    <result column="CREATE_TIME" jdbcType="VARCHAR" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="VARCHAR" property="modifyTime" />
+    <result column="TASK_PARAMS" jdbcType="VARCHAR" property="taskParams" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List">
+    MONITOR_TASK_ID, MONITOR_NAME, MONITOR_PARAMS, TASK_TYPE, TASK_SUBTYPE, 
+    STATUS,date_format(CREATE_TIME,'%Y-%m-%d %H:%i:%s') as CREATE_TIME, 
+    date_format(MODIFY_TIME,'%Y-%m-%d %H:%i:%s') as MODIFY_TIME,TASK_PARAMS
+  </sql>
+ 
+  <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.MonitorTaskInfoDTO" resultMap="MonitorTaskInfoMap">
+  	select <include refid="Base_Column_List" />  from zf_v2_monitor_task_info
+  	where 1=1 
+  	  <if test="monitorName != null and monitorName != ''">
+        and MONITOR_NAME like CONCAT("%",#{monitorName,jdbcType=VARCHAR},"%")
+      </if>
+      <if test="monitorParams != null and monitorParams != '' ">
+        and MONITOR_PARAMS like CONCAT("%",#{monitorParams,jdbcType=VARCHAR},"%")
+      </if>
+      <if test="taskType != null and taskType &gt;= 0 ">
+        and TASK_TYPE = #{taskType,jdbcType=SMALLINT}
+      </if>
+      <if test="startTime != null and startTime != '' ">
+	    AND DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') &gt;= #{startTime,jdbcType=VARCHAR}
+	 </if>
+	 <if test="endTime != null and endTime != '' ">
+	    AND DATE_FORMAT(CREATE_TIME,'%Y-%m-%d') &lt;= #{endTime,jdbcType=VARCHAR}
+	 </if>
+     <if test="status != null and status &gt;= 0 ">
+        and STATUS = #{status,jdbcType=SMALLINT}
+     </if>
+      <if test="monitorTaskId != null and monitorTaskId &gt;= 0 ">
+       MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+      </if>
+     order by MODIFY_TIME desc
+  </select>
+  
+  <select id="select" parameterType="java.lang.Long" resultMap="MonitorTaskInfoMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_monitor_task_info
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+  </select>
+
+  <insert id="insert" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskInfo">
+    insert into zf_v2_monitor_task_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="monitorTaskId != null">
+        MONITOR_TASK_ID,
+      </if>
+      <if test="monitorName != null">
+        MONITOR_NAME,
+      </if>
+      <if test="monitorParams != null">
+        MONITOR_PARAMS,
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE,
+      </if>
+      <if test="taskSubtype != null">
+        TASK_SUBTYPE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+      <if test="taskParams != null">
+        TASK_PARAMS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="monitorTaskId != null">
+        #{monitorTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="monitorName != null">
+        #{monitorName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorParams != null">
+        #{monitorParams,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="taskSubtype != null">
+        #{taskSubtype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskParams != null">
+        #{taskParams,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskInfo">
+    update zf_v2_monitor_task_info
+    <set>
+      <if test="monitorName != null">
+        MONITOR_NAME = #{monitorName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorParams != null">
+        MONITOR_PARAMS = #{monitorParams,jdbcType=VARCHAR},
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE = #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="taskSubtype != null">
+        TASK_SUBTYPE = #{taskSubtype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskParams != null">
+        TASK_PARAMS = #{taskParams,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+  </update>
+ 
+</mapper>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchform">
+                <div class="form-group m-r-sm">
+                    <label>站点名称</label>
+                    <!--<input type="text" id='siteName' class="form-control" name="siteName"/>-->
+                    <select class="form-control" name="siteName" id="siteName">
+                    </select>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label><span id="lName">升级时间</span></label>
+                    <input placeholder="" class="form-control layer-date" name="startTime" id="start">
+                    <input type="hidden" placeholder="" class="form-control layer-date" name="endTime" id="end">
+                </div>
+                <div class="checkbox">
+                    <button type="button" class="btn btn-primary" id="searchformbutton">查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <form id="paramForm">
+                                        <input type="hidden" name="upgradeType" value="1"/>
+                                    </form>
+                                    <div class="tabs-container">
+                                        <ul class="nav nav-tabs" id="tab_upgrade">
+                                            <li id="upgrade_click" class="active"><a data-toggle="tab" href="#info_ws">DPI设备升级管理</a>
+                                            </li>
+                                            <li id="expansion_click"><a data-toggle="tab"
+                                                                        href="#info_kw">DPI设备端口扩容管理</a></li>
+                                        </ul>
+                                        <div class="tab-content ">
+                                            <div id="info_ws" class="tab-pane active">
+                                                <table id="info_upgrade_table" data-mobile-responsive="true"
+                                                       class="text-left"></table>
+                                            </div>
+                                            <div id="info_kw" class="tab-pane">
+                                                <table id="info_expansion_table" data-mobile-responsive="true"
+                                                       class="text-left"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="portDetail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="ibox-title">
+                <h5>端口详情</h5>
+                <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn">
+                    <i class="fa fa-reply-all"></i> 返回上一级
+                </button>
+            </div>
+            <div class="modal-body form-horizontal p-t-n">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox ">
+                            <div class="ibox-content no-borders p-n">
+                                <div class="row">
+                                    <div class="col-sm-12" id="portList">
+
+                                        <div class="example-wrap text-right" >
+                                            <div class="ibox float-e-margins">
+<!--                                                <div class="ibox-title m-t-xs">
+                                                    <div class="ibox-tools"><a class="collapse-link"><i
+                                                            class="fa fa-chevron-up"></i></a>
+                                                    </div>
+                                                </div>-->
+                                                <div class="ibox-content h250" id="port"
+                                                     style="width: 100%;display: none">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--详情-->
+<div th:include="/informationpush/triggerlibdetailsnippet :: detailsnippet"></div>
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #dpiupgrade"></div>
+</body>
+</html>

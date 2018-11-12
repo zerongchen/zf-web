@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.export.HiveExportMapper">
+
+    <resultMap id="taskMap" type="java.util.Map">
+        <result property="id" column="id"/>
+        <result property="file_name" column="file_name"/>
+        <result property="download_status" column="download_status" />
+        <result property="file_type" column="file_type" />
+        <result property="export_status" column="export_status" />
+        <result property="hive_sql" column="hive_sql" jdbcType="BLOB" />
+        <result property="header" column="header" />
+        <result property="create_time" column="create_time" />
+        <result property="user_id" column="user_id" />
+        <result property="user_ip" column="user_ip" />
+    </resultMap>
+
+
+    <insert id="addExportTask" parameterType="java.util.Map">
+        INSERT INTO zf_v2_export_file_manage (
+        file_name
+        ,download_status
+        ,file_type
+        ,export_status
+        ,hive_sql
+        ,header
+        ,create_time
+        ,user_id
+        ,user_ip
+        )
+        VALUES
+        (#{file_name},#{download_status},#{file_type},#{export_status},#{hive_sql},#{header},#{create_time},#{user_id}
+        ,#{user_ip}
+        )
+    </insert>
+
+    <delete id="deleteExportTask" parameterType="java.util.Map">
+        DELETE FROM zf_v2_export_file_manage WHERE id=#{id}
+    </delete>
+
+    <update id="updateDownloadFile" parameterType="java.util.Map">
+        UPDATE zf_v2_export_file_manage SET download_status=#{download_status} WHERE id=#{id}
+    </update>
+
+    <select id="selectExportTask" resultType="hashMap" parameterType="java.util.Map">
+        select
+        id
+        ,file_name
+        ,download_status
+        ,file_type
+        ,export_status
+        ,cast(hive_sql as CHAR) as hive_sql
+        ,header
+        ,create_time
+        ,user_id
+        ,user_ip
+        from zf_v2_export_file_manage
+        WHERE download_status = #{download_status}
+        AND file_type = #{file_type}
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

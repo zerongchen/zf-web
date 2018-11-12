@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.MonitorTaskDetailMapper">
+  <resultMap id="MonitorTaskDetailMap" type="com.aotain.zongfen.model.monitor.MonitorTaskDetail">
+    <id column="TASK_ID" jdbcType="BIGINT" property="taskId" />
+    <result column="MONITOR_TASK_ID" jdbcType="BIGINT" property="monitorTaskId" />
+    <result column="TASK_NAME" jdbcType="VARCHAR" property="taskName" />
+    <result column="MONITOR_PARAMS" jdbcType="VARCHAR" property="monitorParams" />
+    <result column="DATA_ID" jdbcType="BIGINT" property="dataId" />
+    <result column="TASK_TYPE" jdbcType="INTEGER" property="taskType" />
+    <result column="TASK_SUBTYPE" jdbcType="INTEGER" property="taskSubtype" />
+    <result column="STATUS" jdbcType="SMALLINT" property="status" />
+    <result column="TASK_PARAMS" jdbcType="VARCHAR" property="taskParams" />
+    <result column="CREATETIME" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="COMPLETETIME" jdbcType="TIMESTAMP" property="completetime" />
+    <result column="CREATETIME_STR" jdbcType="VARCHAR" property="createtimeStr" />
+    <result column="COMPLETETIME_STR" jdbcType="VARCHAR" property="completetimeStr" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    TASK_ID, MONITOR_TASK_ID, TASK_NAME, MONITOR_PARAMS, DATA_ID, TASK_TYPE, TASK_SUBTYPE, 
+    STATUS, date_format(CREATETIME,'%Y-%m-%d %H:%i:%s') as CREATETIME_STR,
+    date_format(COMPLETETIME,'%Y-%m-%d %H:%i:%s') as COMPLETETIME_STR,TASK_PARAMS
+  </sql>
+ 
+  <select id="select" parameterType="java.lang.Long" resultMap="MonitorTaskDetailMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_monitor_task_detail
+    where TASK_ID = #{taskId,jdbcType=BIGINT}
+  </select>
+  
+    <select id="count" resultType="java.lang.Long">
+    select count(1) from zf_v2_monitor_task_detail
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectList" resultMap="MonitorTaskDetailMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_monitor_task_detail
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT}
+    ORDER BY COMPLETETIME DESC
+	LIMIT #{count,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskDetail">
+    insert into zf_v2_monitor_task_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        TASK_ID,
+      </if>
+      <if test="monitorTaskId != null">
+        MONITOR_TASK_ID,
+      </if>
+      <if test="taskName != null">
+        TASK_NAME,
+      </if>
+      <if test="monitorParams != null">
+        MONITOR_PARAMS,
+      </if>
+      <if test="dataId != null">
+        DATA_ID,
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE,
+      </if>
+      <if test="taskSubtype != null">
+        TASK_SUBTYPE,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="createtime != null">
+        CREATETIME,
+      </if>
+      <if test="completetime != null">
+        COMPLETETIME,
+      </if>
+      <if test="taskParams != null">
+        TASK_PARAMS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="monitorTaskId != null">
+        #{monitorTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskName != null">
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorParams != null">
+        #{monitorParams,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="taskType != null">
+        #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="taskSubtype != null">
+        #{taskSubtype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completetime != null">
+        #{completetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskParams != null">
+        #{taskParams,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskDetail">
+    update zf_v2_monitor_task_detail
+    <set>
+      <if test="monitorTaskId != null">
+        MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskName != null">
+        TASK_NAME = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorParams != null">
+        MONITOR_PARAMS = #{monitorParams,jdbcType=VARCHAR},
+      </if>
+      <if test="dataId != null">
+        DATA_ID = #{dataId,jdbcType=BIGINT},
+      </if>
+      <if test="taskType != null">
+        TASK_TYPE = #{taskType,jdbcType=INTEGER},
+      </if>
+      <if test="taskSubtype != null">
+        TASK_SUBTYPE = #{taskSubtype,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="createtime != null">
+        CREATETIME = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="completetime != null">
+        COMPLETETIME = #{completetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskParams != null">
+        TASK_PARAMS = #{taskParams,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TASK_ID = #{taskId,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

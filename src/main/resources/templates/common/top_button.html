@@ -1,0 +1,19 @@
+<div  th:fragment="commonbutton (add,singleadd,update,delete,detail,export)">
+
+		<button th:if="${add == true}" id="addButtonForRole" type="button" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" data-target="#myModaladd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+		<button th:if="${singleadd == true}" type="button" class="btn btn-outline btn-warning m-l-xs" id="singleadd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增行</button>
+		<button th:if="${detail == true}" type="button" class="btn btn-outline btn-success m-l-xs detailButton" data-toggle="modal" data-target="#myModaladetail"> <i class="fa fa-file-text" aria-hidden="true"></i> 详情</button>
+		<button th:if="${update == true}" type="button" class="btn btn-outline btn-info modifyButton" data-toggle="modal" data-target="updateModal"> <i class="fa fa-paste" aria-hidden="true"></i> 修改</button>
+		<a th:if="${export == true}" class="btn btn-success" id="exportData" ><i class="fa fa fa-download"></i> 导出</a>
+		<button th:if="${delete == true}" id="deleteButtonForRole" type="button" class="btn btn-outline btn-danger deleteButton" > <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+</div>
+
+<div  th:fragment="customButton (refresh,add,singleadd,update,delete,detail,export)">
+       <button th:if="${refresh == true}" type="button" class="btn btn-outline btn-info m-l-xs newRefreshButton" data-toggle="modal" data-target="#myModalRefresh"> <i class="fa fa-refresh" aria-hidden="true"></i> 刷新</button>
+		<button th:if="${add == true}" type="button" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" data-target="#myModaladd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+		<button th:if="${singleadd == true}" type="button" class="btn btn-outline btn-warning m-l-xs" id="singleadd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增行</button>
+		<button th:if="${detail == true}" type="button" class="btn btn-outline btn-success m-l-xs detailButton" data-toggle="modal" data-target="#myModaladetail"> <i class="fa fa-file-text" aria-hidden="true"></i> 详情</button>
+		<button th:if="${update == true}" type="button" class="btn btn-outline btn-info modifyButton" data-toggle="modal" data-target="updateModal"> <i class="fa fa-paste" aria-hidden="true"></i> 修改</button>
+		<a th:if="${export == true}" class="btn btn-success" id="exportData" ><i class="fa fa fa-download"></i> 导出</a>
+		<button th:if="${delete == true}" type="button" class="btn btn-outline btn-danger deleteButton" > <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+</div>

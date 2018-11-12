@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../../zf-common/2_src/1_trunk/zf-common/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../../../../zf-common/2_src/1_trunk/zf-common/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../../zf-common/2_src/1_trunk/zf-common/zf-common-config/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../../zf-common/2_src/1_trunk/zf-common/zf-common-policyapi/pom.xml" />
+        <option value="$PROJECT_DIR$/../../../../zf-common/2_src/1_trunk/zf-common/zf-common-utils/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8 (1)" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="trunkUrl" value="https://192.168.5.124/svn/1_developmentDW/ProvincialConvergence/zf-web/2_src/1_trunk/zf-web" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+</project>

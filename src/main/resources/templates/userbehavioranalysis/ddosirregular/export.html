@@ -1,0 +1,78 @@
+<div th:fragment="myExport">
+    <div class="modal inmodal fade" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+            	<div class="ibox-title" >
+                   <h5 >导出任务</h5>
+                   <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+               	</div>
+                <div class="modal-body form-inline">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form role="form" class="form-inline" id="exportForm">
+                                    <div class="form-group m-r-sm">
+                                        <label>攻击开始时间</label>
+                                        <input placeholder="开始日期" name="startTime" class="form-control" id="start_export">
+                                    </div>
+
+                                    <div class="form-group m-r-sm">
+                                        <label>到</label>
+                                        <input placeholder="结束日期" name="endTime" class="form-control" id="end_export">
+                                    </div>
+
+                                    <div class="form-group m-r-sm">
+                                        <label>用户组</label>
+                                        <select id="userGroupNo_export" name="userGroupNo_export" class="form-control" style="width:160px;">
+                                        </select>
+                                    </div>
+                                    <div class="form-group m-r-sm" th:name="moreSearchDiv_export">
+                                        <div class="form-group m-r-sm ">
+                                            <label>攻击类型</label>
+                                            <select id="appAttackType_export" name="appAttackType_export" class="form-control"
+                                                    style="width:160px;">
+                                                <option value="-1">请选择</option>
+                                                <option value="1">ICMP Redirection</option>
+                                                <option value="2">ICMP Unreacheble</option>
+                                                <option value="3">TCP anomaly Connection</option>
+                                                <option value="4">DNS Query Application Attack</option>
+                                                <option value="5">DNS Reply Application Attack</option>
+                                                <option value="6">SIP Application Attack</option>
+                                                <option value="7">HTTPS Application Attack</option>
+                                                <option value="8">HTTP Get Application Attack</option>
+                                                <option value="9">Challenge Collapsar Attack</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="checkbox">
+                                    <button th:authorized="zf203001_export" type="button" id="exportButton_export"
+                                            class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <!--<i class="fa fa-download"></i> 创建导出任务 <span class="caret"></span>-->
+                                         创建导出任务
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="text-left">
+                                <form role="form" class="form-inline" id="taskForm">
+                                    <div class="form-group m-r-sm" id="downStatus">
+                                        <label>任务清单</label>
+                                        <input name="downloadType" checked="checked" value="0" type="radio">未下载</input>
+                                        <input name="downloadType" value="1" type="radio">已下载</input>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="example-wrap text-right ">
+                            <div class="example">
+                                <table id="table_export" data-mobile-responsive="true" class="text-left text-nowrap">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

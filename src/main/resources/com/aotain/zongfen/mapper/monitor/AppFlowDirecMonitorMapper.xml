@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.AppFlowDirecMonitorMapper">
+  <resultMap id="AppFlowDirecMonitorMap" type="com.aotain.zongfen.dto.monitor.AppFlowDirecMonitorDTO">
+    <result column="stat_time" jdbcType="BIGINT" property="statTime" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+    <result column="create_file_num" jdbcType="INTEGER" property="createFileNum" />
+    <result column="create_file_size" property="createFileSize" />
+    <result column="create_file_record" jdbcType="BIGINT" property="createFileRecord" />
+    <result column="dateType" jdbcType="INTEGER" property="dateType" />
+  </resultMap>
+  
+  <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.AppFlowDirecMonitorDTO" resultMap="AppFlowDirecMonitorMap">
+     SELECT <choose>
+            <when test="dateType==3">
+            	3 as dateType,
+                FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') as statTime,
+                FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS create_time, 
+            </when>
+            <otherwise>
+            	2 as dateType,
+                FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') as statTime,
+                FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS create_time, 
+            </otherwise>
+        </choose>
+		SUM(a.file_num) AS create_file_num, 
+		SUM(a.file_size) AS create_file_size,
+		SUM(a.file_record) AS create_file_record
+	 FROM <choose>
+	 		<when test="dateType==3">
+	 			zf_v2_monitor_createfile_d a 
+	 		</when>
+	 		<otherwise>
+	 			zf_v2_monitor_createfile_h a
+	 		</otherwise>
+	 	  </choose> 
+	 <where>
+	  a.file_type = 452
+	  <if test="startTime != null and startTime != '' ">
+		  AND a.stat_time &gt;= UNIX_TIMESTAMP(#{startTime,jdbcType=VARCHAR})
+	  </if>
+	  <if test="endTime != null and endTime != '' ">
+		  AND a.stat_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endTime},' 23:59:59'))
+	  </if>
+	  GROUP BY a.stat_time
+	  ORDER BY a.stat_time ${orderBy}
+  </where>
+  </select>
+  
+  <select id="selectMaxSize" parameterType="com.aotain.zongfen.dto.monitor.AppFlowDirecMonitorDTO" resultType="java.lang.Long">
+     SELECT MAX(f.create_file_size)
+	 FROM (  SELECT 
+		SUM(a.file_size) AS create_file_size
+	 FROM <choose>
+	 		<when test="dateType==3">
+	 			zf_v2_monitor_createfile_d a 
+	 		</when>
+	 		<otherwise>
+	 			zf_v2_monitor_createfile_h a
+	 		</otherwise>
+	 	  </choose> 
+	 <where>
+	 	 a.file_type = 452 
+	 	 <if test="startTime != null and startTime != '' ">
+	    	AND a.stat_time &gt;= UNIX_TIMESTAMP(#{startTime,jdbcType=VARCHAR})
+	 	</if>
+	 	<if test="endTime != null and endTime != '' ">
+	    	AND a.stat_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endTime},' 23:59:59'))
+	 	</if>
+	 	</where> ) f
+  </select>
+</mapper>

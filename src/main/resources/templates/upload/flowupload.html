@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <input type="hidden" id="modifyAu" th:value=${modifyAu}>
+                <input type="hidden" id="redoAu" th:value=${redoAu}>
+                <input type="hidden" id="deleteAu" th:value=${deleteAu}>
+                <input type="hidden" name="packetType" th:value="${packetType}" />
+                <input type="hidden" name="packetSubtype" th:value="${packetSubtype}"/>
+                <input type="hidden" id="modelTypes" th:value="${authorized}"/>
+                <div th:authorized="${authorized}_query" class="form-group m-r-sm">
+                    <label>策略名称</label>
+                    <input type="text" class="form-control" id="searchMessageName" name="messageName"/>
+                </div>
+                <div th:authorized="${authorized}_query" class="form-group m-r-sm">
+                    <label >创建时间</label>
+                    <input placeholder="开始日期" name="searchStartTime" class="form-control" id="searchStart">
+                </div>
+
+                <div th:authorized="${authorized}_query" class="form-group m-r-sm">
+                    <label >到</label>
+                    <input placeholder="结束日期" name="searchEndTime" class="form-control" id="searchEnd">
+                </div>
+                <div class="checkbox">
+                    <button th:authorized="${authorized}_query" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <button th:authorized="${authorized}_add" type="button" id="commonButtonnewAddButton" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" > <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+                                        <button th:authorized="${authorized}_delete" type="button" id="commonButtondeleteButton" class="btn btn-outline btn-danger m-l-xs deleteButton"> <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+                                    </div>
+                                    <table th:authorized="${authorized}_query" id="table" data-mobile-responsive="true" class="text-left text-nowrap"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增-->
+<div th:include="/upload/addorupdatesnippet :: myaddorupdatesnippet" ></div>
+<div th:include="/common/add-usergroup-snippet :: add-usergroup-snippet"></div>
+<!--新增流量流向-->
+<div th:include="/upload/addAreaGroup :: myAddAreaGroup"></div>
+<!--新增ddos异常流量管理策略-->
+<div th:include="/upload/addddosorupdate :: ddosManageAddorupdate"></div>
+<!-- 新增web信息推送管理策略 -->
+<div th:include="/upload/addwebPushModal :: WebPushAddorupdate"></div>
+<!--   新增指定应用用户策略增加按钮弹出框  -->
+<div th:include="/upload/addAppUserModal :: appUserAddorUpdate"></div>
+
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #flowupload"></div>
+</body>
+</html>

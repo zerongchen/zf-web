@@ -1,0 +1,81 @@
+<div th:fragment="myaddorupdate">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="ibox-title">
+                    <h5>新增</h5> </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm" role="form">
+                                <div class="form-group" id="userTypeDIV">
+                                    <label class="col-md-1 control-label p-n">用户类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="adduserType" id="adduserType">
+                                            <option selected="selected" value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="userNameDiv" style="display: none;">
+                                    <div class="form-group" >
+                                        <label class="col-md-1 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="userName" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-3">
+                                        <span class="help-block m-b-none">
+                                            <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                <i class="fa fa-plus" aria-hidden="true"></i></a>
+                                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="puserGroup" style="display: none;">
+                                    <label class="col-md-1 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <select class="form-control selectpicker" name="userGroupId" id="userGroupId"  multiple data-live-search="true">
+                                        </select>
+                                    </div>
+                                    <a class="help-block" id="newAddGroup">新增组</a>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" name="bindMessageTypeInsert">
+                                    <label class="col-md-1 control-label p-n">策略类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="addbindMessageType">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="addbindMessageNo">
+                                        </select>
+                                    </div>
+                                    <div class="circle-picture help-block m-b-none">
+                                        <a href="#" class="fa fa-plus-circle text-green fa-lg"></a>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id="addSubmitBut">确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal" id="adddismissBut">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

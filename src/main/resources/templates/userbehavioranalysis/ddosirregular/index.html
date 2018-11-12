@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-left">
+            <form role="form" class="form-inline" id="searchForm">
+
+                <div class="form-group m-r-sm">
+                    <label>攻击开始时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="start">
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label>到</label>
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="end">
+                </div>
+
+                <div class="form-group m-r-sm ">
+                    <label>用户组</label>
+                    <select id="userGroupNo" name="userGroupNo" class="form-control" style="width:160px;">
+                        <option value="1">用户组1</option>
+                        <option value="2">用户组2</option>
+                    </select>
+                </div>
+
+                <div class="form-group m-r-sm" th:name="moreSearchDiv" >
+
+                    <div class="form-group m-r-sm ">
+                        <label>攻击类型</label>
+                        <select id="appAttackType" name="appAttackType" class="form-control" style="width:160px;">
+                            <option value="-1">请选择</option>
+                            <option value="1">ICMP Redirection</option>
+                            <option value="2">ICMP Unreacheble</option>
+                            <option value="3">TCP anomaly Connection</option>
+                            <option value="4">DNS Query Application Attack</option>
+                            <option value="5">DNS Reply Application Attack</option>
+                            <option value="6">SIP Application Attack</option>
+                            <option value="7">HTTPS Application Attack</option>
+                            <option value="8">HTTP Get Application Attack</option>
+                            <option value="9">Challenge Collapsar Attack</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="checkbox">
+                    <button th:authorized="zf203001_query" type="button" class="btn btn-primary" id="searchFormButton">
+                        查询
+                    </button>
+                    <button th:authorized="zf203001_export" type="button" id="exportButton"
+                            class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        <!--<i class="fa fa-download"></i>--> 导出 <!--<span class="caret"></span>-->
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right ">
+                                <div class="example">
+
+                                    <div class="ibox-content h250" id="ddosIrregularAttackChart"
+                                         style="height: 400px;border: 0;"></div>
+                                    <!--<div class="ibox-content h250" id="appTypeChart" style="height: 400px;border: 0;" ></div>-->
+                                    <table id="table" data-mobile-responsive="true" class="text-left text-nowrap">
+                                    </table>
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="/userbehavioranalysis/ddosirregular/detail :: dDosDetail"></div>
+<div th:include="/userbehavioranalysis/ddosirregular/export :: myExport"></div>
+
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #ddosIrregularAttack"></div>
+</body>
+</html>

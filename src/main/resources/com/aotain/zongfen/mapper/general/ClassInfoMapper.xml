@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.ClassInfoMapper">
+  <resultMap id="ClassInfotMap" type="com.aotain.zongfen.model.general.ClassInfo">
+    <result column="MESSAGE_TYPE" jdbcType="INTEGER" property="messageType" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="ZONGFEN_ID" jdbcType="INTEGER" property="zongfenId" />
+    <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+    <result column="OPERATE_TYPE" jdbcType="INTEGER" property="operateType" />
+  </resultMap>
+  
+  <!-- <resultMap id="ClassInfoDTOResultMap" type="com.aotain.zongfen.dto.general.ClassInfoDTO">
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="class_type" jdbcType="TINYINT" property="classType" />
+    <result column="class_file_name" jdbcType="VARCHAR" property="classFileName" />
+    <result column="server_ip" jdbcType="VARCHAR" property="serverIp" />
+    <result column="server_port" jdbcType="INTEGER" property="serverPort" />
+    <result column="sftp_username" jdbcType="VARCHAR" property="sftpUsername" />
+    <result column="sftp_password" jdbcType="VARCHAR" property="sftpPassword" />
+    <result column="bind_user_type" jdbcType="TINYINT" property="bindUserType" />
+    <result column="operate_type" jdbcType="TINYINT" property="operateType" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_oper" jdbcType="VARCHAR" property="createOper" />
+    <result column="modify_oper" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+  </resultMap> -->
+  
+  <sql id="fields" >
+    a.MESSAGE_TYPE as MESSAGE_TYPE,a.MESSAGE_NO as MESSAGE_NO,a.ZONGFEN_ID as ZONGFEN_ID,b.MESSAGE_NAME as MESSAGE_NAME
+  </sql>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.ClassInfo">
+    insert into zf_v2_gen_class_info (MESSAGE_TYPE, MESSAGE_NO, ZONGFEN_ID)
+    values (#{messageType,jdbcType=INTEGER}, #{messageNo,jdbcType=DECIMAL}, #{zongfenId,jdbcType=DECIMAL} )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.ClassInfo">
+    insert into zf_v2_gen_class_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageType != null">
+        MESSAGE_TYPE,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="zongfenId != null">
+        ZONGFEN_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageType != null">
+        #{messageType,jdbcType=INTEGER},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="zongfenId != null">
+        #{zongfenId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getClassInfos" parameterType="com.aotain.zongfen.model.general.ClassInfo" resultMap="ClassInfotMap">
+    SELECT <include refid="fields" /> 
+    from zf_v2_gen_class_info a LEFT JOIN  zf_v2_policy_messageno b
+    ON a.MESSAGE_TYPE  = b.MESSAGE_TYPE AND a.MESSAGE_NO = b.MESSAGE_NO
+    <trim prefix="where" prefixOverrides="and|or">  
+	    <if test="messageName !=null ">
+	      and b.MESSAGE_NAME LIKE  CONCAT(CONCAT('%', #{messageName}, '%'))
+	    </if>
+	    <if test="operateType !=null ">
+	      and b.OPERATE_TYPE = #{operateType}
+	    </if>
+    </trim>
+    order by b.MODIFY_TIME desc
+  </select>
+  
+  <select id="getByType" resultMap="ClassInfotMap">
+  	SELECT <include refid="fields" /> 
+  	from zf_v2_gen_class_info a LEFT JOIN  zf_v2_policy_messageno b
+    ON a.MESSAGE_TYPE  = b.MESSAGE_TYPE AND a.MESSAGE_NO = b.MESSAGE_NO
+    WHERE b.OPERATE_TYPE != 3 and a.MESSAGE_TYPE  = #{messageType,jdbcType=INTEGER}
+  </select>
+  
+  <update id="updateInfo" parameterType="com.aotain.zongfen.model.general.ClassInfo">
+    UPDATE zf_v2_gen_class_info
+    <set>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="zongfenId != null">
+        ZONGFEN_ID = #{zongfenId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <trim prefix="where" prefixOverrides="and|or">  
+	    <if test="messageType !=null ">
+	      and b.MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+	    </if>
+    </trim>
+  </update>
+  
+  <select id="getFileDetailByType" parameterType="java.lang.Integer" resultType="com.aotain.zongfen.dto.general.FileDetailListDTO">
+  	SELECT a.MESSAGE_NO messageNo,
+  		   a.MESSAGE_TYPE messageType,
+  		   b.CREATE_TIME createTime,
+  		   b.CLASS_FILE_NAME fileName,
+  		   c.ZONGFEN_IP server,
+  		   a.ZONGFEN_ID zongfenId,
+  		   b.FILE_TYPE fileType,
+  		   b.VERSION_NO versionNo,
+  		   d.MESSAGE_SEQUENCENO messageSequenceno
+  	FROM   ((zf_v2_gen_class_info a left join zf_v2_policy_messageno d
+  			on a.MESSAGE_NO = d.MESSAGE_NO AND a.MESSAGE_TYPE = d.MESSAGE_TYPE )
+  		    left join zf_v2_gen_class_filename b on a.MESSAGE_TYPE = b.MESSAGE_TYPE ) 
+  		   left join zf_v2_dev_zongfen c on a.ZONGFEN_ID = c.ZONGFEN_ID  
+  	WHERE a.MESSAGE_TYPE = #{messageType}
+  	ORDER BY a.MESSAGE_NO DESC
+  	LIMIT 3
+  </select>
+
+</mapper>

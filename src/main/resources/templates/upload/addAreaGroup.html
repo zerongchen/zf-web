@@ -1,0 +1,84 @@
+<div th:fragment="myAddAreaGroup">
+	<div class="modal inmodal modaladd fade" id="areaGroupModal" tabindex="-1"
+		role="dialog" aria-hidden="true" data-backdrop="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="ibox-title" >
+					<h5 id="h5title">添加流量流向策略</h5> </div>
+				<div class="modal-body form-horizontal">
+					<div class="row">
+						<div class="col-sm-12">
+						 <form id="saveOrUpdate"> 
+							<div class="form-group" id="messageNameMsg">
+								<label class="col-md-1 control-label p-n">策略名称</label>
+								<div class="col-md-4">
+									<input type="text" class="form-control" id="areaMessageName"  name="messageName" />
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group" id="internalMsg">
+								<label class="col-md-1 control-label p-n">源</label>
+								<div class="col-md-4">
+									<div class="tabs-container">
+										<ul class="nav nav-tabs">
+											<li class="active"><a data-toggle="tab" href="#tab1">源区域</a></li>
+											<li><a data-toggle="tab" href="#tab2">源IDC</a></li>
+										</ul>
+										<div class="tab-content">
+											<div id="tab1" class="tab-pane active">
+												<ul id="internalAreaTree" class="ztree"></ul>
+											</div>
+											<div id="tab2" class="tab-pane">
+												<ul id="internalIdcTree" class="ztree"></ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="col-md-3">
+									<span class="help-block m-b-none">
+										<i class="fa fa-info-circle"></i> 支持输入省、地市、区域或运营商名称
+									</span>
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group" id="externalMsg">
+								<label class="col-md-1 control-label p-n">目的</label>
+								<div class="col-md-4">
+									<div class="tabs-container">
+										<ul class="nav nav-tabs">
+											<li class="active"><a data-toggle="tab" href="#tab3">目的区域</a>
+											</li>
+											<li><a data-toggle="tab" href="#tab4">目的IDC</a></li>
+										</ul>
+										<div class="tab-content">
+											<div id="tab3" class="tab-pane active">
+												<ul id="externalAreaTree" class="ztree"></ul>
+											</div>
+											<div id="tab4" class="tab-pane">
+												<ul id="externalIdcTree" class="ztree"></ul>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-3">
+									<span class="help-block m-b-none"> 
+									<i class="fa fa-info-circle"></i> 支持输入省、地市、区域或运营商名称
+									</span>
+								</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+							<div class="form-group m-t">
+								<div class="col-md-offset-1 col-md-3">
+									<button type="button" class="btn btn-primary" id="saveBtn">确定</button>
+									<button type="button" class="btn btn-white m-l-sm" data-dismiss="modal" id="cancelBtn">关闭</button>
+								</div>
+							</div>
+						</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

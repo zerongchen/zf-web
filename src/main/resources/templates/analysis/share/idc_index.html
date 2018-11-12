@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"><meta charset="utf-8"></head>
+<body class="gray-bg">
+<div id="main">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-12">
+            <div class="text-right">
+                <form role="form" class="form-inline" id="searchForm">
+                    <input type="hidden" name="probetype" value="1">
+                    <!--<div class="form-group m-r-sm">
+                        <label>时间粒度</label>
+                        <div class="btn-group" id="dateTypeSelect">
+                            <button class="btn btn-success btn-rounded" name="dateType" value="2" id="dateTypeD" type="button">按天</button>
+                            <button class="btn btn-white btn-rounded" name="dateType" value="3" id="dateTypeW" type="button">按周</button>
+                            <button class="btn btn-white btn-rounded" name="dateType" value="4" id="dateTypeM" type="button">按月</button>
+                        </div>
+                    </div>-->
+                    <div class="form-group m-r-sm" id="dateTypeSelect">
+                        <label>时间粒度</label>
+                        <button name="dateType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按天</button>
+                        <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按周</button>
+                        <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="4">按月</button>
+                    </div>
+                    <div class="form-group m-r-sm">
+                        <label>统计时间</label>
+                        <input placeholder="统计时间" class="form-control layer-date "  name="stateTime" id="state" />
+                    </div>
+                    <div class="form-group m-r-sm" >
+                        <label>机房</label>
+                            <select class="form-control" name="areaid" id="areaId">
+                            </select>
+                    </div>
+
+                    <div class="checkbox">
+                        <button th:authorized="zf202004_query" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                        <div th:replace="/common/exportbtn::exportChoose" ></div>
+                        <button class="btn btn-outline btn-link moreSearchCondition" type="button">更多条件查询</button>
+                    </div>
+
+                    <div class="text-left" name="moreSearchDiv" style="display: none">
+                        <div class="form-group m-r-sm" >
+                            <label>用户帐号</label>
+                            <input class="form-control" name="useraccount" id="useraccount">
+                            </input>
+                        </div>
+
+                        <div class="form-group m-r-sm" >
+                            <label>用户IP</label>
+                            <input class="form-control" name="userip" id="userip">
+                            </input>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeinright">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="example-wrap text-right ">
+                                    <div class="example">
+                                            <table th:authorized="zf202004_query" id="table" data-mobile-responsive="true" class="text-left text-nowrap">
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div th:include="/common/footer :: myfooter"></div>
+    <div th:include="/common/footer :: #idcshare"></div>
+</body>
+</html>

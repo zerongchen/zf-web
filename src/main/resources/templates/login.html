@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN"
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+        
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title th:text="登录"></title>
+    <meta name="keywords" th:content="省汇聚综分系统" />
+    <meta name="description" th:content="省汇聚综分系统" />
+<!-- <meta name="_csrf" th:content="${_csrf.token}"/> -->
+<!-- <meta name="_csrf_header" th:content="${_csrf.headerName}"/> -->
+
+<!-- basic styles -->
+ <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link th:href="@{{path}/static/css/bootstrap.min14ed.css?v=3.3.6(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/font-awesome.min93e3.css?v=4.4.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/animate.min.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/style.min862f.css?v=4.1.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/plugins/bootstrap-table/bootstrap-table.min.css(path=${contextPath})}" rel="stylesheet" />
+    <!--login -->
+    <link th:href="@{{path}/static/css/login.min.css(path=${contextPath})}" rel="stylesheet" />
+
+    <!--<script th:src="@{{path}/static/js/login.js(path=${contextPath})}" />-->
+</head>
+
+<body class="signin">
+    <div class="signinpanel">
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="signin-info">
+                    <div class="logopanel m-b">
+                        <h1>[ DPI汇聚分析平台 ]</h1>
+                    </div>
+                    <!--<div class="m-b"></div>
+                    <h4>欢迎您 <strong>王小丫</strong></h4>-->
+                    <div class="m-b-sm">
+                          <img width="150" height="150" th:src="@{static/img/isms_weixin.png}" alt=" 关注微信号，接收推送信息" />
+                    </div>
+                    <strong>关注微信号，接收推送信息</strong>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <form method="post" id="loginForm" th:action="@{/dealLogin}">
+                    <!--<h4 class="no-margins text-success">登录：</h4>-->
+                    <p class="m-t-md text-success">登录到DPI汇聚分析平台</p>
+                    <input id="username" name="username" type="text" class="form-control uname" placeholder="用户名" />
+                    <input id="password" name="password" type="password" class="form-control pword m-b" placeholder="密码" />
+                    <div>
+                        <input class="form-control" style="color:#333" name="verificationCode" type="text"  placeholder="验证码" />
+                        <img id="validateImg" th:src="@{/code(path=${contextPath})}">
+                        <a href="#" id="flushBtn">点击刷新</a>
+                    </div>
+                    <div id="errorCode">
+                        <div th:if="${errorCode==1}"><strong th:utext="${message}" style="color:#FF4040;"></strong></div>
+                        <div th:if="${errorCode==2}"><strong th:utext="${message}" style="color:#FF4040;"></strong></div>
+                    </div>
+                    <button id="submitBtn" class="btn btn-success btn-block" >登录</button>
+                </form>
+            </div>
+        </div>
+        <div class="signup-footer">
+            <div class="pull-left">
+                版权所有© 中国电信集团公司
+            </div>
+        </div>
+    </div>
+</body>
+
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #login"></div>
+</html>

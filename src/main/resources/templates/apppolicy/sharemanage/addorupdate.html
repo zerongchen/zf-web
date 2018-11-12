@@ -1,0 +1,186 @@
+<div th:fragment="myaddorupdate">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                        <h5 id="title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <div class="form-group" id="nameMessage">
+                                	<input type="hidden" id="messageNo" class="form-control" />
+                                	<input type="hidden" id="shareId" class="form-control" />
+                                    <label class="col-md-1 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="addPolicyName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="typeMessage">
+                                    <label class="col-md-1 control-label p-n">控制类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="controlType">
+                                            <option selected="" value="">请选择</option>
+                                            <option value="1">推送警示信息</option>
+                                            <option value="32">重置所有Http链接</option>
+                                            <option value="33">按1/2比例重置Http链接</option>
+                                            <option value="34">按1/3比例重置Http链接</option>
+                                            <option value="35">按1/4比例重置Http链接</option>
+                                            <option value="36">按1/5比例重置Http链接</option>
+                                            <option value="37">按1/6比例重置Http链接</option>
+                                            <option value="38">按1/7比例重置Http链接</option>
+                                            <option value="39">按1/8比例重置Http链接</option>
+                                            <option value="40">按1/9比例重置Http链接</option>
+                                            <option value="41">按1/10比例重置Http链接</option>
+                                            <option value="42">按1/11比例重置Http链接</option>
+                                            <option value="43">按1/12比例重置Http链接</option>
+                                            <option value="44">按1/13比例重置Http链接</option>
+                                            <option value="45">按1/14比例重置Http链接</option>
+                                            <option value="46">按1/15比例重置Http链接</option>
+                                            <option value="47">按1/16比例重置Http链接</option>
+                                            <option value="48">重置TCP链接</option>
+                                            <option value="49">按1/2比例重置TCP链接</option>
+                                            <option value="50">按1/3比例重置TCP链接</option>
+                                            <option value="51">按1/4比例重置TCP链接</option>
+                                            <option value="52">按1/5比例重置TCP链接</option>
+                                            <option value="53">按1/6比例重置TCP链接</option>
+                                            <option value="54">按1/7比例重置TCP链接</option>
+                                            <option value="55">按1/8比例重置TCP链接</option>
+                                            <option value="56">按1/9比例重置TCP链接</option>
+                                            <option value="57">按1/10比例重置TCP链接</option>
+                                            <option value="58">按1/11比例重置TCP链接</option>
+                                            <option value="59">按1/12比例重置TCP链接</option>
+                                            <option value="60">按1/13比例重置TCP链接</option>
+                                            <option value="61">按1/14比例重置TCP链接</option>
+                                            <option value="62">按1/15比例重置TCP链接</option>
+                                            <option value="63">按1/16比例重置TCP链接</option>
+                                            <option value="64">对某类应用进行丢弃</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="appTypeMessage">
+                                    <label class="col-md-1 control-label p-n">应用类型</label>
+                                    <div class="col-md-3" >
+	                                    <select  id="appType" class="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="advUrlMessage">
+                                    <label class="col-md-1 control-label p-n">警示信息</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id ="advUrl" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="ratioMessage">
+                                    <label class="col-md-1 control-label p-n">丢包比例</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id ="packetDropRatio" placeholder="0-100" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group ">
+                                    <label class="col-md-1 control-label p-n">策略有效期</label>
+                                    <div class="col-md-3">
+                                    <input placeholder="开始日期" class="form-control" id="start">
+                               		</div>
+                               		<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不输入开始时间，默认系统当前时间</span></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                	<label class="col-md-1 control-label p-n">到</label>
+                                	<div class="col-md-3">
+                                    <input placeholder="结束日期" class="form-control" id="end">
+                                	</div>
+                                	<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不输入结束日期，默认长期有效</span></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+					                <label class="col-md-1 control-label p-n">管理时间</label>
+					                <div class="col-md-9" id="webTimebar">
+                						 <ul class="timeul">
+							      			<li><input type="button" value="0"/></li>
+											<li><input type="button" value="1"/></li>
+											<li><input type="button" value="2"/></li>
+											<li><input type="button" value="3"/></li>
+											<li><input type="button" value="4"/></li>
+											<li><input type="button" value="5"/></li>
+											<li><input type="button" value="6"/></li>
+											<li><input type="button" value="7"/></li>
+											<li><input type="button" value="8"/></li>
+											<li><input type="button" value="9"/></li>
+											<li><input type="button" value="10"/></li>
+											<li><input type="button" value="11"/></li>
+											<li><input type="button" value="12"/></li>
+											<li><input type="button" value="13"/></li>
+											<li><input type="button" value="14"/></li>
+											<li><input type="button" value="15"/></li>
+											<li><input type="button" value="16"/></li>
+											<li><input type="button" value="17"/></li>
+											<li><input type="button" value="18"/></li>
+											<li><input type="button" value="19"/></li>
+											<li><input type="button" value="20"/></li>
+											<li><input type="button" value="21"/></li>
+											<li><input type="button" value="22"/></li>
+											<li><input type="button" value="23"/></li>
+											<li class="m-l-sm"><i class="fa fa-square-o checkall"></i><span>全选</span></li>
+											<li class="m-l-sm" id="tips"><span class="m-b-none"> <i class="fa fa-info-circle"></i> 每格为1小时，必须选择否则策略无效</span></li>
+										</ul>
+                				</div>
+                			</div>
+                			<div class="hr-line-dashed"></div>
+                			<div class="form-group" >
+                                <label class="col-md-1 control-label p-n">绑定用户</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="userType">
+                                        <option value="0">全用户</option>
+                                        <option value="1">账号</option>
+                                        <option value="2">IP地址</option>
+                                        <option value="3">用户组</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                                <div id="userNameDiv" style="display: none;">
+                                    <div class="form-group" >
+                                        <label class="col-md-1 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="userName" id="userName" class="form-control">
+                                        </div>
+                                        <div class="col-md-1">
+                                            <span class="help-block m-b-none">
+                                                <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                 </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="puserGroup" style="display: none;">
+                                    <label class="col-md-1 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <select class="form-control selectpicker" name="puserGroup" id="puserGroupid"  multiple data-live-search="true">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-1">
+                                    	<a th:if="${session.zf103001_add}==1" class="help-block" id="newAddGroup">新增组</a>
+                                    </div>
+                                </div>
+                          </form>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">保存</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

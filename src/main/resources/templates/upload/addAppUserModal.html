@@ -1,0 +1,150 @@
+<div th:fragment="appUserAddorUpdate">
+    <div class="modal inmodal fade" id="addAppUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <!--<div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">新增</h4>
+                </div>-->
+                <div class="ibox-title">
+                    <h5 id="h5title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="appUserAddOrupdateForm">
+                                <input type="hidden" id="messageNo" name="messageNo"/>
+                                <div class="form-group" id="messageName">
+                                    <label class="col-md-2 control-label p-n">策略名称</label>
+                                    <div class="col-md-3 messageName">
+                                        <input type="text" name="messageName" class="form-control" />
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+                                <div class="form-group" >
+                                    <label class="col-md-2 control-label p-n">应用类型</label>
+                                    <div class="col-md-3 appType">
+                                        <select class="form-control" id="appType">
+                                            <!--<option value="0">文本框</option>
+                                            <option value="1">密码框</option>
+                                            <option value="2">下拉框</option>
+                                            <option value="3">多选框</option>
+                                            <option value="4">单选框</option>-->
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" >
+                                    <label class="col-md-2 control-label p-n">子应用</label>
+                                    <div class="col-md-3 appId">
+                                        <select class="form-control" id="appId">
+                                            <!--<option value="0">文本框</option>
+                                            <option value="1">密码框</option>
+                                            <option value="2">下拉框</option>
+                                            <option value="3">多选框</option>
+                                            <option value="4">单选框</option>-->
+                                        </select>
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+                                <div class="form-group" id="appName">
+                                    <label class="col-md-2 control-label p-n">自定义应用名称</label>
+                                    <div class="col-md-3 appName">
+                                        <input type="text" name="appName" class="form-control" />
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+
+                                <div class="form-group" id="startTime">
+                                    <label class="col-md-2 control-label p-n">统计开始时间</label>
+                                    <div class="col-md-3 appStart">
+                                        <input placeholder="开始时间" name="startTime" class="form-control" id="appStart">
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="endTime">
+                                    <label class="col-md-2 control-label p-n">结束时间</label>
+                                    <div class="col-md-3 appEnd">
+                                        <input placeholder="结束时间" name="endTime" class="form-control" id="appEnd">
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="userTypeDiv">
+                                    <label class="col-md-2 control-label p-n">绑定用户</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="userType" id="userType">
+                                            <option selected="" value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!--<div class="hr-line-dashed"></div>
+                                <div class="form-group" id="userTypeDIV">
+                                    <label class="col-md-1 control-label p-n">绑定用户</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="userType" id="userType">
+                                            <option selected="" value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="userNameDiv" style="display: none;">
+                                    <div class="form-group" >
+                                        <label class="col-md-1 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="userName" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <span class="help-block m-b-none">
+                                                <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i></a>
+
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group" id="puserGroup" style="display: none;">
+                                    <label class="col-md-1 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <select class="form-control selectpicker" name="puserGroup" id="puserGroupid"  multiple data-live-search="true">
+                                        </select>
+                                    </div>
+                                    <a class="help-block" id="newAddGroup">新增组</a>
+                                </div>-->
+
+                                <!--<div class="form-group" >
+                                    <label class="col-md-1 control-label p-n">绑定用户</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="userType">
+                                            <option value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                            <option value="4">未绑定</option>
+                                        </select>
+                                    </div>
+                                    &lt;!&ndash;<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>&ndash;&gt;
+                                </div>-->
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "appUserAddSubmitBut" >确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" id = "appUserAddCloseBut" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

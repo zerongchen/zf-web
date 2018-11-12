@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.TriggerRelationMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.TriggerRelation">
+    <result column="TRIGGER_ID" jdbcType="INTEGER" property="triggerId" />
+    <result column="TRIGGER_HOST_LISTID" jdbcType="INTEGER" property="triggerHostListid" />
+    <result column="TRIGGER_KW_LISTID" jdbcType="INTEGER" property="triggerKwListid" />
+  </resultMap>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.TriggerRelation">
+    insert into zf_v2_gen_trigger_relation (TRIGGER_ID, TRIGGER_HOST_LISTID, TRIGGER_KW_LISTID
+      )
+    values (#{triggerId,jdbcType=INTEGER}, #{triggerHostListid,jdbcType=INTEGER}, #{triggerKwListid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.TriggerRelation">
+    insert into zf_v2_gen_trigger_relation
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="triggerId != null">
+        TRIGGER_ID,
+      </if>
+      <if test="triggerHostListid != null">
+        TRIGGER_HOST_LISTID,
+      </if>
+      <if test="triggerKwListid != null">
+        TRIGGER_KW_LISTID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="triggerId != null">
+        #{triggerId,jdbcType=INTEGER},
+      </if>
+      <if test="triggerHostListid != null">
+        #{triggerHostListid,jdbcType=INTEGER},
+      </if>
+      <if test="triggerKwListid != null">
+        #{triggerKwListid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insertHostArrays">
+    INSERT INTO zf_v2_gen_trigger_relation (TRIGGER_ID, TRIGGER_HOST_LISTID)VALUES
+    <foreach collection="array" index="index" item="item" separator=",">
+      (
+      #{triggerId},
+      #{item}
+      )
+    </foreach>
+  </insert>
+  
+  <insert id="insertKwArrays">
+    INSERT INTO zf_v2_gen_trigger_relation (TRIGGER_ID, TRIGGER_KW_LISTID)VALUES
+    <foreach collection="array" index="index" item="item" separator=",">
+      (
+      #{triggerId},
+      #{item}
+      )
+    </foreach>
+  </insert>
+  
+  <delete id="deleteByTriggerId">
+    DELETE FROM zf_v2_gen_trigger_relation WHERE TRIGGER_ID = #{triggerId}
+  </delete>
+  
+  <delete id="deleteByTriggerHostId">
+    DELETE FROM zf_v2_gen_trigger_relation WHERE TRIGGER_HOST_LISTID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </delete>
+  
+  <delete id="deleteByTriggerKwId">
+    DELETE FROM zf_v2_gen_trigger_relation WHERE TRIGGER_KW_LISTID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </delete>
+  
+  <select id="getRelationTriggerIdByHostListId" resultType="java.lang.Integer">
+    select TRIGGER_ID FROM zf_v2_gen_trigger_relation WHERE TRIGGER_HOST_LISTID = #{id}
+  </select>
+  
+  <select id="getRelationTriggerIdByKwListId" resultType="java.lang.Integer">
+    select TRIGGER_ID FROM zf_v2_gen_trigger_relation WHERE TRIGGER_KW_LISTID = #{id}
+  </select>
+
+
+</mapper>

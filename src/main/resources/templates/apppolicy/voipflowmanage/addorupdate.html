@@ -1,0 +1,170 @@
+<div th:fragment="myaddorupdate">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="h5title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <div class="form-group" id="nameMessage">
+                                	<input type="hidden" id="messageNo" class="form-control" />
+                                	<input type="hidden" id="voipFlowId" class="form-control" />
+                                    <label class="col-md-2 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="messageName" id="messageName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="interfereTypeSelDiv">
+                                    <label class="col-md-2 control-label p-n">干扰类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="interfereTypeSel">
+                                            <option selected="" value="">请选择</option>
+                                            <option value="1">信令干扰</option>
+                                            <option value="2">噪音干扰</option>
+                                            <option value="32">回音干扰 </option>
+                                            <option value="33">其它</option>
+                                        </select>
+                                    </div>
+                                    <!--<label class="col-md-1 control-label p-n inter">干扰强度</label>
+                                    <div class="col-md-1 inter">
+                                    	<input type="text" id="interfereLevel" title="请输入数字" class="form-control" />
+                                    </div>
+                                    <div class="col-md-2 inter" id="typeMessage"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i>共16级，1-16逐级增强</span></div>-->
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="dirMessage">
+                                    <label class="col-md-2 control-label p-n">干扰方向</label>
+                                    <div class="col-md-3" >
+	                                    <select  id="interfereSel" class="form-control">
+											<option selected="" value="">请选择</option>
+                                            <option value="1">仅干扰受控区域内的通话方</option>
+                                            <option value="2">仅干扰与受控区域内用户通话的远方</option>
+                                            <option value="3">通话双方的通话都受到干扰</option>
+	                                    </select>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group war" id="gwMessage">
+                                    <label class="col-md-2 control-label p-n">网关IP</label>
+                                    <div class="col-md-3">
+                                        <textarea class="form-control" placeholder="每行一个IP，如192.168.1.2" id="gwIp"></textarea>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group war" id="keeperMessage">
+                                    <label class="col-md-2 control-label p-n">网守IP</label>
+                                    <div class="col-md-3">
+                                    	<textarea class="form-control" placeholder="每行一个IP，如192.168.1.2" id="gwKeeperIp"></textarea>
+                                    </div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group ">
+                                    <label class="col-md-2 control-label p-n">策略有效期</label>
+                                    <div class="col-md-3">
+                                    <input placeholder="开始日期" class="form-control" id="start">
+                               		</div>
+                               		<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不输入开始时间，默认系统当前时间</span></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                	<label class="col-md-2 control-label p-n">到</label>
+                                	<div class="col-md-3">
+                                    <input placeholder="结束日期" class="form-control" id="end">
+                                	</div>
+                                	<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不输入结束日期，默认长期有效</span></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+					                <label class="col-md-2 control-label p-n">管理时间</label>
+					                <div class="col-md-9" id="voipTimebar">
+                						 <ul class="timeul">
+							      			<li><input type="button" value="0"/></li>
+											<li><input type="button" value="1"/></li>
+											<li><input type="button" value="2"/></li>
+											<li><input type="button" value="3"/></li>
+											<li><input type="button" value="4"/></li>
+											<li><input type="button" value="5"/></li>
+											<li><input type="button" value="6"/></li>
+											<li><input type="button" value="7"/></li>
+											<li><input type="button" value="8"/></li>
+											<li><input type="button" value="9"/></li>
+											<li><input type="button" value="10"/></li>
+											<li><input type="button" value="11"/></li>
+											<li><input type="button" value="12"/></li>
+											<li><input type="button" value="13"/></li>
+											<li><input type="button" value="14"/></li>
+											<li><input type="button" value="15"/></li>
+											<li><input type="button" value="16"/></li>
+											<li><input type="button" value="17"/></li>
+											<li><input type="button" value="18"/></li>
+											<li><input type="button" value="19"/></li>
+											<li><input type="button" value="20"/></li>
+											<li><input type="button" value="21"/></li>
+											<li><input type="button" value="22"/></li>
+											<li><input type="button" value="23"/></li>
+											<li class="m-l-sm"><i class="fa fa-square-o checkall"></i><span>全选</span></li>
+											<!--<li class="m-l-sm" id="tips"><span class="m-b-none"> <i class="fa fa-info-circle"></i> 每格为1小时，必须选择否则策略无效</span></li>-->
+										</ul>
+                				</div>
+                			</div>
+
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="userTypeDIV">
+                                <label class="col-md-2 control-label p-n">绑定用户</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="userType" id="userType">
+                                        <option selected="" value="0">全用户</option>
+                                        <option value="1">账号</option>
+                                        <option value="2">IP地址</option>
+                                        <option value="3">用户组</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="userNameDiv" style="display: none;">
+                                <div class="form-group" >
+                                    <label class="col-md-2 control-label p-n"></label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="userName" class="form-control">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <span class="help-block m-b-none">
+                                            <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                <i class="fa fa-plus" aria-hidden="true"></i></a>
+
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group" id="puserGroup" style="display: none;">
+                                <label class="col-md-2 control-label p-n"></label>
+                                <div class="col-md-3">
+                                    <select class="form-control selectpicker" name="puserGroup" id="puserGroupid"  multiple data-live-search="true">
+                                    </select>
+                                </div>
+                                <a th:if="${session.zf103001_add}==1" class="help-block" id="newAddGroup">新增组</a>
+                            </div>
+
+                          </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">保存</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

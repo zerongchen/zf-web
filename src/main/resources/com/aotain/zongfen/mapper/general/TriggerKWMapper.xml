@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.TriggerKWMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.TriggerKW">
+    <result column="TRIGGER_KW_LISTID" jdbcType="DECIMAL" property="triggerKwListid" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="TRIGGER_KW_LISTNAME" jdbcType="VARCHAR" property="triggerKwListname" />
+    <result column="KW_NUM" jdbcType="DECIMAL" property="kwNum" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operationType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+
+  </resultMap>
+  
+  <resultMap id="TriggerKWDTOMap" type="com.aotain.zongfen.dto.general.TriggerKWDTO">
+    <result column="TRIGGER_KW_LISTID" jdbcType="DECIMAL" property="triggerKwListid" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="TRIGGER_KW_LISTNAME" jdbcType="VARCHAR" property="triggerKwListname" />
+    <result column="KW_NUM" jdbcType="DECIMAL" property="kwNum" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  
+  <insert id="insert" useGeneratedKeys="true" keyProperty="triggerKwListid" parameterType="com.aotain.zongfen.model.general.TriggerKW">
+    insert into zf_v2_gen_trigger_kw (MESSAGE_NO,TRIGGER_KW_LISTNAME,
+      KW_NUM,  OPERATE_TYPE,CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME)
+    values (#{messageNo,jdbcType=DECIMAL}, #{triggerKwListname,jdbcType=VARCHAR},
+      #{kwNum,jdbcType=DECIMAL},  #{operationType,jdbcType=DECIMAL},
+      #{createOper,jdbcType=VARCHAR},#{modifyOper,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},#{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="triggerKwListid" parameterType="com.aotain.zongfen.model.general.TriggerKW">
+    insert into zf_v2_gen_trigger_kw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="triggerKwListname != null">
+        TRIGGER_KW_LISTNAME,
+      </if>
+      <if test="kwNum != null">
+        KW_NUM,
+      </if>
+      <if test="operationType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+
+    </trim>
+
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="triggerKwListname != null">
+        #{triggerKwListname,jdbcType=VARCHAR},
+      </if>
+      <if test="kwNum != null">
+        #{kwNum,jdbcType=DECIMAL},
+      </if>
+      
+      <if test="operationType != null">
+        #{operationType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP}
+      </if>
+
+    </trim>
+  </insert>
+
+  <update id="updateSelective" parameterType="com.aotain.zongfen.model.general.TriggerKW">
+      UPDATE zf_v2_gen_trigger_kw
+      SET
+      <trim>
+        OPERATE_TYPE = 2,
+        <if test="messageNo != null">
+          MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+        </if>
+        <if test="triggerKwListname != null">
+          TRIGGER_KW_LISTNAME = #{triggerKwListname,jdbcType=VARCHAR},
+        </if>
+        <if test="kwNum != null">
+          KW_NUM = #{kwNum,jdbcType=DECIMAL},
+        </if>
+        <if test="createOper != null">
+          CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+        </if>
+        <if test="modifyOper != null">
+          MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+        </if>
+        <if test="createTime != null">
+          CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="modifyTime != null">
+          MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP}
+        </if>
+      </trim>
+    where TRIGGER_KW_LISTID = #{triggerKwListid}
+  </update>
+  
+  <select id="getTriggerKW" parameterType="com.aotain.zongfen.model.general.TriggerKW" resultMap="TriggerKWDTOMap" >
+    
+    SELECT TRIGGER_KW_LISTID, MESSAGE_NO,TRIGGER_KW_LISTNAME, KW_NUM,
+            OPERATE_TYPE,CREATE_OPER,MODIFY_OPER, CREATE_TIME,MODIFY_TIME
+    FROM zf_v2_gen_trigger_kw
+    WHERE OPERATE_TYPE != 3
+    <if test="triggerKwListname!=null">
+      AND TRIGGER_KW_LISTNAME like concat('%',#{triggerKwListname},'%')
+    </if>
+    <if test="startTime != null and startTime!=''">
+  		AND date_format(CREATE_TIME,'%Y-%m-%d') &gt;= #{startTime}
+  	</if>
+  	<if test="endTime != null and endTime!=''">
+  		AND date_format(CREATE_TIME,'%Y-%m-%d') &lt;= #{endTime}
+  	</if>
+    ORDER BY TRIGGER_KW_LISTID DESC
+  </select>
+  
+  <select id="getMaxId" resultType="java.lang.Long">
+    select max(TRIGGER_KW_LISTID) from zf_v2_gen_trigger_kw
+  </select>
+  
+  <update id="deleteById">
+    UPDATE zf_v2_gen_trigger_kw
+    SET OPERATE_TYPE = 3
+    WHERE TRIGGER_KW_LISTID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  
+  </update>
+  
+  <update id="updateNum" parameterType="com.aotain.zongfen.model.general.TriggerKW" >
+    UPDATE zf_v2_gen_trigger_kw SET KW_NUM = #{kwNum}
+    WHERE TRIGGER_KW_LISTID = #{triggerKwListid}
+  </update>
+
+  <select id="selectByListName" parameterType="string" resultType="int">
+      SELECT count(*)
+      FROM zf_v2_gen_trigger_kw
+      WHERE TRIGGER_KW_LISTNAME = #{triggerKwListname}
+      and OPERATE_TYPE != 3
+  </select>
+
+  <select id="selectByListId" parameterType="long" resultMap="BaseResultMap">
+    SELECT *
+    FROM zf_v2_gen_trigger_kw
+    WHERE TRIGGER_KW_LISTID = #{triggerKwListId}
+    and OPERATE_TYPE != 3
+  </select>
+</mapper>

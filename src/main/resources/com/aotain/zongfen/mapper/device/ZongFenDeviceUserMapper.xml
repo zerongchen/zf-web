@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.ZongFenDeviceUserMapper">
+  <resultMap id="deviceUsers" type="com.aotain.zongfen.model.device.ZongFenDeviceUser">
+   	<id column="ZONGFEN_ID" jdbcType="INTEGER" property="zongfenId" />
+   	<result column="PACKET_TYPE" jdbcType="INTEGER" property="packetType" />
+   	<result column="PACKET_SUBTYPE" jdbcType="INTEGER" property="packetSubType" />
+   	<result column="ZONGFEN_FTP_USER" jdbcType="VARCHAR" property="zongfenFtpUser" />
+   	<result column="ZONGFEN_FTP_PWD" jdbcType="VARCHAR" property="zongfenFtpPwd" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    a.ZONGFEN_ID, a.PACKET_TYPE, a.PACKET_SUBTYPE, a.ZONGFEN_FTP_USER, a.ZONGFEN_FTP_PWD
+  </sql>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.ZongFenDeviceUser">
+    insert into zf_v2_dev_zongfen_user ( ZONGFEN_ID, PACKET_TYPE, PACKET_SUBTYPE, ZONGFEN_FTP_USER, ZONGFEN_FTP_PWD
+      )
+    values ( #{zongfenId,jdbcType=INTEGER}, 
+      #{packetType,jdbcType=INTEGER}, #{packetSubType,jdbcType=INTEGER}, #{zongfenFtpUser,jdbcType=VARCHAR}, 
+      #{zongfenFtpPwd,jdbcType=VARCHAR}
+)
+  </insert>
+  
+  <insert id="insertList" parameterType="java.util.List">
+  	 insert into zf_v2_dev_zongfen_user ( ZONGFEN_ID, PACKET_TYPE, PACKET_SUBTYPE, ZONGFEN_FTP_USER, ZONGFEN_FTP_PWD)
+    values 
+    <foreach collection="list" index="index" item="item" separator=","> 
+    ( #{item.zongfenId,jdbcType=INTEGER}, #{item.packetType,jdbcType=INTEGER}, #{item.packetSubType,jdbcType=INTEGER},
+    	#{item.zongfenFtpUser,jdbcType=VARCHAR}, #{item.zongfenFtpPwd,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <delete id="deleteByZfId" parameterType="java.lang.Integer" >
+	  DELETE FROM zf_v2_dev_zongfen_user
+	  WHERE ZONGFEN_ID = #{deviceId}
+  </delete>
+</mapper>

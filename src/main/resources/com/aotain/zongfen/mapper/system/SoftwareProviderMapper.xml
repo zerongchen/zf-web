@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.system.SoftwareProviderMapper">
+
+    <resultMap id="softwareProviderMap" type="hashMap">
+
+    </resultMap>
+
+    <select id="getInitTable" parameterType="java.util.HashMap" resultMap="softwareProviderMap">
+        SELECT software_provider_name ,software_provider FROM zf_dict_software_provider where 1=1
+        <if test="providerName!=null and providerName!=''">
+            AND software_provider_name LIKE concat(concat('%',#{providerName},'%'))
+        </if>
+        <if test="providerShort!=null and providerShort!=''">
+            AND software_provider LIKE concat(concat('%',#{providerShort},'%'))
+        </if>
+    </select>
+
+    <select id="getSoftwareProvider" parameterType="java.util.HashMap" resultType="hashMap">
+
+        SELECT software_provider_name ,software_provider FROM zf_dict_software_provider
+    </select>
+
+    <insert id="addProvider" parameterType="java.util.List">
+        INSERT  INTO zf_dict_software_provider (software_provider_name,software_provider)VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.providerName,jdbcType=VARCHAR}, #{item.providerShort,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
+
+    <update id="updateProvider" parameterType="java.util.HashMap">
+        UPDATE zf_dict_software_provider SET software_provider_name=#{providerName} WHERE software_provider=#{providerShort}
+    </update>
+
+    <delete id="deleteProvider">
+        DELETE FROM zf_dict_software_provider WHERE software_provider=#{providerShort}
+    </delete>
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.AreaGroupMapper">
+  <resultMap id="AreaGroupMap" type="com.aotain.common.policyapi.model.msg.AreaGroup">
+    <result column="AREAGROUP_ID" jdbcType="BIGINT" property="areaGroupId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="AREAGROUP_NAME" jdbcType="VARCHAR" property="areagroupName" />
+    <result column="AREA_TYPE" jdbcType="TINYINT" property="areaType" />
+    <result column="AREA_SUBID1" jdbcType="VARCHAR" property="areaSubid1" />
+    <result column="AREA_SUBID2" jdbcType="VARCHAR" property="areaSubid2" />
+    <result column="AREA_SUBID3" jdbcType="VARCHAR" property="areaSubid3" />
+    <result column="AREA_SUBID4" jdbcType="VARCHAR" property="areaSubid4" />
+    <result column="INTERNAL_AREA_STR" jdbcType="VARCHAR" property="internalAreaStr" />
+    <result column="EXTERNAL_AREA_STR" jdbcType="VARCHAR" property="externalAreaStr" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    AREAGROUP_ID, MESSAGE_NO, AREAGROUP_NAME, AREA_TYPE, AREA_SUBID1, AREA_SUBID2, AREA_SUBID3, AREA_SUBID4
+  </sql>
+  
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into zf_v2_policy_areagroup (AREAGROUP_ID, MESSAGE_NO, AREAGROUP_NAME, AREA_TYPE, AREA_SUBID1, AREA_SUBID2, AREA_SUBID3, AREA_SUBID4)
+    values <foreach collection="list" item="it" index="index" separator=",">
+    	(#{it.areaGroupId,jdbcType=BIGINT}, #{it.messageNo,jdbcType=DECIMAL}, #{it.areagroupName,jdbcType=VARCHAR},
+      #{it.areaType,jdbcType=TINYINT}, #{it.areaSubid1,jdbcType=VARCHAR}, #{it.areaSubid2,jdbcType=VARCHAR}, 
+      #{it.areaSubid3,jdbcType=VARCHAR}, #{it.areaSubid4,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  <select id="selectInternal" resultMap="AreaGroupMap">
+   select GROUP_CONCAT(DISTINCT a.AREAGROUP_NAME) AS INTERNAL_AREA_STR FROM zf_v2_policy_areagroup a 
+   where MESSAGE_NO = #{messageNo,jdbcType=DECIMAL} AND AREA_TYPE = 0 
+  </select>
+  
+  <select id="selectExternal" resultMap="AreaGroupMap">
+  	select GROUP_CONCAT(DISTINCT a.AREAGROUP_NAME) AS EXTERNAL_AREA_STR FROM zf_v2_policy_areagroup a 
+    where MESSAGE_NO = #{messageNo,jdbcType=DECIMAL} AND AREA_TYPE = 1 
+  </select>
+  
+  <select id="selectByNoAndType" parameterType="com.aotain.common.policyapi.model.msg.AreaGroup" resultMap="AreaGroupMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_areagroup
+    where MESSAGE_NO = #{messageNo,jdbcType=DECIMAL} and AREA_TYPE = #{areaType,jdbcType=TINYINT} 
+    and AREA_SUBID1 = #{areaSubid1,jdbcType=VARCHAR} and AREA_SUBID2 = #{areaSubid2,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByMessageNo" parameterType="java.lang.Long">
+    delete from zf_v2_policy_areagroup
+     where MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.common.policyapi.model.msg.AreaGroup">
+    insert into zf_v2_policy_areagroup (AREAGROUP_ID, MESSAGE_NO, AREAGROUP_NAME, 
+      AREA_TYPE, AREA_SUBID1, AREA_SUBID2, 
+      AREA_SUBID3, AREA_SUBID4)
+    values (#{areagroupId,jdbcType=BIGINT}, #{messageNo,jdbcType=DECIMAL}, #{areagroupName,jdbcType=VARCHAR}, 
+      #{areaType,jdbcType=TINYINT}, #{areaSubid1,jdbcType=VARCHAR}, #{areaSubid2,jdbcType=VARCHAR}, 
+      #{areaSubid3,jdbcType=VARCHAR}, #{areaSubid4,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.msg.AreaGroup">
+    insert into zf_v2_policy_areagroup
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areagroupId != null">
+        AREAGROUP_ID,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="areagroupName != null">
+        AREAGROUP_NAME,
+      </if>
+      <if test="areaType != null">
+        AREA_TYPE,
+      </if>
+      <if test="areaSubid1 != null">
+        AREA_SUBID1,
+      </if>
+      <if test="areaSubid2 != null">
+        AREA_SUBID2,
+      </if>
+      <if test="areaSubid3 != null">
+        AREA_SUBID3,
+      </if>
+      <if test="areaSubid4 != null">
+        AREA_SUBID4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areagroupId != null">
+        #{areagroupId,jdbcType=BIGINT},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="areagroupName != null">
+        #{areagroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaType != null">
+        #{areaType,jdbcType=TINYINT},
+      </if>
+      <if test="areaSubid1 != null">
+        #{areaSubid1,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid2 != null">
+        #{areaSubid2,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid3 != null">
+        #{areaSubid3,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid4 != null">
+        #{areaSubid4,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.common.policyapi.model.msg.AreaGroup">
+    update zf_v2_policy_areagroup
+    <set>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="areagroupName != null">
+        AREAGROUP_NAME = #{areagroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaType != null">
+        AREA_TYPE = #{areaType,jdbcType=TINYINT},
+      </if>
+      <if test="areaSubid1 != null">
+        AREA_SUBID1 = #{areaSubid1,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid2 != null">
+        AREA_SUBID2 = #{areaSubid2,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid3 != null">
+        AREA_SUBID3 = #{areaSubid3,jdbcType=VARCHAR},
+      </if>
+      <if test="areaSubid4 != null">
+        AREA_SUBID4 = #{areaSubid4,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AREAGROUP_ID = #{areagroupId,jdbcType=BIGINT}
+  </update>
+</mapper>

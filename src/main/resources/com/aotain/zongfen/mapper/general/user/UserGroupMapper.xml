@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.user.UserGroupMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.user.UserGroup">
+    <result column="USER_GROUP_ID" jdbcType="DECIMAL" property="userGroupId" />
+    <result column="USER_GROUP_NAME" jdbcType="VARCHAR" property="userGroupName" />
+    <result column="USER_GROUP_DESC" jdbcType="VARCHAR" property="userGroupDesc" />
+    <result column="CREATE_OPER" jdbcType="DECIMAL" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="DECIMAL" property="modifyOper" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <result column="OPERATE_TYPE" jdbcType="TINYINT" property="operateType" />
+    
+  </resultMap>
+  
+  
+  <sql id="commonfile">
+    USER_GROUP_ID, USER_GROUP_NAME, USER_GROUP_DESC, MESSAGE_NO
+  </sql>
+  
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="userGroupId" parameterType="com.aotain.zongfen.model.general.user.UserGroup">
+    insert into zf_v2_usergroup
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userGroupId != null">
+        USER_GROUP_ID,
+      </if>
+      <if test="userGroupName != null">
+        USER_GROUP_NAME,
+      </if>
+      <if test="userGroupDesc != null">
+        USER_GROUP_DESC,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userGroupId != null">
+        #{userGroupId,jdbcType=DECIMAL},
+      </if>
+      <if test="userGroupName != null">
+        #{userGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="userGroupDesc != null">
+        #{userGroupDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <select id="selectSingleUserGroup" parameterType="com.aotain.zongfen.model.general.user.UserGroup" resultMap="BaseResultMap">
+    select <include refid="commonfile"/> from zf_v2_usergroup
+    <where>
+      <if test="userGroupId != null">
+        USER_GROUP_ID =  #{userGroupId,jdbcType=DECIMAL}
+      </if>
+    </where>
+    
+  </select>
+  <select id="getUserGroupList" parameterType="com.aotain.zongfen.model.general.user.UserGroup" resultMap="BaseResultMap" >
+  
+    SELECT t.USER_GROUP_ID, t.USER_GROUP_NAME, t.USER_GROUP_DESC, t.MESSAGE_NO ,m.CREATE_OPER ,
+    m.MODIFY_OPER ,m.MODIFY_TIME,m.CREATE_TIME,m.OPERATE_TYPE,m.MESSAGE_TYPE
+    FROM zf_v2_usergroup t,zf_v2_policy_messageno m
+    WHERE t.MESSAGE_NO = m.MESSAGE_NO and m.OPERATE_TYPE!=3
+      <if test="messageType!=null">
+        AND m.MESSAGE_TYPE = #{messageType}
+      </if>
+      <if test="userGroupName != null">
+        and USER_GROUP_NAME LIKE  CONCAT(CONCAT('%', #{userGroupName}, '%'))
+      </if>
+       <if test="startTime != null and startTime!=''">
+  		AND date_format(m.CREATE_TIME,'%Y-%m-%d') &gt;= #{startTime}
+  	</if>
+  	<if test="endTime != null and endTime!=''">
+  		AND date_format(m.CREATE_TIME,'%Y-%m-%d') &lt;= #{endTime}
+  	</if>
+    order by MODIFY_TIME desc
+  </select>
+  
+  
+  <update id="deleteUserGroups" >
+    
+    UPDATE zf_v2_usergroup set OPERATE_TYPE=1,MODIFY_TIME=SYSDATE() where USER_GROUP_ID in
+    <foreach collection="array" item="item" separator="," open="(" close=")">
+      #{item,jdbcType=DECIMAL}
+    </foreach>
+  
+  </update>
+  <update id="updateUserGroupName" >
+    UPDATE zf_v2_usergroup
+    set USER_GROUP_NAME= #{userGroupName},
+        USER_GROUP_DESC= #{userGroupName}
+    where USER_GROUP_ID = #{userGroupId}
+  </update>
+  
+  <select id="isSampleUserGroup" parameterType="com.aotain.zongfen.model.general.user.UserGroup" resultType="java.lang.Integer">
+    
+    SELECT COUNT(USER_GROUP_NAME) FROM zf_v2_usergroup t
+    WHERE 1=1
+    <if test="userGroupId!=null">
+      AND USER_GROUP_ID = #{userGroupId}
+    </if>
+    <if test="userGroupName!=null">
+      AND USER_GROUP_NAME = #{userGroupName}
+    </if>
+  </select>
+
+  <select id="isSampleUserGroup2" parameterType="com.aotain.zongfen.model.general.user.UserGroup" resultType="java.lang.Integer">
+
+    SELECT COUNT(USER_GROUP_NAME) FROM zf_v2_usergroup t
+    WHERE 1=1
+    <if test="userGroupId!=null">
+      AND USER_GROUP_ID != #{userGroupId}
+    </if>
+    <if test="userGroupName!=null">
+      AND USER_GROUP_NAME = #{userGroupName}
+    </if>
+  </select>
+  
+</mapper>

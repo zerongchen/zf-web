@@ -1,0 +1,11 @@
+<!--${authorized} 公共导出,设置改权限时，直接在域对象中返回 key:authorized ,value=zf***..-->
+<div th:fragment="exportChoose" th:authorized="${authorized}_export" class="btn-group">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-download"></i> 导出  <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu exportHead">
+        <li data-export_type="0"><a href="#">EXCEL</a></li>
+        <li data-export_type="1"><a href="#">WORD</a></li>
+        <li data-export_type="2"><a href="#">PDF</a></li>
+    </ul>
+</div>

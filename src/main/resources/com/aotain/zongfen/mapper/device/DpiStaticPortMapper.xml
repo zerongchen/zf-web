@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiStaticPortMapper">
+  <resultMap id="DpiStaticPortMap" type="com.aotain.zongfen.model.device.DpiStaticPort">
+    <id column="PortNo" jdbcType="DECIMAL" property="portno" />
+    <result column="DeploySiteName" jdbcType="VARCHAR" property="deploysitename" />
+    <result column="PortType" jdbcType="DECIMAL" property="porttype" />
+    <result column="PortDescription" jdbcType="VARCHAR" property="portdescription" />
+    <result column="M_LinkID" jdbcType="DECIMAL" property="mlinkid" />
+    <result column="M_LinkDesc" jdbcType="VARCHAR" property="mlinkdesc" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    PortNo, DeploySiteName, PortType, PortDescription, M_LinkID, M_LinkDesc, MODIFY_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="DpiStaticPortMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_dev_dpi_static_port
+    where PortNo = #{portno,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectList" resultMap="DpiStaticPortMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from zf_v2_dev_dpi_static_port
+   where DeploySiteName = #{deploysitename,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_dev_dpi_static_port
+    where PortNo = #{portno,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.DpiStaticPort">
+    insert into zf_v2_dev_dpi_static_port (PortNo, DeploySiteName, PortType, 
+      PortDescription, M_LinkID, M_LinkDesc, 
+      MODIFY_TIME)
+    values (#{portno,jdbcType=DECIMAL}, #{deploysitename,jdbcType=VARCHAR}, #{porttype,jdbcType=DECIMAL}, 
+      #{portdescription,jdbcType=VARCHAR}, #{mlinkid,jdbcType=DECIMAL}, #{mlinkdesc,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.device.DpiStaticPort">
+    insert into zf_v2_dev_dpi_static_port
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="portno != null">
+        PortNo,
+      </if>
+      <if test="deploysitename != null">
+        DeploySiteName,
+      </if>
+      <if test="porttype != null">
+        PortType,
+      </if>
+      <if test="portdescription != null">
+        PortDescription,
+      </if>
+      <if test="mlinkid != null">
+        M_LinkID,
+      </if>
+      <if test="mlinkdesc != null">
+        M_LinkDesc,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="portno != null">
+        #{portno,jdbcType=DECIMAL},
+      </if>
+      <if test="deploysitename != null">
+        #{deploysitename,jdbcType=VARCHAR},
+      </if>
+      <if test="porttype != null">
+        #{porttype,jdbcType=DECIMAL},
+      </if>
+      <if test="portdescription != null">
+        #{portdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="mlinkid != null">
+        #{mlinkid,jdbcType=DECIMAL},
+      </if>
+      <if test="mlinkdesc != null">
+        #{mlinkdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.device.DpiStaticPort">
+    update zf_v2_dev_dpi_static_port
+    <set>
+      <if test="deploysitename != null">
+        DeploySiteName = #{deploysitename,jdbcType=VARCHAR},
+      </if>
+      <if test="porttype != null">
+        PortType = #{porttype,jdbcType=DECIMAL},
+      </if>
+      <if test="portdescription != null">
+        PortDescription = #{portdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="mlinkid != null">
+        M_LinkID = #{mlinkid,jdbcType=DECIMAL},
+      </if>
+      <if test="mlinkdesc != null">
+        M_LinkDesc = #{mlinkdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where PortNo = #{portno,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.device.DpiStaticPort">
+    update zf_v2_dev_dpi_static_port
+    set DeploySiteName = #{deploysitename,jdbcType=VARCHAR},
+      PortType = #{porttype,jdbcType=DECIMAL},
+      PortDescription = #{portdescription,jdbcType=VARCHAR},
+      M_LinkID = #{mlinkid,jdbcType=DECIMAL},
+      M_LinkDesc = #{mlinkdesc,jdbcType=VARCHAR},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP}
+    where PortNo = #{portno,jdbcType=DECIMAL}
+  </update>
+
+  <select id="selectDistinctLinkList" resultMap="DpiStaticPortMap">
+    select DISTINCT M_LinkID,M_LinkDesc
+    from zf_v2_dev_dpi_static_port;
+  </select>
+</mapper>

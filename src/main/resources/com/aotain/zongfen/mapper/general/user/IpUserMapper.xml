@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.user.IpUserMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.user.IpUser">
+    <id column="USER_ID" jdbcType="BIGINT" property="userId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+  
+  <resultMap id="BaseDtoResultMap" type="com.aotain.zongfen.dto.general.user.IpUserDTO">
+    <id column="USER_ID" jdbcType="BIGINT" property="userId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <collection property="userInfo" select="getUserIps" ofType="com.aotain.common.policyapi.model.msg.IpMsg" column="{id=USER_ID}">
+      <result column="IP_ID" jdbcType="BIGINT" property="ipId" />
+      <result column="USERIP" jdbcType="VARCHAR" property="userIp" />
+      <result column="USERIP_PREFIX" jdbcType="BIGINT" property="userIpPrefix" />
+    </collection>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    USER_ID, MESSAGE_NO, USER_NAME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_ipuser
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectOne" parameterType="com.aotain.zongfen.model.general.user.IpUser" resultMap="BaseResultMap">
+    select
+    t.USER_ID,
+    t.MESSAGE_NO,
+    t.USER_NAME
+    from zf_v2_policy_ipuser t ,zf_v2_policy_messageno m
+    where m.MESSAGE_NO = t.MESSAGE_NO AND m.OPERATE_TYPE!=3
+    <if test="messageType!=null">
+      AND m.MESSAGE_TYPE=#{messageType}
+    </if>
+    <if test="userName!=null">
+      AND t.USER_NAME = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="userId!=null">
+      AND t.USER_ID = #{userId,jdbcType=BIGINT}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_policy_ipuser
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.user.IpUser">
+    insert into zf_v2_policy_ipuser (USER_ID, MESSAGE_NO, USER_NAME
+      )
+    values (#{userId,jdbcType=BIGINT}, #{messageNo,jdbcType=DECIMAL}, #{userName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="userId" parameterType="com.aotain.zongfen.model.general.user.IpUser">
+    insert into zf_v2_policy_ipuser
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.general.user.IpUser">
+    update zf_v2_policy_ipuser
+    <set>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.general.user.IpUser">
+    update zf_v2_policy_ipuser
+    set MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      USER_NAME = #{userName,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="getList" parameterType="com.aotain.zongfen.dto.general.user.IpUserDTO" resultMap="BaseDtoResultMap">
+    SELECT
+    t.USER_ID,
+    t.USER_NAME,
+    t.MESSAGE_NO,
+    m.MESSAGE_TYPE,
+    m.CREATE_TIME
+    from zf_v2_policy_ipuser t LEFT JOIN zf_v2_policy_messageno m
+    on t.MESSAGE_NO = m.MESSAGE_NO
+    WHERE 1 = 1 AND m.OPERATE_TYPE!=3
+    <if test="messageType!=null">
+      and m.MESSAGE_TYPE = #{messageType}
+    </if>
+    <if test="userId!=null">
+      and t.USER_ID = #{userId}
+    </if>
+    <if test="userName!=null">
+      and t.USER_NAME LIKE CONCAT("%",#{userName},"%")
+    </if>
+    <if test="startTime != null and startTime!=''">
+  		AND date_format(m.CREATE_TIME,'%Y-%m-%d') &gt;= #{startTime}
+  	</if>
+  	<if test="endTime != null and endTime!=''">
+  		AND date_format(m.CREATE_TIME,'%Y-%m-%d') &lt;= #{endTime}
+  	</if>
+    ORDER BY  m.MODIFY_TIME DESC
+  </select>
+  
+  <select id="getUserIps" parameterType="Map" resultType="com.aotain.common.policyapi.model.msg.IpMsg">
+    SELECT IP_ID,USERIP,USERIP_PREFIX FROM zf_v2_policy_ipuser_ip WHERE USER_ID=#{id} AND OPERATE_TYPE!=3 ORDER BY MODIFY_TIME DESC
+  </select>
+  
+</mapper>

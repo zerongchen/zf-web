@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.AppFlowManagerUserGroupMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.AppFlowManagerUserGroup">
+    <result column="APPFLOW_ID" jdbcType="BIGINT" property="appflowId" />
+    <result column="USER_TYPE" jdbcType="DECIMAL" property="userType" />
+    <result column="USER_GROUP_ID" jdbcType="BIGINT" property="userGroupId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+  </resultMap>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManagerUserGroup">
+    insert into zf_v2_appflow_manage_usergroup (APPFLOW_ID, USER_TYPE, USER_GROUP_ID, 
+      USER_NAME)
+    values (#{appflowId,jdbcType=BIGINT}, #{userType,jdbcType=DECIMAL}, #{userGroupId,jdbcType=BIGINT}, 
+      #{userName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManagerUserGroup">
+    insert into zf_v2_appflow_manage_usergroup
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appflowId != null">
+        APPFLOW_ID,
+      </if>
+      <if test="userType != null">
+        USER_TYPE,
+      </if>
+      <if test="userGroupId != null">
+        USER_GROUP_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appflowId != null">
+        #{appflowId,jdbcType=BIGINT},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=DECIMAL},
+      </if>
+      <if test="userGroupId != null">
+        #{userGroupId,jdbcType=BIGINT},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <insert id="insertSelectiveList" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+      insert into zf_v2_appflow_manage_usergroup
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="item.appflowId != null">
+          APPFLOW_ID,
+        </if>
+        <if test="item.userType != null">
+          USER_TYPE,
+        </if>
+        <if test="item.userGroupId != null">
+          USER_GROUP_ID,
+        </if>
+        <if test="item.userName != null">
+          USER_NAME,
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="item.appflowId != null">
+          #{item.appflowId,jdbcType=BIGINT},
+        </if>
+        <if test="item.userType != null">
+          #{item.userType,jdbcType=DECIMAL},
+        </if>
+        <if test="item.userGroupId != null">
+          #{item.userGroupId,jdbcType=BIGINT},
+        </if>
+        <if test="item.userName != null">
+          #{item.userName,jdbcType=VARCHAR},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
+  
+  <select id="getAppGroup" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManagerUserGroup" resultMap="BaseResultMap">
+    SELECT APPFLOW_ID, USER_TYPE, USER_GROUP_ID, USER_NAME FROM zf_v2_appflow_manage_usergroup WHERE APPFLOW_ID =#{appflowId}
+  </select>
+  
+  <delete id="delete" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManagerUserGroup">
+    DELETE from zf_v2_appflow_manage_usergroup WHERE
+    APPFLOW_ID = #{appflowId}
+    <if test="userType!=null">
+      AND USER_TYPE =#{userType}
+    </if>
+    <if test="userGroupId!=null">
+      AND USER_GROUP_ID = #{userGroupId}
+    </if>
+    <if test="userName!=null">
+      AND USER_NAME = #{userName}
+    </if>
+  </delete>
+  
+  <delete id="deleteList" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+      DELETE from zf_v2_appflow_manage_usergroup WHERE
+      APPFLOW_ID = #{item.appflowId}
+      <if test="item.userType!=null">
+        AND USER_TYPE =#{item.userType}
+      </if>
+      <if test="item.userGroupId!=null">
+        AND USER_GROUP_ID = #{item.userGroupId}
+      </if>
+      <if test="item.userName!=null">
+        AND USER_NAME = #{item.userName}
+      </if>
+    </foreach>
+  </delete>
+  
+</mapper>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.DdosFlowManageMapper">
+
+    <resultMap id="BaseResultListMap" type="com.aotain.common.policyapi.model.DdosExceptFlowStrategy">
+        <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+        <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+        <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+        <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+        <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="USER_TYPE" jdbcType="DECIMAL" property="userType" />
+        <collection property="userName" ofType="java.lang.String">
+            <result column="USER_NAME" jdbcType="VARCHAR"/>
+        </collection>
+        <collection property="userGroupId" ofType="java.lang.Long">
+            <result column="USER_GROUP_ID" jdbcType="DECIMAL" />
+        </collection>
+        <collection property="appAttachNormal" ofType="com.aotain.common.policyapi.model.msg.DdosFlowAppAttachNormal">
+            <!-- 定义这个集合中元素的封装规则 -->
+            <id column="APP_ATTACK_TYPE" property="appAttackType"/>
+            <result column="ATTACK_THRESHOLD" property="attackThreshold"/>
+            <result column="ATTACK_CONTROL" property="attackControl"/>
+        </collection>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        a.R_STARTTIME AS rStartTime,
+        a.R_ENDTIME AS rEndTime,
+        a.appType AS appType,
+        a.appId AS appId,
+        a.USERTYPE AS userType,
+        a.APPName AS appName,
+        a.MESSAGE_NO AS messageNo,
+        b.MESSAGE_NAME AS messageName,
+        b.MODIFY_TIME AS modifyTime,
+        b.CREATE_TIME AS createTime,
+        b.CREATE_OPER AS createOper,
+        b.MODIFY_OPER AS modifyOper,
+        b.OPERATE_TYPE AS operationType,
+        c.user_names AS userNames,
+        c.user_groupIds AS userGroupIds
+    </sql>
+
+    <sql id="Base_Column">
+        a.DDOS_ID as ddosId,
+        a.ATTACK_CONTROL AS attackControl,
+        a.ATTACK_THRESHOLD AS attackThreshold,
+        a.APP_ATTACK_TYPE AS appAttackType,
+        a.MESSAGE_NO AS messageNo,
+        b.MESSAGE_NAME AS messageName,
+        b.CREATE_TIME AS createTime,
+        b.CREATE_OPER AS createOper
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="com.aotain.common.policyapi.model.DdosExceptFlowStrategy"
+            resultType="com.aotain.common.policyapi.model.DdosExceptFlowStrategy">
+        SELECT
+        GROUP_CONCAT(a.DDOS_ID) as ddosId,
+        GROUP_CONCAT(a.ATTACK_CONTROL) AS attackControl,
+        GROUP_CONCAT(a.ATTACK_THRESHOLD) AS attackThreshold,
+        GROUP_CONCAT(a.APP_ATTACK_TYPE) AS appAttackType,
+        a.MESSAGE_NO AS messageNo,
+        b.MESSAGE_NAME AS messageName,
+        min(b.CREATE_TIME) AS createTime,
+        min(b.CREATE_OPER) AS createOper
+        from
+        ZF_V2_POLICY_DDOS a
+        INNER JOIN
+        zf_v2_policy_messageno b ON a.MESSAGE_NO = b.MESSAGE_NO
+        AND b.MESSAGE_TYPE = 67 AND b.OPERATE_TYPE in (1,2)
+        WHERE a.MESSAGE_NO = #{messageNo} GROUP BY a.MESSAGE_NO,b.MESSAGE_NAME
+    </select>
+
+
+    <select id="listData" parameterType="com.aotain.zongfen.dto.apppolicy.DdosExceptFlowStrategyPo"
+                resultType="com.aotain.zongfen.dto.apppolicy.DdosExceptFlowStrategyPo">
+            SELECT
+            a.attackControl AS attackControl,
+            a.attackThreshold AS attackThreshold,
+            a.appAttackType AS appAttackType,
+            a.MESSAGE_NO AS messageNo,
+            b.MESSAGE_NAME AS messageName,
+            b.CREATE_TIME AS createTime,
+            b.CREATE_OPER AS createOper
+            from
+            (SELECT
+            MESSAGE_NO,
+            GROUP_CONCAT(APP_ATTACK_TYPE)  as appAttackType,
+            GROUP_CONCAT(ATTACK_THRESHOLD)  as attackThreshold,
+            GROUP_CONCAT(ATTACK_CONTROL)  as attackControl
+            FROM ZF_V2_POLICY_DDOS GROUP BY MESSAGE_NO)
+             a
+            INNER JOIN
+            (select * FROM zf_v2_policy_messageno WHERE MESSAGE_TYPE = 67 AND OPERATE_TYPE in (1,2)
+        <if test='messageName!=null and messageName!=""' >
+            AND MESSAGE_NAME LIKE CONCAT("%",#{messageName},"%")
+        </if>
+        <if test='startTime!=null and startTime!=""'>
+            AND CREATE_TIME &gt;= CONCAT(#{startTime}," 00:00:00")
+        </if>
+        <if test='endTime!=null and endTime!=""'>
+            AND CREATE_TIME &lt;= CONCAT(#{endTime}," 23:59:59")
+        </if>
+        ) b ON a.MESSAGE_NO = b.MESSAGE_NO
+            AND b.MESSAGE_TYPE = 67 AND b.OPERATE_TYPE in (1,2)
+
+        <if test='startTime!=null and startTime!=""'>
+            AND b.CREATE_TIME &gt;= CONCAT(#{startTime}," 00:00:00")
+        </if>
+        <if test='endTime!=null and endTime!=""'>
+            AND b.CREATE_TIME &lt;= CONCAT(#{endTime}," 23:59:59")
+        </if>
+        ORDER BY a.MESSAGE_NO DESC
+        </select>
+
+    <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.DdosExceptFlowStrategy">
+        insert into ZF_V2_POLICY_DDOS
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="messageNo != null">
+                MESSAGE_NO,
+            </if>
+            <if test="appAttackType != null">
+                APP_ATTACK_TYPE,
+            </if>
+            <if test="attackThreshold != null">
+                ATTACK_THRESHOLD,
+            </if>
+            <if test="attackControl != null">
+                ATTACK_CONTROL,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="messageNo != null">
+                #{messageNo,jdbcType=DECIMAL},
+            </if>
+            <if test="appAttackType != null">
+                #{appAttackType,jdbcType=DECIMAL},
+            </if>
+            <if test="attackThreshold != null">
+                #{attackThreshold,jdbcType=DECIMAL},
+            </if>
+            <if test="attackControl != null">
+                #{attackControl,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteData" parameterType="com.aotain.common.policyapi.model.DdosExceptFlowStrategy">
+        delete from zf_v2_policy_ddos
+        where MESSAGE_NO = #{messageNo}
+    </delete>
+
+    <select id="selectByMessage" parameterType="com.aotain.common.policyapi.model.DdosExceptFlowStrategy"
+            resultType="com.aotain.common.policyapi.model.msg.DdosFlowAppAttachNormal">
+        SELECT
+        a.ATTACK_CONTROL AS attackControl,
+        a.ATTACK_THRESHOLD AS attackThreshold,
+        a.APP_ATTACK_TYPE AS appAttackType
+        from
+        ZF_V2_POLICY_DDOS a
+        WHERE a.MESSAGE_NO = #{messageNo}
+    </select>
+
+</mapper>

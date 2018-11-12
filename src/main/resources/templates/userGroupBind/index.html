@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <!-- <input type="hidden" name="userGroupId"/>-->
+                <div class="form-group m-r-sm">
+                    <label>策略类型</label>
+                    <select class="form-control" name="bindMessageType" id="bindMessageType">
+                    </select>
+                </div>
+                <div class="form-group m-r-sm">
+                    <select class="form-control" name="bindMessageNo" id="bindMessageNo" style="display: none;">
+                    </select>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>用户类型</label>
+                    <select class="form-control" name="userType" id="userType">
+                        <option selected="selected" value="">请选择</option>
+                        <option value="0">全用户</option>
+                        <option value="1">账号</option>
+                        <option value="2">IP地址</option>
+                        <option value="3">用户组</option>
+                    </select>
+                   <!-- <input type="text" class="form-control" name="userType" id="userType"/>-->
+                </div>
+				<div class="form-group m-r-sm">
+                    <label >创建时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="searchStart">
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label >到</label>
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="searchEnd">
+                </div>
+                <div class="checkbox">
+                    <button th:if="${session.zf103003_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- example toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <button th:if="${session.zf103003_add}==1" type="button" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" data-target="#myModaladd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+                                        <button th:if="${session.zf103003_delete}==1" type="button" class="btn btn-outline btn-danger deleteButton" > <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+
+                                    </div>
+                                    <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                            <!-- end example toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <input type="hidden" id="zf103003_redo" th:value="${session.zf103003_redo}" />
+    <input type="hidden" id="zf103003_delete" th:value="${session.zf103003_delete}" />
+</div>
+<!--新增-->
+<div th:include="/userGroupBind/addorupdate :: myaddorupdate"></div>
+<!--详情-->
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #usergroupbind"></div>
+</body>
+</html>

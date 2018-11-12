@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.GenIPAddressMapper">
+  <resultMap id="IPAddressMap" type="com.aotain.zongfen.model.general.GenIPAddress">
+    <id column="IP_ID" jdbcType="BIGINT" property="ipId" />
+    <result column="IP_TYPE" jdbcType="VARCHAR" property="ipType" />
+    <result column="START_IP" jdbcType="VARCHAR" property="startIp" />
+    <result column="END_IP" jdbcType="VARCHAR" property="endIp" />
+    <result column="IP_SEGMENT" jdbcType="VARCHAR" property="ipSegment" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="AREA_ID" jdbcType="VARCHAR" property="areaId" />
+    <result column="PROVINCE_NAME" jdbcType="VARCHAR" property="provinceName" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    IP_ID, IP_TYPE, START_IP, END_IP, AREA_NAME, AREA_ID, PROVINCE_NAME, UPDATE_TIME
+  </sql>
+  
+  <select id="selectIpV4" resultMap="IPAddressMap">
+  	 select <include refid="Base_Column_List" />  from zf_v2_gen_ipaddress where IP_TYPE = '0X04'
+  </select>
+  
+  <select id="selectIpV6" resultMap="IPAddressMap">
+  	 select <include refid="Base_Column_List" />  from zf_v2_gen_ipaddress where IP_TYPE = '0X06'
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="IPAddressMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_ipaddress
+    where IP_ID = #{ipId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_gen_ipaddress
+    where IP_ID = #{ipId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.GenIPAddress">
+    insert into zf_v2_gen_ipaddress (IP_ID, IP_TYPE, START_IP, END_IP, AREA_NAME, AREA_ID, PROVINCE_NAME, UPDATE_TIME
+      )
+    values (#{ipId,jdbcType=BIGINT}, #{ipType,jdbcType=VARCHAR}, #{startIp,jdbcType=VARCHAR}, 
+      #{endIp,jdbcType=VARCHAR}, #{areaName,jdbcType=VARCHAR},#{areaId,jdbcType=VARCHAR},
+      #{provinceName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.GenIPAddress">
+    insert into zf_v2_gen_ipaddress
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ipId != null">
+        IP_ID,
+      </if>
+      <if test="ipType != null">
+        IP_TYPE,
+      </if>
+      <if test="startIp != null">
+        START_IP,
+      </if>
+      <if test="endIp != null">
+        END_IP,
+      </if>
+      <if test="areaName != null">
+        AREA_NAME,
+      </if>
+       <if test="areaId != null">
+        AREA_ID,
+      </if>
+       <if test="provinceName != null">
+        PROVINCE_NAME,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ipId != null">
+        #{ipId,jdbcType=BIGINT},
+      </if>
+      <if test="ipType != null">
+        #{ipType,jdbcType=VARCHAR},
+      </if>
+      <if test="startIp != null">
+        #{startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="endIp != null">
+        #{endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null">
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceName != null">
+        #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.general.GenIPAddress">
+    update zf_v2_gen_ipaddress
+    <set>
+      <if test="ipType != null">
+        IP_TYPE = #{ipType,jdbcType=VARCHAR},
+      </if>
+      <if test="startIp != null">
+        START_IP = #{startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="endIp != null">
+        END_IP = #{endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null">
+        AREA_NAME = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="areaId != null">
+        AREA_ID = #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceName != null">
+        PROVINCE_NAME = #{provinceName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where IP_ID = #{ipId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.general.GenIPAddress">
+    update zf_v2_gen_ipaddress
+    set IP_TYPE = #{ipType,jdbcType=VARCHAR},
+      START_IP = #{startIp,jdbcType=VARCHAR},
+      END_IP = #{endIp,jdbcType=VARCHAR},
+      AREA_NAME = #{areaName,jdbcType=VARCHAR},
+      AREA_ID = #{areaId,jdbcType=VARCHAR},
+      PROVINCE_NAME = #{provinceName,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where IP_ID = #{ipId,jdbcType=BIGINT}
+  </update>
+  
+   <insert id="insertList" parameterType="java.util.List" >
+    insert into zf_v2_gen_ipaddress ( IP_TYPE, START_IP, END_IP, AREA_NAME, AREA_ID, PROVINCE_NAME, UPDATE_TIME
+      )
+    values <foreach collection="list" item="it" index="index" separator=",">
+    	(#{it.ipType,jdbcType=VARCHAR}, #{it.startIp,jdbcType=VARCHAR}, 
+      #{it.endIp,jdbcType=VARCHAR}, #{it.areaName,jdbcType=VARCHAR},
+      #{it.areaId,jdbcType=VARCHAR},#{it.provinceName,jdbcType=VARCHAR} ,
+      #{it.updateTime,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+  
+  <select id="getIndexList" parameterType="java.util.Map" resultMap="IPAddressMap">
+  	SELECT IP_ID, IP_TYPE, START_IP, END_IP, AREA_NAME, UPDATE_TIME, CONCAT(START_IP,'~',END_IP) AS IP_SEGMENT,AREA_ID, PROVINCE_NAME
+  	FROM zf_v2_gen_ipaddress
+  	WHERE 1=1
+  	<if test="ipType!=null and ipType!=''">
+  		AND IP_TYPE = #{ipType}
+  	</if>
+  	<if test="ipaddress!=null and ipaddress!=''">
+  		AND (START_IP LIKE CONCAT('%',#{ipaddress},'%') 
+  		OR END_IP LIKE CONCAT('%',#{ipaddress},'%') )
+  	</if>
+  </select>
+  
+  <delete id="deleteAll">
+  	DELETE FROM zf_v2_gen_ipaddress
+  </delete>
+</mapper>

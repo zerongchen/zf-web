@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>告警信息</label>
+                    <input type="text" class="form-control" name="alarmContent" id="alarmContent" />
+                </div>
+                 <div class="form-group m-r-sm">
+                    <label>告警参数</label>
+                    <input type="text" class="form-control" name="alarmParams" id="alarmParams" />
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>处理状态</label>
+                    <select class="form-control" name="dealStatus" id="dealStatus" >
+                    	<option value="-1">请选择</option>
+                    	<option value="0">未处理</option>
+                    	<option value="1">已处理</option>
+                    </select>
+                </div>
+				<div class="checkbox">
+                    <button th:if="${session.zf401001_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                	<button th:if="${session.zf401001_query}==1" class="btn btn-outline btn-link" type="button" onClick="showsearch()">更多条件查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+   <div class="row m-t m-r-none m-l onoffswitch-checkbox prompt-search">
+    <div class="col-sm-12 p-trbl gray2-bg">
+      <div class="text-left">
+        <form class="form-inline">
+		  <div class="form-group m-r-sm">
+		    <label>告警时间</label>
+		    <input placeholder="开始时间" name="startTime" class="form-control" id="start" >
+		  </div>
+	      <div class="form-group m-r-sm">
+	         <label>至</label>
+			 <input placeholder="日期时间" name="endTime" class="form-control" id="end" >
+		  </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- example toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="table-toolbar" role="group">
+					                    
+					                 </div>
+                                        <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                            <!-- end example toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <input type="hidden" id="zf401001_query" th:value="${session.zf401001_query}" />
+    <input type="hidden" id="zf401001_deal" th:value="${session.zf401001_deal}" />
+    <input type="hidden" id="zf401001_redo" th:value="${session.zf401001_redo}" />
+</div>
+<!--详情页面 -->
+<div th:include="/monitor/alarm/detail :: mydetail"></div>
+<!--文件告警详情页面 -->
+<div th:include="/monitor/alarm/detailExceptionFile :: myExceptionFiledetail"></div>
+<!--处理页面 -->
+<div th:include="/monitor/alarm/deal :: mydeal"></div>
+<!--文件页面 -->
+<div th:include="/monitor/alarm/file :: myfile"></div>
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #monitorAlarm"></div>
+</body>
+</html>

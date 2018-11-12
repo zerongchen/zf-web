@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.WebFlowManageMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.WebFlowManage">
+    <id column="WEBFLOW_ID" jdbcType="INTEGER" property="webflowId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+    <result column="CTYPE" jdbcType="DECIMAL" property="ctype" />
+    <result column="C_TIME" jdbcType="DECIMAL" property="time" />
+    <result column="ADV_URL" jdbcType="VARCHAR" property="advUrl" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_OPER" jdbcType="CHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="CHAR" property="modifyOper" />
+    <result column="R_STARTTIME" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="R_ENDTIME" jdbcType="TIMESTAMP" property="endTime" />
+    <collection property="webTypes" ofType="com.aotain.zongfen.model.apppolicy.WebFlowManageWebType" column="WEBFLOW_ID" select="getWebTypes"/>
+    <collection property="userGroup" ofType="com.aotain.zongfen.model.apppolicy.WebFlowUserGroup" column="WEBFLOW_ID" select="getUserGroups"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.WEBFLOW_ID, a.CTYPE, a.C_TIME, a.ADV_URL, a.MODIFY_TIME, a.CREATE_TIME, a.CREATE_OPER, 
+    a.MODIFY_OPER, a.MESSAGE_NO, a.MESSAGE_NAME,a.R_STARTTIME,a.R_ENDTIME,a.OPERATE_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_webflow_manage
+    where WEBFLOW_ID = #{webflowId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_webflow_manage
+    where WEBFLOW_ID = #{webflowId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.apppolicy.WebFlowManage" useGeneratedKeys="true" keyProperty="webflowId">
+    insert into zf_v2_webflow_manage (CTYPE, C_TIME, 
+      ADV_URL, MODIFY_TIME,CREATE_TIME, CREATE_OPER, MODIFY_OPER,
+      MESSAGE_NO, MESSAGE_NAME, R_STARTTIME, R_ENDTIME,OPERATE_TYPE)
+    values ( #{ctype,jdbcType=DECIMAL}, #{time,jdbcType=DECIMAL}, #{advUrl,jdbcType=VARCHAR}, 
+    	#{modifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{createOper,jdbcType=CHAR},
+    	#{modifyOper,jdbcType=CHAR}, #{messageNo,jdbcType=DECIMAL}, #{messageName,jdbcType=VARCHAR},
+    	#{startTime,jdbcType=DECIMAL},#{endTime,jdbcType=DECIMAL},#{operateType,jdbcType=DECIMAL})
+  </insert>
+  
+  <select id="isSamePolicyName" parameterType="com.aotain.zongfen.model.apppolicy.WebFlowManage" resultType="java.lang.Integer" >
+  	SELECT COUNT(WEBFLOW_ID)
+  	FROM zf_v2_webflow_manage
+  	WHERE MESSAGE_NAME = #{messageName}
+  	<if test="webflowId!=null">
+  	and	WEBFLOW_ID != #{webflowId,jdbcType=INTEGER}
+  	</if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.apppolicy.WebFlowManage">
+    update zf_v2_webflow_manage
+    <set>
+      <if test="ctype != null">
+        CTYPE = #{ctype,jdbcType=DECIMAL},
+      </if>
+      <if test="time != null">
+        C_TIME = #{time,jdbcType=DECIMAL},
+      </if>
+      <if test="advUrl != null">
+        ADV_URL = #{advUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE = #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=CHAR},
+      </if>
+      <if test="messageName!=null">
+      	MESSAGE_NAME = #{messageName,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where WEBFLOW_ID = #{webflowId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getIndexList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_webflow_manage a
+  	WHERE  a.OPERATE_TYPE != 3
+  	<if test="messageName != null and messageName!=''">
+  	AND	a.MESSAGE_NAME LIKE CONCAT("%",#{messageName},"%")
+  	</if>
+  	<if test="startTime != null and startTime!=''">
+  	AND date_format(a.CREATE_TIME,'%Y-%m-%d') &gt;= #{startTime}
+  	</if>
+  	<if test="endTime != null and endTime!=''">
+  	AND date_format(a.CREATE_TIME,'%Y-%m-%d') &lt;= #{endTime}
+  	</if>
+  	GROUP BY a.WEBFLOW_ID
+  	ORDER BY a.MODIFY_TIME DESC
+  </select>
+  
+  <select id="getWebTypes" parameterType="java.lang.Integer" resultType="com.aotain.zongfen.model.apppolicy.WebFlowManageWebType">
+  	SELECT a.WEBFLOW_ID as webflowId,
+  		   a.CWEBTYPE as webType,
+  		   b.WEB_NAME as webTypeName
+  	FROM zf_v2_webflow_manage_webtype a,
+  		 zf_dict_webtype b
+  	WHERE a.WEBFLOW_ID = #{webflowId}
+  	AND   a.CWEBTYPE = b.WEB_TYPE
+  </select>
+   <select id="getUserGroups" parameterType="java.lang.Integer" resultType="com.aotain.zongfen.model.apppolicy.WebFlowUserGroup">
+   	SELECT WEBFLOW_ID as webflowId,
+  		   USER_TYPE as userType,
+  		   USER_GROUP_ID as userGroupId,
+  		   USER_NAME as userName
+  	FROM zf_v2_webflow_manage_usergroup
+  	WHERE WEBFLOW_ID = #{webflowId}
+   	
+   </select>
+  
+  <select id="getRecordsByIds" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_webflow_manage a
+  	WHERE WEBFLOW_ID IN
+  	<foreach collection="array" item="item" index="index" separator="," open="(" close=")">
+  		#{item}
+  	</foreach>
+  </select>
+</mapper>

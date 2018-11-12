@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.common.MultiSelectMapper">
+
+  <select id="selectAreaGroupPolicy" resultType="com.aotain.zongfen.dto.common.Multiselect">
+  SELECT DISTINCT a.MESSAGE_NO as value,a.MESSAGE_NAME as title FROM zf_v2_policy_messageno a 
+  LEFT JOIN zf_v2_policy_areagroup b ON b.MESSAGE_NO = a.MESSAGE_NO 
+  WHERE a.MESSAGE_TYPE = 69 AND a.OPERATE_TYPE != 3
+  </select>
+
+    <select id="selectDdosManagePolicy" resultType="com.aotain.zongfen.dto.common.Multiselect">
+        SELECT DISTINCT a.MESSAGE_NO as value,a.MESSAGE_NAME as title FROM zf_v2_policy_messageno a
+        INNER JOIN zf_v2_policy_ddos b ON b.MESSAGE_NO = a.MESSAGE_NO
+        WHERE a.MESSAGE_TYPE = 67 AND a.OPERATE_TYPE != 3
+    </select>
+
+  <select id="getWSOption" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    select TRIGGER_HOST_LISTID AS value, TRIGGER_HOST_LISTNAME AS title from zf_v2_gen_trigger_host WHERE HOST_LISTTYPE = 1 and  OPERATE_TYPE != 3
+  </select>
+  
+   <select id="getKWOption" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    select TRIGGER_KW_LISTID AS value, TRIGGER_KW_LISTNAME AS title from zf_v2_gen_trigger_kw WHERE  OPERATE_TYPE != 3
+  </select>
+  
+   <select id="getWLOption" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    select TRIGGER_HOST_LISTID AS value, TRIGGER_HOST_LISTNAME AS title from zf_v2_gen_trigger_host WHERE HOST_LISTTYPE = 2 and  OPERATE_TYPE != 3
+  </select>
+  <select id="getAppType" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    select DISTINCT APP_TYPE AS value, APP_TYPE_NAME AS title from zf_dict_apptype
+    ORDER BY APP_TYPE ASC
+  </select>
+  
+  <select id="getAppByType" parameterType="java.lang.Integer" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    select DISTINCT APP_ID AS value, APP_ZH_NAME AS title ,APP_EN_NAME AS label from zf_v2_gen_app WHERE APP_TYPE=#{appType}
+    ORDER BY APP_ID ASC
+  </select>
+  
+   <select id="getUserGroup" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    SELECT t.USER_GROUP_ID AS VALUE, t.USER_GROUP_NAME AS title ,t.USER_GROUP_NAME AS label FROM zf_v2_usergroup t ,zf_v2_policy_messageno m
+     WHERE t.`MESSAGE_NO` = m.`MESSAGE_NO` AND m.`MESSAGE_TYPE` = 64 AND m.`OPERATE_TYPE`!=3
+  </select>
+
+   <select id="getMessageTypeName" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    SELECT t.MESSAGE_TYPE AS VALUE, t.MESSAGE_TITLE AS title ,t.MESSAGE_TITLE AS label FROM zf_dict_messagetype t
+     WHERE t.`FLAG` =1
+  </select>
+
+    <select id="getAppUserPolicy" resultType="com.aotain.zongfen.dto.common.Multiselect">
+        SELECT b.MESSAGE_NO AS VALUE,b.MESSAGE_NAME AS title,b.MESSAGE_NAME AS label
+        FROM zf_v2_policy_appuser a
+        inner join zf_v2_policy_messageno b on a.MESSAGE_NO = b.MESSAGE_NO  AND b.MESSAGE_TYPE = 8
+        where b.OPERATE_TYPE != 3
+    </select>
+
+    <select id="getClassFileInfo" resultType="com.aotain.zongfen.dto.common.Multiselect" >
+      SELECT class_file_name AS value , class_file_name AS title FROM zf_v2_gen_class_filename WHERE class_type = #{classType}
+    </select>
+  
+    <select id="getZongfenDev" resultType="com.aotain.zongfen.dto.common.Multiselect" parameterType="java.util.Map" >
+        <choose>
+            <when test="packetType==1">
+                SELECT DISTINCT
+                a.ZONGFEN_ID AS VALUE,
+                CONCAT(a.ZONGFEN_IP, " ", a.ZONGFEN_PORT) AS title,
+                CONCAT(a.ZONGFEN_IP, " ", a.ZONGFEN_PORT) AS label
+                FROM
+                zf_v2_dev_zongfen a LEFT JOIN zf_v2_dev_zongfen_user b ON a.`ZONGFEN_ID` = b.`ZONGFEN_ID`
+            </when>
+            <otherwise>
+                SELECT a.ZONGFEN_ID AS VALUE , CONCAT(a.ZONGFEN_IP ," ", a.ZONGFEN_FTP_PORT) AS title,CONCAT(a.ZONGFEN_IP ," ", a.ZONGFEN_FTP_PORT) AS label
+                FROM zf_v2_dev_zongfen a , zf_v2_dev_zongfen_user b
+                WHERE a.`ZONGFEN_ID` = b.`ZONGFEN_ID`
+                AND b.PACKET_TYPE = #{packetType}
+                AND b.PACKET_SUBTYPE = #{packetSubtype}
+            </otherwise>
+        </choose>
+    </select>
+    
+    <select id="getWebType" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    	SELECT  WEB_TYPE AS value,
+  				WEB_NAME AS title
+  		FROM 	zf_dict_webtype
+  		ORDER BY WEB_TYPE ASC
+    </select>
+    
+    <select id="getWebPushManagePolicy" resultType="com.aotain.zongfen.dto.common.Multiselect">
+        SELECT DISTINCT a.MESSAGE_NO as value,a.MESSAGE_NAME as title FROM zf_v2_policy_messageno a
+        INNER JOIN zf_v2_policy_webpush b ON b.MESSAGE_NO = a.MESSAGE_NO
+        WHERE a.MESSAGE_TYPE = 65 AND a.OPERATE_TYPE != 3
+    </select>
+    
+    <select id="getAreaList" parameterType="java.util.Map" resultType="com.aotain.zongfen.dto.common.Multiselect">
+        SELECT area_code AS VALUE,area_name AS title,area_name AS label
+  		FROM zf_dict_chinaarea
+  		WHERE 1=1
+  		<if test="type==0">
+  		AND AREA_CODE = PARENT
+  		</if> 
+  		<if test="type==1">
+  		AND AREA_CODE != PARENT
+  		</if>
+  		AND PARENT = #{parentCode}
+    </select>
+    
+    <select id="getIdcHouseList" resultType="com.aotain.zongfen.dto.common.Multiselect">
+        SELECT house_id as VALUE , house_name as title, house_name as label
+        FROM idc_isms_base_house
+    </select>
+    
+    <select id="getCarrieroperators" resultType="com.aotain.zongfen.dto.common.Multiselect">
+    	SELECT  cp AS value,
+  				cp AS title
+  		FROM 	zf_v2_ubas_illegalroutes_cp
+    </select>
+    
+</mapper>

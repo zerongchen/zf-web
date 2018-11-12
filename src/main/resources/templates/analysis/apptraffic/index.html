@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"><meta charset="utf-8"></head>
+<body class="gray-bg">
+<div id="main">
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-sm-12">
+            <div class="text-right">
+                <form role="form" class="form-inline" id="searchForm">
+                    <input type="hidden" name="pageType" th:value="${pageType}" />
+                    <!--<div class="form-group m-r-sm">
+                        <label>时间粒度</label>
+                        <div class="btn-group" id="dateTypeSelect">
+                            <button class="btn  btn-white btn-rounded" name="dateType" value="1" id="dateTypeH" type="button">按小时</button>
+                            <button class="btn btn-success btn-rounded" name="dateType" value="2" id="dateTypeD" type="button">按天</button>
+                            <button class="btn btn-white btn-rounded" name="dateType" value="3" id="dateTypeW" type="button">按周</button>
+                            <button class="btn btn-white btn-rounded" name="dateType" value="4" id="dateTypeM" type="button">按月</button>
+                        </div>
+                    </div>-->
+                    <div class="form-group m-r-sm" id="dateTypeSelect">
+                        <label>时间粒度</label>
+                        <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="1">按小时</button>
+                        <button name="dateType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按天</button>
+                        <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按周</button>
+                        <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="4">按月</button>
+                    </div>
+                    <div class="form-group m-r-sm">
+                        <label>统计时间</label>
+                        <input placeholder="统计时间" class="form-control layer-date "  name="stateTime" id="state" />
+                    </div>
+                    <div class="form-group m-r-sm" >
+                        <label>应用类型</label>
+                            <select class="form-control" name="appType" id="apptype">
+                            </select>
+                    </div>
+                    <div class="checkbox">
+                        <button th:authorized="${authorized}_query" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                        <div th:replace="/common/exportbtn::exportChoose" ></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper wrapper-content animated fadeinright">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox ">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="example-wrap text-right ">
+                                    <div class="example">
+                                            <div th:authorized="${authorized}_query" class="ibox-content h250" id="echart"  ></div>
+                                            <table th:authorized="${authorized}_query" id="table" data-mobile-responsive="true" class="text-left text-nowrap">
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="child" style="display: none">
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-sm-12">
+                <div class="text-right">
+                    <form role="form" class="form-inline" id="appSearchForm">
+                        <input type="hidden" name="type" value="2"><!--1 trend ,2 ranking-->
+                        <input type="hidden" name="areaType">
+                        <input type="hidden" name="destArea">
+                        <input type="hidden" name="srcArea">
+                        <!--<div class="form-group m-r-sm">
+                            <label>时间粒度</label>
+                            <div class="btn-group" id="appDateTypeSelect">
+                                <button class="btn btn-white btn-rounded" name="dateType" value="1" id="appDateTypeH" type="button">按小时</button>
+                                <button class="btn btn-white btn-rounded" name="dateType" value="2" id="appDateTypeD" type="button">按天</button>
+                                <button class="btn btn-white btn-rounded" name="dateType" value="3" id="appDateTypeW" type="button">按周</button>
+                                <button class="btn btn-white btn-rounded" name="dateType" value="4" id="appDateTypeM" type="button">按月</button>
+                            </div>
+                        </div>-->
+                        <div class="form-group m-r-sm" id="appDateTypeSelect">
+                            <label>时间粒度</label>
+                            <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="1">按小时</button>
+                            <button name="btnType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按天</button>
+                            <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按周</button>
+                            <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="4">按月</button>
+                        </div>
+                        <div class="form-group m-r-sm">
+                            <label>统计时间</label>
+                            <input placeholder="统计时间" class="form-control layer-date "  name="startTime" id="start">
+                            <input type="hidden" placeholder="结束日期" class="form-control layer-date "  name="endTime"  id="end">
+                        </div>
+
+                        <div class="form-group m-r-sm" >
+                            <label>应用类型</label>
+                            <select class="form-control" name="appType" id="appType2">
+                            </select>
+                        </div>
+                        <div class="checkbox">
+                            <button type="button"  class="btn btn-primary" id="appSearchFormButton" >查询</button>
+                            <div th:replace="/common/exportbtn::exportChoose"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper wrapper-content animated fadeinright">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="ibox ">
+                        <div class="ibox-content">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs">
+                                    <li id="trendAct"><a data-toggle="tab" href="#trend" aria-expanded="false">趋势分析</a> </li>
+                                    <li id="rankAct" class="active"> <a data-toggle="tab" href="#ranking" aria-expanded="true">排名分析</a> </li>
+                                    <li class="pull-right">
+                                        <button type="button" class="btn btn-success" id="returnToMain"><i class="fa fa-reply-all"></i> 返回上一级</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content ">
+                                    <div id="trend" class="tab-pane ">
+                                        <div class="example-wrap">
+                                            <div class="example m-t-xs">
+                                                <div class="ibox-content h350 m-b" id="appTrendEchart" style="height: 400px;border: 0;text-align: center" > </div>
+                                                <table id="appTrendTable" data-mobile-responsive="true">
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="ranking" class="tab-pane active">
+                                        <div class="example-wrap">
+                                            <div class="example m-t-xs">
+                                                <div class="ibox-content h350 m-b" id="appRankingEchart" style="height: 400px;border: 0;text-align: center"> </div>
+                                                <table id="appRankingTable" data-mobile-responsive="true">
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div th:include="/common/footer :: myfooter"></div>
+    <div th:include="/common/footer :: #traffic"></div>
+</body>
+</html>

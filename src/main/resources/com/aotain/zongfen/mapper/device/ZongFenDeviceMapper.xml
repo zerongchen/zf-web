@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.ZongFenDeviceMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.device.ZongFenDevice">
+    <id column="ZONGFEN_ID" jdbcType="INTEGER" property="zongfenId" />
+    <result column="ZONGFEN_IP" jdbcType="VARCHAR" property="zongfenIp" />
+    <result column="ZONGFEN_PORT" jdbcType="INTEGER" property="zongfenPort" />
+    <result column="ZONGFEN_FTP_PORT" jdbcType="INTEGER" property="zongfenFtpPort" />
+    <result column="ZONGFEN_NAME" jdbcType="VARCHAR" property="zongfenName" />
+    <result column="CREATE_OPER" jdbcType="DECIMAL" property="createOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="ISVIRTUALIP" jdbcType="INTEGER" property="isVirtualIp" />
+    <collection property="deviceUsers" ofType="com.aotain.zongfen.model.device.ZongFenDeviceUser" column="ZONGFEN_ID" select="getDeviceUser"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.ZONGFEN_ID, a.ZONGFEN_IP, a.ZONGFEN_PORT, a.ZONGFEN_FTP_PORT, a.ZONGFEN_NAME, a.CREATE_TIME, a.MODIFY_OPER, a.MODIFY_TIME,a.ISVIRTUALIP
+  </sql>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.ZongFenDevice" useGeneratedKeys="true" keyProperty="zongfenId">
+    insert into zf_v2_dev_zongfen ( ZONGFEN_IP, ZONGFEN_PORT, ZONGFEN_FTP_PORT, ZONGFEN_NAME, CREATE_OPER, CREATE_TIME, MODIFY_OPER, MODIFY_TIME, ISVIRTUALIP
+      )
+    values ( #{zongfenIp,jdbcType=VARCHAR}, 
+      #{zongfenPort,jdbcType=INTEGER}, #{zongfenFtpPort,jdbcType=INTEGER}, #{zongfenName,jdbcType=INTEGER}, 
+      #{createOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyOper,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP},#{isVirtualIp,jdbcType=INTEGER})
+  </insert>
+  
+  <update id="updateById" parameterType="com.aotain.zongfen.model.device.ZongFenDevice">
+  	UPDATE zf_v2_dev_zongfen
+  	SET ZONGFEN_NAME = #{zongfenName}
+  	<if test="zongfenIp!=null and zongfenIp!=''">
+  	,ZONGFEN_IP = #{zongfenIp}
+  	</if>
+  	<if test="zongfenPort!=null">
+  	,ZONGFEN_PORT = #{zongfenPort}
+  	</if>
+  	<if test="zongfenFtpPort != null">
+  	,ZONGFEN_FTP_PORT = #{zongfenFtpPort}
+  	</if>
+  	<if test="modifyOper!=null">
+  	,MODIFY_OPER = #{modifyOper}
+  	</if>
+  	<if test="modifyTime!=null">
+  	,MODIFY_TIME = #{modifyTime}
+  	</if>
+  	WHERE ZONGFEN_ID = #{zongfenId}
+  </update>
+  
+  <select id="getZongfenDevByPrimary" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from zf_v2_dev_zongfen a WHERE a.ZONGFEN_ID = #{zongfenId,jdbcType=INTEGER }
+  </select>
+  
+  <select id="getZongfenDevByType" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from zf_v2_dev_zongfen a,zf_v2_dev_zongfen_user b 
+    WHERE b.PACKET_TYPE = #{packetType,jdbcType=INTEGER}  
+    AND   b.PACKET_SUBTYPE = #{packetSubType,jdbcType=INTEGER}
+    AND   a.ZONGFEN_ID = b.ZONGFEN_ID
+    ORDER BY ZONGFEN_ID ASC
+  </select>
+  
+  <select id="getListByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_dev_zongfen a
+  	WHERE 1=1
+  	<if test="zongFenName!=null and zongFenName!=''">
+  		AND ZONGFEN_NAME LIKE CONCAT("%",#{zongFenName},"%")
+  	</if>
+  	ORDER BY MODIFY_TIME DESC
+  </select>
+  
+  <select id="getSameIpCount" parameterType="com.aotain.zongfen.model.device.ZongFenDevice" resultType="java.lang.Integer">
+  	SELECT COUNT(ZONGFEN_ID)
+  	FROM zf_v2_dev_zongfen
+  	WHERE ZONGFEN_IP = #{zongfenIp}
+  	AND ISVIRTUALIP = #{isVirtualIp}
+  	AND ZONGFEN_PORT = #{zongfenPort}
+  	<if test="zongfenId!=null">
+  	AND	ZONGFEN_ID != #{zongfenId}
+  	</if>
+  </select>
+  
+  <delete id="deleteById" parameterType="java.lang.Integer">
+  	DELETE FROM zf_v2_dev_zongfen
+  	WHERE ZONGFEN_ID = #{deviceId}
+  </delete>
+  
+    <select id="selectIsUploadUsed" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT count(a.ZONGFEN_ID)
+  	FROM zf_v2_dev_zongfen a,
+  		 zf_v2_policy_messageno b,
+  		 zf_v2_policy_flowupload c
+  	WHERE a.ZONGFEN_ID = #{zongFenId}
+  	AND a.ZONGFEN_ID = c.ZONGFEN_ID 
+  	AND c.MESSAGE_NO = b.MESSAGE_NO 
+  	AND b.MESSAGE_TYPE = 1
+  	AND b.OPERATE_TYPE != 3
+  	<if test="packageType!=null">
+  	AND c.PACKET_TYPE = #{packageType}
+  	AND c.PACKET_SUBTYPE = #{packageSubType}
+  	</if>
+  </select>
+  
+  <select id="selectIsCategoryUsed" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  	SELECT count(a.ZONGFEN_ID)
+  	FROM zf_v2_dev_zongfen a,
+  		 zf_v2_policy_messageno b,
+  		 zf_v2_gen_class_info c
+  	WHERE a.ZONGFEN_ID = #{deviceId} 
+  	AND (a.ZONGFEN_ID = c.ZONGFEN_ID 
+  		AND c.MESSAGE_NO = b.MESSAGE_NO 
+  		AND b.MESSAGE_TYPE IN (200,207)
+  		AND b.OPERATE_TYPE != 3)
+  </select>
+  
+  <select id="getDeviceUser" parameterType="java.lang.Integer" resultType="com.aotain.zongfen.model.device.ZongFenDeviceUser">
+  	SELECT ZONGFEN_ID zongfenId, PACKET_TYPE packetType, PACKET_SUBTYPE packetSubType, ZONGFEN_FTP_USER zongfenFtpUser, ZONGFEN_FTP_PWD zongfenFtpPwd
+  	FROM zf_v2_dev_zongfen_user
+  	WHERE ZONGFEN_ID = #{zongfenId}
+  </select>
+  
+  <select id="getDeviceUserByType" resultType="com.aotain.zongfen.model.device.ZongFenDeviceUser">
+  	SELECT ZONGFEN_ID zongfenId, PACKET_TYPE packetType, PACKET_SUBTYPE packetSubType, ZONGFEN_FTP_USER zongfenFtpUser, ZONGFEN_FTP_PWD zongfenFtpPwd
+  	FROM zf_v2_dev_zongfen_user
+  	WHERE PACKET_TYPE = #{packetType} AND PACKET_SUBTYPE = #{packetSubType} ORDER BY ZONGFEN_ID ASC
+  </select>
+  
+  <select id="getExistIp" parameterType="java.util.List" resultType="java.lang.Integer">
+  	select count(b.ZONGFEN_ID)
+  	from zf_v2_dev_zongfen_rel b
+  	where 1=1 
+  	and (
+  	<foreach collection="list" item="item" separator=" or ">(
+  	b.IP = #{item.ip}
+  	<if test="item.zongfenId!=null">
+  	and	b.ZONGFEN_ID != #{item.zongfenId}
+  	</if>
+  	)</foreach>)
+  </select>
+</mapper>

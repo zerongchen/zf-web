@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.system.SystemParameterMapper">
+
+    <sql id="Base_Column_List">
+        config_id AS configId, config_key AS configKey, config_value AS configValue,
+        config_desc AS configDesc, input_type AS inputType, input_items AS inputItems,
+        model_type AS modelType, CREATE_OPER As createOper, MODIFY_OPER As modifyOper,
+        CREATE_TIME AS createTime, MODIFY_TIME AS modifyTime
+    </sql>
+
+    <select id="listSystemParameter" resultType="com.aotain.zongfen.model.system.SystemParameter">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM zf_dict_system_config a
+        WHERE 1 = 1
+            <if test="configKey!=null and configKey!= '' ">
+                AND a.config_key LIKE CONCAT('%',#{configKey},'%')
+            </if>
+            <if test="configValue!=null and configValue!= '' ">
+                AND a.config_value LIKE CONCAT('%',#{configValue},'%')
+            </if>
+            <if test="configDesc!=null and configDesc!= '' ">
+                AND a.config_desc LIKE CONCAT('%',#{configDesc},'%')
+            </if>
+            <if test="modelType!=null and modelType!= 0 ">
+              AND a.model_type = #{modelType}
+            </if>
+
+        ORDER BY a.MODIFY_TIME DESC
+    </select>
+
+    <delete id="batchDelete" parameterType="java.util.List" >
+        delete from zf_dict_system_config
+        where config_id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="configId" parameterType="com.aotain.zongfen.model.system.SystemParameter">
+        insert into zf_dict_system_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="configKey != null">
+                config_key,
+            </if>
+            <if test="configValue != null">
+                config_value,
+            </if>
+            <if test="configDesc != null">
+                config_desc,
+            </if>
+            <if test="inputType != null">
+                input_type,
+            </if>
+            <if test="inputItem != null">
+                input_items,
+            </if>
+            <if test="modelType != null">
+                model_type,
+            </if>
+            <if test="createOper != null">
+                CREATE_OPER,
+            </if>
+            <if test="modifyOper != null">
+                MODIFY_OPER,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="modifyTime != null">
+                MODIFY_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="configKey != null">
+                #{configKey,jdbcType=VARCHAR},
+            </if>
+            <if test="configValue != null">
+                #{configValue,jdbcType=VARCHAR},
+            </if>
+            <if test="configDesc != null">
+                #{configDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null">
+                #{inputType,jdbcType=DECIMAL},
+            </if>
+            <if test="inputItem != null">
+                #{inputItem,jdbcType=VARCHAR},
+            </if>
+            <if test="modelType != null">
+                #{modelType,jdbcType=DECIMAL},
+            </if>
+            <if test="createOper != null">
+                #{createOper,jdbcType=VARCHAR},
+            </if>
+            <if test="modifyOper != null">
+                #{modifyOper,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyTime != null">
+                #{modifyTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByConfigKey" parameterType="com.aotain.zongfen.model.system.SystemParameter">
+        UPDATE zf_dict_system_config
+        <set>
+          <if test="inputItem != null">
+              input_items = #{inputItem,jdbcType=VARCHAR},
+          </if>
+          <if test="configValue != null">
+              config_value = #{configValue,jdbcType=VARCHAR},
+          </if>
+          <if test="configDesc != null">
+              config_desc = #{configDesc,jdbcType=VARCHAR},
+          </if>
+          <if test="inputType != null">
+              input_type = #{inputType,jdbcType=DECIMAL},
+          </if>
+          <if test="modelType != null">
+              model_type = #{modelType,jdbcType=DECIMAL},
+          </if>
+        </set>
+        where
+          config_key = #{configKey}
+    </update>
+
+    <select id="selectByConfigKey" parameterType="string" resultType="com.aotain.zongfen.model.system.SystemParameter">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM zf_dict_system_config a
+        WHERE a.config_key = #{configKey}
+    </select>
+
+    <select id="selectByConfigDesc" parameterType="com.aotain.zongfen.model.system.SystemParameter"
+            resultType="com.aotain.zongfen.model.system.SystemParameter">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM zf_dict_system_config a
+        WHERE a.config_desc = #{configDesc}
+        <if test="configKey!=null">
+            AND a.config_key != #{configKey}
+        </if>
+        <if test="modelType!=null">
+            AND a.model_type = #{modelType}
+        </if>
+    </select>
+
+    <select id="selectByConfigId" parameterType="int"
+            resultType="com.aotain.zongfen.model.system.SystemParameter">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM zf_dict_system_config a
+        WHERE a.config_id = #{configId}
+    </select>
+
+</mapper>

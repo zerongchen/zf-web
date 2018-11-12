@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.analysis.WlanMapper">
+  
+  <select id="getCountUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+  	SELECT COUNT(1)
+  	FROM zf_v2_user
+  	WHERE USER_GROUP_ID = #{userGroup}
+  	AND USER_NAME LIKE CONCAT('%',#{userAccount},'%')
+  </select>
+  
+  <select id="getAcountList" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	SELECT USER_NAME
+  	FROM zf_v2_user
+  	WHERE USER_GROUP_ID = #{userGroup}
+  </select>
+  
+</mapper>

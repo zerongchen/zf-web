@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.AppFlowManagerMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.apppolicy.AppFlowManager">
+    <id column="APPFLOW_ID" jdbcType="BIGINT" property="appFlowId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+    <result column="APPTYPE" jdbcType="DECIMAL" property="apptype" />
+    <result column="APPID" jdbcType="DECIMAL" property="appid" />
+    <result column="APPNAME" jdbcType="VARCHAR" property="appname" />
+    <result column="APP_THRESHOLD_UP_ABS" jdbcType="BIGINT" property="appThresholdUpAbs" />
+    <result column="APP_THRESHOLD_DN_ABS" jdbcType="BIGINT" property="appThresholdDnAbs" />
+    <result column="R_STARTTIME" jdbcType="DECIMAL" property="rStarttime" />
+    <result column="R_ENDTIME" jdbcType="DECIMAL" property="rEndtime" />
+    <result column="C_TIME" jdbcType="BIGINT" property="cTime" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultListMap" type="com.aotain.zongfen.dto.apppolicy.FlowManagerDTO">
+    <result column="APPFLOW_ID" jdbcType="BIGINT" property="appFlowId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_NAME" jdbcType="VARCHAR" property="messageName" />
+    <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <result column="APPTYPE" jdbcType="DECIMAL" property="apptype" />
+    <result column="APPID" jdbcType="DECIMAL" property="appid" />
+    <result column="APPNAME" jdbcType="VARCHAR" property="appname" />
+    <result column="APP_THRESHOLD_UP_ABS" jdbcType="BIGINT" property="appThresholdUpAbs" />
+    <result column="APP_THRESHOLD_DN_ABS" jdbcType="BIGINT" property="appThresholdDnAbs" />
+    <result column="R_STARTTIME" jdbcType="DECIMAL" property="rStarttime" />
+    <result column="R_ENDTIME" jdbcType="DECIMAL" property="rEndtime" />
+    <result column="C_TIME" jdbcType="BIGINT" property="cTime" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="USER_TYPE" jdbcType="DECIMAL" property="userType" />
+    <collection property="userName" ofType="java.lang.String" select="selectUserNames" column="{id=APPFLOW_ID}"  >
+      <result column="USER_NAME" jdbcType="VARCHAR"  />
+    </collection>
+  
+    <collection property="puserGroup" ofType="java.lang.Long" select="selectUserGroups" column="{id=APPFLOW_ID}" >
+      <result column="USER_GROUP_ID" jdbcType="DECIMAL" />
+    </collection>
+    
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    APPFLOW_ID , MESSAGE_NO,MESSAGE_NAME,APPTYPE, APPID, APPNAME, APP_THRESHOLD_UP_ABS, APP_THRESHOLD_DN_ABS,
+    R_STARTTIME, R_ENDTIME, C_TIME, OPERATE_TYPE, CREATE_OPER, MODIFY_OPER, CREATE_TIME, 
+    MODIFY_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_appflow_manage
+    where APPFLOW_ID = #{appFlowId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_appflow_manage
+    where APPFLOW_ID = #{appFlowId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="appFlowId" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManager">
+    insert into zf_v2_appflow_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="appFlowId != null">
+        APPFLOW_ID,
+      </if>
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="messageName != null">
+        MESSAGE_NAME,
+      </if>
+      <if test="apptype != null">
+        APPTYPE,
+      </if>
+      <if test="appid != null">
+        APPID,
+      </if>
+      <if test="appname != null">
+        APPNAME,
+      </if>
+      <if test="appThresholdUpAbs != null">
+        APP_THRESHOLD_UP_ABS,
+      </if>
+      <if test="appThresholdDnAbs != null">
+        APP_THRESHOLD_DN_ABS,
+      </if>
+      <if test="rStarttime != null">
+        R_STARTTIME,
+      </if>
+      <if test="rEndtime != null">
+        R_ENDTIME,
+      </if>
+      <if test="cTime != null">
+        C_TIME,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="appFlowId != null">
+        #{appFlowId,jdbcType=BIGINT}
+      </if>
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="messageName != null">
+        #{messageName,jdbcType=VARCHAR},
+      </if>
+      <if test="apptype != null">
+        #{apptype,jdbcType=DECIMAL},
+      </if>
+      <if test="appid != null">
+        #{appid,jdbcType=DECIMAL},
+      </if>
+      <if test="appname != null">
+        #{appname,jdbcType=VARCHAR},
+      </if>
+      <if test="appThresholdUpAbs != null">
+        #{appThresholdUpAbs,jdbcType=BIGINT},
+      </if>
+      <if test="appThresholdDnAbs != null">
+        #{appThresholdDnAbs,jdbcType=BIGINT},
+      </if>
+      <if test="rStarttime != null">
+        #{rStarttime,jdbcType=DECIMAL},
+      </if>
+      <if test="rEndtime != null">
+        #{rEndtime,jdbcType=DECIMAL},
+      </if>
+      <if test="cTime != null">
+        #{cTime,jdbcType=BIGINT},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManager">
+    update zf_v2_appflow_manage
+    <set>
+      <if test="messageNo != null">
+        MESSAGE_NO = #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="messageName != null">
+        MESSAGE_NAME = #{messageName,jdbcType=VARCHAR},
+      </if>
+      <if test="apptype != null">
+        APPTYPE = #{apptype,jdbcType=DECIMAL},
+      </if>
+      <if test="appid != null">
+        APPID = #{appid,jdbcType=DECIMAL},
+      </if>
+      <if test="appname != null">
+        APPNAME = #{appname,jdbcType=VARCHAR},
+      </if>
+      <if test="appThresholdUpAbs != null">
+        APP_THRESHOLD_UP_ABS = #{appThresholdUpAbs,jdbcType=BIGINT},
+      </if>
+      <if test="appThresholdDnAbs != null">
+        APP_THRESHOLD_DN_ABS = #{appThresholdDnAbs,jdbcType=BIGINT},
+      </if>
+      <if test="rStarttime != null">
+        R_STARTTIME = #{rStarttime,jdbcType=DECIMAL},
+      </if>
+      <if test="rEndtime != null">
+        R_ENDTIME = #{rEndtime,jdbcType=DECIMAL},
+      </if>
+      <if test="cTime != null">
+        C_TIME = #{cTime,jdbcType=BIGINT},
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE = #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where APPFLOW_ID = #{appFlowId,jdbcType=BIGINT}
+  </update>
+  
+  <select id="isSameName" parameterType="com.aotain.zongfen.model.apppolicy.AppFlowManager" resultType="int">
+    SELECT COUNT(MESSAGE_NAME) FROM zf_v2_appflow_manage t WHERE t.OPERATE_TYPE!=3
+    <if test="messageName">
+      AND t.MESSAGE_NAME = #{messageName}
+    </if>
+    <if test="appFlowId">
+      AND t.APPFLOW_ID != #{appFlowId}
+    </if>
+  </select>
+  
+  <select id="getList" parameterType="com.aotain.zongfen.dto.apppolicy.FlowManagerDTO" resultMap="BaseResultListMap">
+    SELECT DISTINCT
+    t.APPFLOW_ID,
+    t.MESSAGE_NO ,
+    t.MESSAGE_NAME,
+    t.APPTYPE,
+    t.APPID,
+    t.APPNAME,
+    t.APP_THRESHOLD_UP_ABS,
+    t.APP_THRESHOLD_DN_ABS,
+    t.R_STARTTIME,
+    t.R_ENDTIME,
+    t.C_TIME,
+    t.OPERATE_TYPE,
+    t.CREATE_OPER,
+    t.MODIFY_OPER,
+    t.CREATE_TIME,
+    t.MODIFY_TIME,
+    u.USER_TYPE
+    from zf_v2_appflow_manage t ,
+    zf_v2_appflow_manage_usergroup u
+    WHERE  t.APPFLOW_ID = u.APPFLOW_ID
+      AND t.OPERATE_TYPE!=3
+    <if test="messageNo">
+      AND t.MESSAGE_NO = #{messageNo}
+    </if>
+    <if test="appFlowId">
+      AND t.APPFLOW_ID = #{appFlowId}
+    </if>
+    <if test="messageName!=null">
+      AND t.MESSAGE_NAME LIKE CONCAT("%",#{messageName},"%")
+    </if>
+    <if test="searchStartTime!=null">
+      AND t.CREATE_TIME &gt;= #{searchStartTime}
+    </if>
+    <if test="searchEndTime!=null">
+      AND t.CREATE_TIME &lt; #{searchEndTime}
+    </if>
+    ORDER by t.MODIFY_TIME DESC
+  </select>
+  
+   <select id="selectUserNames" parameterType="java.util.Map" resultType="String">
+     SELECT USER_NAME FROM zf_v2_appflow_manage_usergroup WHERE APPFLOW_ID=#{id}
+   </select>
+  
+  <select id="selectUserGroups" parameterType="java.util.Map" resultType="Long">
+    SELECT USER_GROUP_ID FROM zf_v2_appflow_manage_usergroup WHERE APPFLOW_ID=#{id}
+  </select>
+  
+</mapper>

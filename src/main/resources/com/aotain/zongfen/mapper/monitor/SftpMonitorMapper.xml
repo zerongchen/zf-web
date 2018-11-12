@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.SftpMonitorMapper">
+  <resultMap id="SftpMonitorMap" type="com.aotain.zongfen.dto.monitor.SftpMonitorDTO">
+    <result column="stat_time" jdbcType="BIGINT" property="statTime" />
+    <result column="received_time" jdbcType="VARCHAR" property="receivedTime" />
+    <result column="file_type" jdbcType="INTEGER" property="fileType" />
+    <result column="file_type_name" jdbcType="VARCHAR" property="fileTypeName" />
+    <result column="probe_type" jdbcType="TINYINT" property="probeType" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+    <result column="received_file_num" jdbcType="INTEGER" property="receivedFileNum" />
+    <result column="received_file_size" jdbcType="BIGINT" property="receivedFileSize" />
+  </resultMap>
+  
+  <select id="selectFileType" resultMap="SftpMonitorMap">
+  	SELECT (PACKET_SUB_TYPE + PACKET_TYPE * 256) AS file_type, PACKET_TYPE_NAME AS file_type_name 
+	FROM zf_dict_packettype where PACKET_TYPE > 1
+  </select>
+  
+  <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.SftpMonitorDTO" resultMap="SftpMonitorMap">
+     SELECT a.stat_time,a.file_type,b.file_type_name,
+	     <if test="tableType == 2">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time, 
+	     </if>
+	     <if test="tableType == 1">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H:%i') AS received_time, 
+	     </if>
+	     <if test="tableType == 3">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time, 
+	     </if>
+	    <choose> 
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>  
+				a.probe_type,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>  
+				a.probe_type,a.area_id,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>  
+				a.probe_type,a.area_id,a.software_provider, 
+			</when>
+			<otherwise>
+				0 as level,
+			</otherwise>
+	    </choose> 
+		SUM(a.file_num) AS received_file_num, 
+		SUM(a.file_size) AS received_file_size
+	 FROM  
+	     <if test="tableType == 2">
+	        zf_v2_monitor_receivedfile_h a
+	     </if>
+	     <if test="tableType == 1">
+	        zf_v2_monitor_receivedfile_min a
+	     </if>
+	     <if test="tableType == 3">
+	        zf_v2_monitor_receivedfile_d a
+	     </if>
+	 LEFT JOIN 
+	 ( SELECT (PACKET_SUB_TYPE + PACKET_TYPE * 256) AS file_type, PACKET_TYPE_NAME AS file_type_name 
+	 FROM zf_dict_packettype ) b 
+	 ON b.file_type = a.file_type 
+	 WHERE a.file_type = #{fileType,jdbcType=INTEGER}
+	 <if test="startTime != null and startTime != '' ">
+	    AND a.stat_time &gt;= UNIX_TIMESTAMP(CONCAT(#{startTime}," 00:00:00"))
+	 </if>
+	 <if test="endTime != null and endTime != '' ">
+	    AND a.stat_time &lt; UNIX_TIMESTAMP(CONCAT(#{endTime}," 23:59:59"))
+	 </if>
+	 <choose> 
+		<!--  设备类型DPI、EU  -->
+		<when test='level == 1'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT} 
+			GROUP BY received_time,a.probe_type
+		</when>
+		<!--  区域ID或者机房  -->
+		<when test='level == 2'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} 
+			GROUP BY received_time,a.probe_type,a.area_id
+		</when>
+		<!--  厂家  -->
+		<when test='level == 3'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+			GROUP BY received_time,a.probe_type,a.area_id,a.software_provider
+		</when>
+		<otherwise>   
+        	GROUP BY received_time  
+	    </otherwise>
+	 </choose>
+	  ORDER BY a.stat_time DESC
+  </select>
+
+	<select id="selectChartList" parameterType="com.aotain.zongfen.dto.monitor.SftpMonitorDTO" resultMap="SftpMonitorMap">
+		SELECT a.stat_time,a.file_type,b.file_type_name,
+		<if test="tableType == 2">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time,
+		</if>
+		<if test="tableType == 1">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H:%i') AS received_time,
+		</if>
+		<if test="tableType == 3">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time,
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				a.probe_type,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				a.probe_type,a.area_id,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				a.probe_type,a.area_id,a.software_provider,
+			</when>
+		</choose>
+		SUM(a.file_num) AS received_file_num,
+		SUM(a.file_size) AS received_file_size
+		FROM
+		<if test="tableType == 2">
+			zf_v2_monitor_receivedfile_h a
+		</if>
+		<if test="tableType == 1">
+			zf_v2_monitor_receivedfile_min a
+		</if>
+		<if test="tableType == 3">
+			zf_v2_monitor_receivedfile_d a
+		</if>
+		LEFT JOIN
+		( SELECT (PACKET_SUB_TYPE + PACKET_TYPE * 256) AS file_type, PACKET_TYPE_NAME AS file_type_name
+		FROM zf_dict_packettype ) b
+		ON b.file_type = a.file_type
+		WHERE a.file_type = #{fileType,jdbcType=INTEGER}
+		<if test="startTime != null and startTime != '' ">
+			AND a.stat_time &gt;= UNIX_TIMESTAMP(CONCAT(#{startTime}," 00:00:00"))
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND a.stat_time &lt; UNIX_TIMESTAMP(CONCAT(#{endTime}," 23:59:59"))
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}
+				GROUP BY received_time,a.probe_type
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR}
+				GROUP BY received_time,a.probe_type,a.area_id
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+				GROUP BY received_time,a.probe_type,a.area_id,a.software_provider
+			</when>
+			<otherwise>
+				GROUP BY received_time
+			</otherwise>
+		</choose>
+		ORDER BY a.stat_time
+	</select>
+
+</mapper>

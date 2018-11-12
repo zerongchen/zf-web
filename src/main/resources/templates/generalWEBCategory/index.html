@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='SHB'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>类型</label>
+                    <select class="form-control" id="webType"></select>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>Host名称</label>
+                    <input type="text" id="hostName" class="form-control"/>
+                    <input type="hidden" name="fileName" id="downLoadFileName" value="" class="form-control"/>
+                </div>
+                <div class="checkbox">
+                    <button th:if="${session.zf104002_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                        	<div class="pull-left">
+			                <div class="alert alert-danger m-t-sm" style="display: none" id="importAlert">用户导入完成，请点击“生成文件并下发”进行内容更新！</div>
+			            	</div>
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+										<button th:if="${session.zf104002_import}==1" type="button" id="import" class="btn btn-outline btn-primary m-l-xs" data-toggle="modal" data-target="#upLoad">导入</button>
+                    					<a th:if="${session.zf104002_export}==1" class="btn btn-success" id="export" download="导出"><i class="fa fa fa-download"></i> 导出</a>
+					                    <button th:if="${session.zf104002_create}==1" type="button" id="createAndSend" class="btn btn-outline btn-primary m-l-xs" data-toggle="modal" data-target="#createFile">生成文件并下发</button>
+					                    <button th:if="${session.zf104002_query}==1" type="button" id="getDetail" class="btn btn-outline btn-primary m-l-xs" data-toggle="modal" data-target="#fileDetail">文件下发详情</button>
+                                    </div>
+                                    <table id="webCategoryList" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="upLoad" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="ibox-title">
+            <h5>导入</h5> </div>
+      <form class="form-horizontal" id="importWEBCategory" enctype ="multipart/form-data">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+            	<div class="form-group">
+                	<label class="col-md-2 control-label">操作类型</label>
+                	<div class="col-md-3">
+                  		<select class="form-control" id="operation" name="operation">
+                  			<option value="">请选择</option>
+                  			<option value="0">全量</option>
+                  			<option value="1">增量</option>
+                  		</select>
+                	</div>
+              </div>
+              <div class="hr-line-dashed"></div>
+              <div class="form-group">
+                <label class="col-md-2 control-label">文件</label>
+                <div class="col-md-3">
+                  <input type="file" id="webCategoryFile" name="webCategoryFile" class="form-control">
+                </div>
+                <div class="col-md-3 help-block">
+                   <a href="uploadTemplate" target="_self">下载导入模板</a>
+               </div>
+              </div>
+              <div class="hr-line-dashed"></div>
+              <div class="form-group m-t"> 
+				<div class="col-md-offset-2 col-md-6">
+				 	<button type="button" id="importButton" class="btn btn-primary">导入</button>
+                   	<a class="m-l-sm" data-dismiss="modal">关闭</a> 
+                  </div>
+			</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal inmodal fade" id="createFile" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="ibox-title">
+            <h5>生成文件并下发</h5> </div>
+      <form class="form-horizontal">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-sm-12">
+            	<div class="form-group" id="serverMessage">
+                	<label class="col-md-2 control-label">生成列表服务器</label>
+                	<div class="col-md-3">
+                  		<select class="form-control" id="servers">
+                  		</select>
+                	</div>
+              	</div>
+              <div class="hr-line-dashed"></div>
+              <div class="form-group m-t"> 
+				<div class="col-md-offset-2 col-md-6">
+				 	<button type="button" id="ensure" class="btn btn-primary">确定</button>
+                   	<a class="m-l-sm" data-dismiss="modal">关闭</a> 
+                  </div>
+			</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div th:include="/common/file_detail_snippet :: fileDetail"></div>
+
+<div th:include="/common/role_permission :: rolePermission"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+<script th:src="@{{path}/static/js/common/policy-detail-snippet.js(path=${contextPath})}"></script>
+<script th:src="@{{path}/static/js/common/file-detail-snippet.js(path=${contextPath})}"></script>
+<script th:src="@{{path}/static/js/general/webCategoryManage.js(path=${contextPath})}"></script>
+</body>
+</html>

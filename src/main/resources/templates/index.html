@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title"> <a href="/monitor/alarm/index"><span class="label label-danger pull-right">更多</span></a>
+                    <h5><span id="alarmCount">告警监控（10）</span></h5>
+                </div>
+                <div class="ibox-content">
+                    <table id="exampleTableToolbar18" class="table table-hover text-danger" style="border-bottom: 1px solid #e7eaec; border-top: hidden;"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>IDC对外流量概览 &nbsp;&nbsp;&nbsp;<small>(近7天)</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <!--图表echarts：圆饼图-->
+                    <div class="h350" style="background: #369;" id="idc_traffic"></div>
+                    <!--图表echarts：圆饼图 end-->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>城域网访问外省流量概览 &nbsp;&nbsp;&nbsp;<small>(近7天)</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <!--图表echarts：柱状图-->
+                    <div class="h350" style="background: #06c;" id="dpi_traffic"></div>
+                    <!--图表echarts：柱状图 end-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>应用流量概览 &nbsp;&nbsp;&nbsp;<small>(近7天)</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <!--图表echarts：折线图1-->
+                    <div class="h350" style="background: #f60;" id="appflow"></div>
+                    <!--图表echarts：折线图1 end-->
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>应用流量TOP10 &nbsp;&nbsp;&nbsp;<small>(近7天)</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <!--图表echarts：折线图2-->
+                    <div class="h350" style="background: #f00;" id="flowTop10"></div>
+                    <!--图表echarts：折线图2 end-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #indexpage"></div>
+</body>
+</html>

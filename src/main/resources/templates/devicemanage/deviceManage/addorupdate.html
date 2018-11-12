@@ -1,0 +1,264 @@
+<div th:fragment="myaddorupdate">
+	<!-- 综分设备编辑 -->
+    <div class="modal inmodal fade" id="zongfenModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="zftitle">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group" id="nameMessage">
+                                <label class="col-md-1 control-label p-n">设备名称</label>
+                                <div class="col-md-3">
+                                	<input type="hidden" id="zongFenId" class="form-control" />
+                                    <input type="text" id="addDeviceName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed reDev"></div>
+                            <div class="form-group reDev" id="ipPortMessage">
+                                 <label class="col-md-1 control-label p-n">物理IP地址:端口</label>
+                                <div class="col-md-3" >
+                                 <select  id="realIpandPort" class="form-control selectpicker " multiple data-live-search="false">
+                                 </select>
+                            	 </div>
+                            	 <div class="help-block m-b-none col-md-3 virCheck" >
+                            	 	<input type="checkbox" id="isVirtual">
+                            	 	<span>是否增加虚拟IP</span>
+                            	 </div>
+                            </div>
+                            <div class="hr-line-dashed vir"></div>
+                            <div class="form-group vir" id="virtualIpMessage">
+                             <label class="col-md-1 control-label p-n">虚拟IP地址</label>
+                                <div class="col-md-3">
+                                    	<input type="text" id="virtualIp" class="form-control" />
+                                </div>
+                            </div>
+                			<div class="hr-line-dashed"></div>
+                			<div id="isZongFen">
+                			<div class="form-group" >
+                				<label class="col-md-1 control-label p-n">设备用途</label>
+                                <div class="col-md-2">
+                                    <select class="form-control" id="deviceType" name="deviceTypes">
+                                        <option selected="" value="">请选择</option>
+                                        <option value="2_0">HTTP</option>
+                                        <option value="2_1">RTSP</option>
+                                        <option value="2_2">VoIP</option>
+                                        <option value="2_3">FTP</option>
+                                        <option value="2_4">SMTP</option>
+                                        <option value="2_5">POP3</option>
+                                        <option value="2_6">IMAP</option>
+                                        <option value="2_7">DNS</option>
+                                        <option value="2_8">P2P</option>
+                                        <option value="2_9">Game</option>
+                                        <option value="2_10">IM</option>
+                                        <option value="3_0">HTTP GET数据接收</option>
+                                        <option value="3_1">WLAN终端数据接收</option>
+                                        <option value="9_0">分类库下发设备</option>
+                                    </select>
+                                </div>
+                                <label class="col-md-2 control-label p-n">物理服务器登录名:密码</label>
+                                <div class="col-md-1">
+                                    <input type="text" id ="sftpNM" name="sftpNMs" class="form-control"/>
+                                </div>
+                                <div class="col-md-1">
+                                	<input onKeyUp="getType(this)" id="sftpPW" name="sftpPWs" class="form-control"/>
+                                </div>
+                                <div class="col-md-1">
+									<span class="help-block m-b-none tips">
+										<a class="m-l-n m-r-sm"><i class="fa fa-plus" id="sftpInputAdd" aria-hidden="true"></i></a>
+									</span>
+              					</div>
+                            </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                			<div class="form-group" >
+                                <label class="col-md-1 control-label p-n">SFTP/FTP端口</label>
+                                <div class="col-md-1" id="sftpPortMessage">
+                                    <input type="text" id ="sftpPort" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addButZF">确认</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DPI信息接收设备编辑页面 -->
+    <div class="modal inmodal fade" id="dpiRecModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="dpiRectitle">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group" id="nameMessagedpirec">
+                                <label class="col-md-2 control-label p-n">设备名称</label>
+                                <div class="col-md-3">
+                                	<input type="hidden" id="messageNo" class="form-control" />
+                                	<input type="hidden" id="dpiRecId" class="form-control" />
+                                    <input type="text" id="addDeviceNamedpirec" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="typeMessagedpirec">
+                                <label class="col-md-2 control-label p-n">设备类型</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="deviceTypedpirec">
+                                        <option selected="" value="">请选择</option>
+                                        <option value="0">DPI</option>
+                                        <option value="1">EU</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="areaMessage">
+                                <label class="col-md-2 control-label p-n">所属区域</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="area">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed idc"></div>
+                            <div class="form-group idc" id="idcHouseMessage">
+                                  <label class="col-md-2 control-label p-n">机房</label>
+                                 <div class="col-md-3" >
+                                  <select  id="idcHouse" class="form-control selectpicker " multiple data-live-search="false">
+                                  </select>
+                              	</div>
+                             </div>
+                             <div class="hr-line-dashed ser"></div>
+                            <div class="form-group ser" id="serversMessage">
+                            	 <input type="hidden" id="isAutoFlag">
+                                  <label class="col-md-2 control-label p-n">综分设备</label>
+                                 <div class="col-md-3" >
+                                  <select  id="servers" class="form-control ">
+                                  </select>
+                              	</div>
+                             </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="aaaDataMessage">
+                                  <label class="col-md-2 control-label p-n">是否接收AAA数据</label>
+                                 <div class="help-block m-b-none col-md-3" >
+	                                  <label class="checkbox-inline p-t-n">
+	                                  	<input type="radio" name="aaaData" value="1" >是
+	                                  </label>
+	                                  <label class="checkbox-inline p-t-n">
+	                                  	<input type="radio" name="aaaData" value="0" >否
+	                                  </label>
+                              	</div>
+                             </div>
+                            <div class="hr-line-dashed"></div>
+                			<div class="form-group">
+                                <label class="col-md-2 control-label p-n">IP地址:端口</label>
+                                <div class="col-md-3">
+                                    <input type="text" id ="deviceIPdpirec" class="form-control"/>
+                                </div>
+                                <div class="col-md-2">
+                                	<input type="text" id="devicePortdpirec" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addButdpirec">确认</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DPI数据接收设备页面 -->
+    <div class="modal inmodal fade" id="dpiUplModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="dpiUpltitle">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12" id="ipsUpload">
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="typeMessagedpiupl">
+                                <label class="col-md-1 control-label p-n">设备类型</label>
+                                <div class="col-md-3">
+                                	<input type="hidden" id="dpiUplId" class="form-control" />
+                                    <select class="form-control" id="deviceTypedpiupl">
+                                        <option selected="" value="">请选择</option>
+                                        <option value="0">DPI</option>
+                                        <option value="1">EU</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed area"></div>
+                            <div class="form-group area" id="areaUplMessage">
+                                <label class="col-md-1 control-label p-n">所属区域</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="areaUpl">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed upl"></div>
+                            <div class="form-group upl" id="idcHouseUplMessage">
+                                  <label class="col-md-1 control-label p-n">机房</label>
+                                 <div class="col-md-3" >
+                                  <select  id="idcHouseUpl" class="form-control">
+                                  </select>
+                              	</div>
+                             </div>
+                            <div class="hr-line-dashed"></div>
+                			<div class="form-group" id="softwareMessage">
+                                <label class="col-md-1 control-label p-n">厂家来源</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="softwareProvider">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group"> 
+								<label class="col-md-1 control-label p-n">开始IP:结束IP</label>
+								<div class="col-md-3"> 
+									<input type="text" id="startIp" name="startIps" class="form-control frominput">
+								 </div>
+								 <div class="col-md-3"> 
+									<input type="text" id="endIp" name="endIps" class="form-control frominput">
+								 </div>
+								<div class="col-md-1">
+									<span class="help-block m-b-none tips">
+										<a class="m-l-n m-r-sm"><i class="fa fa-plus" id="ipInputAdd" aria-hidden="true"></i></a>
+									</span>
+              					</div>
+							</div>
+							<div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addButdpiupl">确认</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

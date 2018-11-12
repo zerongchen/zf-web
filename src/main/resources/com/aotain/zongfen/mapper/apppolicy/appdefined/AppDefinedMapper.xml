@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.appdefined.AppDefinedMapper">
+
+    <sql id="appDefinedSql">
+        a.DEFINED_ID AS defined_id,a.MESSAGE_NO AS message_no,a.APPTYPE AS app_type,a.APPID AS app_id,a.APPNAME AS app_name
+    </sql>
+
+    <sql id="appDefinedQuintet">
+        b.QUINTET_ID AS qui_quintet_id,b.DEFINED_ID AS qui_defined_id,b.U_PROTOCOL AS qui_protocol,
+        b.U_SOURCEIP AS qui_source_ip,b.U_SOURCEPORT AS qui_source_port,b.U_DESTIP AS qui_dest_ip,b.U_DESTPORT AS qui_dest_port
+    </sql>
+
+    <sql id="appDefinedKey">
+        c.QUINTET_ID AS key_quintet_id,c.U_OFFSETBASE AS key_offset_base,c.U_OFFSET AS key_offset,c.U_KWVALUE AS key_kw_value
+    </sql>
+
+    <sql id="MESSAGE_NO_COLUMN">
+        mn.MESSAGE_NAME AS messageName,mn.MESSAGE_SEQUENCENO AS messageSequenceNo,mn.OPERATE_TYPE AS operationType,
+        mn.CREATE_OPER AS createOper,mn.MODIFY_OPER AS modifyOper,mn.CREATE_TIME AS createTime,mn.MODIFY_TIME AS modifyTime
+    </sql>
+
+    <resultMap id="appDefinedMap" type="com.aotain.common.policyapi.model.AppDefinedStrategy">
+        <id property="definedId" column="defined_id" />
+        <result property="messageNo" column="message_no" />
+        <result property="appType" column="app_type" />
+        <result property="appId" column="app_id" />
+        <result property="appName" column="app_name" />
+        <result property="messageName" column="messageName"/>
+        <result property="operationType" column="operationType"/>
+        <result property="createOper" column="createOper"/>
+        <result property="modifyOper" column="modifyOper"/>
+        <result property="createTime" column="createTime"/>
+        <result property="modifyTime" column="modifyTime"/>
+        <collection property="bindUser" ofType="com.aotain.common.policyapi.model.UserPolicyBindStrategy" column="message_no" select="selectBindUsers"/>
+        <collection property="signature" ofType="com.aotain.common.policyapi.model.AppDefinedQuintet" column="defined_id" select="selectAppDefinedQuintet"/>
+    </resultMap>
+
+    <resultMap id="appDefinedQuintetMap" type="com.aotain.common.policyapi.model.AppDefinedQuintet">
+        <id property="quintetId" column="qui_quintet_id"/>
+        <result property="definedId" column="qui_defined_id"/>
+        <result property="protocol" column="qui_protocol"/>
+        <result property="sourceIp" column="qui_source_ip"/>
+        <result property="sourcePort" column="qui_source_port"/>
+        <result property="destIp" column="qui_dest_ip"/>
+        <result property="destPort" column="qui_dest_port"/>
+        <collection property="kw" ofType="com.aotain.common.policyapi.model.AppDefinedKey">
+            <result property="quintetId" column="key_quintet_id"/>
+            <result property="offSetBase" column="key_offset_base"/>
+            <result property="offSet" column="key_offset"/>
+            <result property="kwValue" column="key_kw_value"/>
+        </collection>
+    </resultMap>
+
+    <!-- SQL语句中以"#{}"的形式引用参数 -->
+    <select id="selectBindUsers" parameterType="map" resultType="com.aotain.common.policyapi.model.UserPolicyBindStrategy">
+        select USER_TYPE AS userType,
+        USER_NAME AS userName,
+        USER_GROUP_ID AS userGroupId
+        from zf_v2_policy_userpolicy_bind
+        where BIND_MESSAGE_NO = #{messageNo} and BIND_MESSAGE_TYPE = 10 and OPERATE_TYPE != 3
+    </select>
+
+    <select id="selectAppDefinedQuintet" parameterType="long" resultMap="appDefinedQuintetMap">
+        SELECT
+          <include refid="appDefinedQuintet"/>,
+          <include refid="appDefinedKey"/>
+        from zf_v2_policy_appdefined_quintet b
+        INNER JOIN zf_v2_policy_appdefined_key c
+        ON b.QUINTET_ID = c.QUINTET_ID
+        WHERE b.DEFINED_ID = #{definedId}
+    </select>
+
+    <select id="listData" parameterType="map" resultMap="appDefinedMap">
+        SELECT
+          <include refid="appDefinedSql"/>,
+          <include refid="MESSAGE_NO_COLUMN"/>,
+          c.APP_TYPE_NAME AS appTypeName
+        FROM zf_v2_policy_appdefined a
+        INNER JOIN zf_v2_policy_messageno mn ON a.MESSAGE_NO = mn.MESSAGE_NO and mn.MESSAGE_TYPE = 10
+        INNER JOIN zf_dict_apptype c ON a.APPTYPE = c.APP_TYPE
+        WHERE mn.OPERATE_TYPE != 3
+        <if test="messageName!=null and messageName!='' ">
+            and mn.MESSAGE_NAME like concat('%',#{messageName},'%')
+        </if>
+        <if test="startTime!=null ">
+            and mn.CREATE_TIME &gt;= #{startTime}
+        </if>
+        <if test="endTime!=null ">
+            and mn.CREATE_TIME &lt; #{endTime}
+        </if>
+        ORDER BY a.DEFINED_ID DESC
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="long" resultMap="appDefinedMap">
+        SELECT
+        <include refid="appDefinedSql"/>,
+        <include refid="MESSAGE_NO_COLUMN"/>
+        FROM zf_v2_policy_appdefined a
+        INNER JOIN zf_v2_policy_messageno mn ON a.MESSAGE_NO = mn.MESSAGE_NO AND mn.MESSAGE_TYPE = 10
+        WHERE a.DEFINED_ID = #{definedId}
+    </select>
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="definedId" parameterType="com.aotain.common.policyapi.model.AppDefinedStrategy">
+        insert into zf_v2_policy_appdefined
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="messageNo != null">
+                MESSAGE_NO,
+            </if>
+            <if test="appType != null">
+                APPTYPE,
+            </if>
+            <if test="appId != null">
+                APPID,
+            </if>
+            <if test="appName != null">
+                APPNAME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="messageNo != null">
+                #{messageNo,jdbcType=DECIMAL},
+            </if>
+            <if test="appType != null">
+                #{appType,jdbcType=DECIMAL},
+            </if>
+            <if test="appId != null">
+                #{appId,jdbcType=DECIMAL},
+            </if>
+            <if test="appName != null">
+                #{appName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSelective" parameterType="com.aotain.common.policyapi.model.AppDefinedStrategy">
+        update zf_v2_policy_appdefined
+        <set>
+            <if test="appType != null">
+                APPTYPE = #{appType,jdbcType=DECIMAL},
+            </if>
+            <if test="appId != null">
+                APPID = #{appId,jdbcType=DECIMAL},
+            </if>
+            <if test="appName != null">
+                APPNAME = #{appName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where 1=1
+        <if test="definedId != null ">
+            AND DEFINED_ID = #{definedId,jdbcType=DECIMAL}
+        </if>
+        <if test="messageNo != null ">
+            AND MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+        </if>
+    </update>
+
+    <delete id="deleteData" parameterType="com.aotain.common.policyapi.model.AppDefinedStrategy">
+        DELETE FROM zf_v2_policy_appdefined
+        WHERE DEFINED_ID = #{definedId}
+    </delete>
+
+</mapper>

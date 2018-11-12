@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.IdcHouseMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.device.IdcHouse">
+    <id column="house_id" jdbcType="VARCHAR" property="houseId" />
+    <result column="house_name" jdbcType="VARCHAR" property="houseName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    house_id, house_name, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from idc_isms_base_house
+    where house_id = #{houseId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from idc_isms_base_house
+    where house_id = #{houseId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.IdcHouse">
+    insert into idc_isms_base_house (house_id, house_name, create_time
+      )
+    values (#{houseId,jdbcType=VARCHAR}, #{houseName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.device.IdcHouse">
+    insert into idc_isms_base_house
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="houseId != null">
+        house_id,
+      </if>
+      <if test="houseName != null">
+        house_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="houseId != null">
+        #{houseId,jdbcType=VARCHAR},
+      </if>
+      <if test="houseName != null">
+        #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.device.IdcHouse">
+    update idc_isms_base_house
+    <set>
+      <if test="houseName != null">
+        house_name = #{houseName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where house_id = #{houseId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.device.IdcHouse">
+    update idc_isms_base_house
+    set house_name = #{houseName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where house_id = #{houseId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getIdcHouseList" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM idc_isms_base_house
+  </select>
+
+  <select id="getConditionIdcHouseList" resultMap="BaseResultMap" parameterType="com.aotain.zongfen.model.device.IdcHouse">
+    SELECT <include refid="Base_Column_List"/>
+    FROM idc_isms_base_house
+    WHERE 1 = 1
+    <if test=" houseName != null and houseName != '' ">
+      AND house_name LIKE CONCAT('%',#{houseName},'%')
+    </if>
+    ORDER BY create_time DESC
+  </select>
+  
+  <select id="getIdcHouseByIds" resultType="java.lang.String">
+  	SELECT house_name
+  	FROM idc_isms_base_house
+  	WHERE house_id in (<foreach collection="array" separator="," item="item" >
+  		#{item}
+  	</foreach>)
+  </select>
+
+  <select id="selectByName" parameterType="com.aotain.zongfen.model.device.IdcHouse" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM idc_isms_base_house
+    WHERE house_name = #{houseName}
+    <if test="houseId!=null">
+      AND house_id !=#{houseId}
+    </if>
+  </select>
+
+  <select id="selectByIdOrName" parameterType="com.aotain.zongfen.model.device.IdcHouse" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"/>
+    FROM idc_isms_base_house
+    WHERE house_id = #{houseId} or house_name = #{houseName}
+
+  </select>
+
+  <delete id="batchDelete" parameterType="java.util.List" >
+    delete from idc_isms_base_house
+    where house_id in
+    <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+</mapper>

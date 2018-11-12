@@ -1,0 +1,49 @@
+<div th:fragment="myaddorupdatesnippet">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title">
+                <h5 id="title">新增</h5>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form id="addOrupdateForm">
+                            <div class="form-group" name="addOrupdateProvider">
+                                <label class="col-md-1 control-label p-n">厂家名称</label>
+                                <div class="col-md-2">
+                                    <input type="text" name="providerName" id="providerName" class="form-control">
+                                </div>
+
+                                <label class="col-md-1 control-label p-n">厂家代码</label>
+                                <div class="col-md-1">
+                                    <input type="text" name="providerShort" id="providerShort" class="form-control">
+                                </div>
+
+                                <div class="col-md-3">
+                                        <span class="help-block m-b-none">
+                                            <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                             </a>
+                                        </span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group m-t">
+                            <label class="col-md-2 control-label"></label>
+                            <div class="col-md-3">
+                                <input type="hidden" id="operate" value="">
+                                <button type="button" class="btn btn-primary" id = "addSubmitBut" >确定</button>
+                                <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>

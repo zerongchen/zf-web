@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.GeneralAppMapper">
+  <resultMap id="AppNameMap" type="com.aotain.zongfen.model.general.GeneralApp">
+    <id column="ID" jdbcType="BIGINT" property="id" />
+    <result column="APP_ID" jdbcType="VARCHAR" property="appId" />
+    <result column="APP_ZH_NAME" jdbcType="VARCHAR" property="appZHName" />
+    <result column="APP_EN_NAME" jdbcType="VARCHAR" property="appENName" />
+    <result column="APP_NAME" jdbcType="VARCHAR" property="appName" />
+    <result column="APP_TYPE" jdbcType="TINYINT" property="appType" />
+    <result column="APP_TYPE_NAME" jdbcType="VARCHAR" property="appTypeName" />
+    <result column="IS_MAIN_APP" jdbcType="TINYINT" property="isMainApp" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="mainApp" jdbcType="VARCHAR" property="mainApp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+     APP_ID, APP_ZH_NAME,APP_EN_NAME, APP_TYPE, IS_MAIN_APP, REMARK, UPDATE_TIME
+  </sql>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_gen_app
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+   <insert id="insertList" parameterType="java.util.List">
+   	insert into zf_v2_gen_app (APP_ID, APP_ZH_NAME, APP_EN_NAME,
+      APP_TYPE, IS_MAIN_APP, REMARK, UPDATE_TIME)
+    values 
+    <foreach collection="list" index="index" item="list" separator=",">
+    	(#{list.appId,jdbcType=TINYINT}, #{list.appZHName,jdbcType=VARCHAR},#{list.appENName,jdbcType=VARCHAR}, 
+      #{list.appType,jdbcType=TINYINT}, #{list.isMainApp,jdbcType=TINYINT}, 
+      #{list.remark,jdbcType=VARCHAR}, #{list.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+   </insert>
+   
+    <select id="getIndexList" parameterType="java.util.Map" resultMap="AppNameMap">
+    	SELECT a.APP_ID, a.APP_ZH_NAME,a.APP_EN_NAME, a.APP_TYPE, b.APP_TYPE_NAME, a.IS_MAIN_APP, a.REMARK, a.UPDATE_TIME,
+    	case when a.IS_MAIN_APP = 1 then "是" 
+    	else "否" end  mainApp 
+    	FROM zf_v2_gen_app a,
+    		 zf_dict_apptype b
+    	WHERE a.APP_TYPE = b.APP_TYPE
+    	<if test="appType!=null and appType!=''">
+    		AND a.APP_TYPE = #{appType}
+    	</if>
+    	<if test="appName!=null and appName!=''">
+    		AND (APP_ZH_NAME LIKE CONCAT('%',#{appName},'%')
+    			 OR APP_EN_NAME LIKE CONCAT('%',#{appName},'%'))
+    	</if>
+    </select>
+    
+    <delete id="deleteAll">
+    	DELETE FROM zf_v2_gen_app
+    </delete>
+    
+  <select id="countAppByAppName" parameterType="com.aotain.zongfen.model.general.GeneralApp" resultType="java.lang.Integer">
+    SELECT COUNT(1) FROM zf_v2_gen_app WHERE 1=1
+    <if test="appZHName!=null">
+      AND APP_ZH_NAME=#{appZHName}
+    </if>
+    <if test="appId!=null">
+      AND APP_ID=#{appId}
+    </if>
+    <if test="appType!=null">
+      AND APP_TYPE = #{appType}
+    </if>
+  </select>
+  	
+</mapper>

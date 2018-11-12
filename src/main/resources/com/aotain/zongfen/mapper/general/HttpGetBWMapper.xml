@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.HttpGetBWMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.HttpGetBW">
+    <result column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TYPE" jdbcType="TINYINT" property="type" />
+    <result column="DOMAIN" jdbcType="VARCHAR" property="domain" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <resultMap id="HttpGetBWDTOMap" type="com.aotain.zongfen.dto.general.HttpGetBWDTO">
+    <result column="ID" jdbcType="BIGINT" property="id" />
+    <result column="TYPE" jdbcType="TINYINT" property="type" />
+    <result column="DOMAIN" jdbcType="VARCHAR" property="domain" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  
+  <resultMap id="resultMap" type="java.util.HashMap">
+    <result column="id" property="key" />
+    <result column="timeGap" property="value" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.HttpGetBW">
+    insert into zf_v2_gen_httpget_bw (ID, TYPE, DOMAIN, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{domain,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.HttpGetBW">
+    insert into zf_v2_gen_httpget_bw
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="domain != null">
+        DOMAIN,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="domain != null">
+        #{domain,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getDomain" parameterType="com.aotain.zongfen.model.general.HttpGetBW" resultMap="HttpGetBWDTOMap" >
+  
+    SELECT ID, TYPE, DOMAIN, UPDATE_TIME FROM zf_v2_gen_httpget_bw WHERE 1=1
+    <if test="type !=null">
+      AND TYPE = #{type}
+    </if>
+    <if test="domain!=null" >
+      AND DOMAIN LIKE  CONCAT('%', #{domain}, '%')
+    </if>
+    ORDER BY ID ASC
+  </select>
+  
+  <delete id="deleteByType" >
+    DELETE FROM zf_v2_gen_httpget_bw WHERE TYPE = #{type}
+  </delete>
+  
+  <select id="getListByType" resultType="String">
+    SELECT DOMAIN FROM zf_v2_gen_httpget_bw WHERE TYPE = #{type}
+  </select>
+  
+  <insert id="insertByType" >
+    INSERT INTO zf_v2_gen_httpget_bw(TYPE,DOMAIN,UPDATE_TIME)VALUES
+    <foreach collection="set" index="index" item="item" separator=",">
+      (#{type}, #{item}, SYSDATE() )
+    </foreach>
+  </insert>
+  
+  <select id="getTimeGap" resultMap="resultMap" >
+    SELECT a.TYPE as id, (UNIX_TIMESTAMP(b.modify_time)-UNIX_TIMESTAMP(MAX(a.update_time)))/3600 AS timeGap
+     FROM zf_v2_gen_httpget_bw a,zf_v2_gen_class_filename b
+     WHERE b.MESSAGE_TYPE=207 AND b.FILE_TYPE=#{filetype} GROUP BY a.TYPE
+  </select>
+  
+  <delete id="deleteByIds">
+    DELETE FROM zf_v2_gen_httpget_bw WHERE ID IN(
+    <foreach collection="array" item="item" separator=",">
+      #{item}
+    </foreach>
+    )
+  </delete>
+  
+  <update id="updateBw" parameterType="com.aotain.zongfen.model.general.HttpGetBW">
+    UPDATE zf_v2_gen_httpget_bw
+    <set>
+      <if test="domain!=null">
+        DOMAIN = #{domain},
+      </if>
+      <if test="updateTime!=null">
+        UPDATE_TIME = #{updateTime},
+      </if>
+    </set>
+    WHERE ID = #{id}
+  </update>
+  
+</mapper>

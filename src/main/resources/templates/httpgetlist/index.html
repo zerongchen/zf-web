@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchform">
+                <input type="hidden" name="type"/>
+                <div class="form-group m-r-sm">
+                    <label>域名/URL</label>
+                    <input type="text" name="domain" class="form-control" />
+                </div>
+                <div class="checkbox">
+                    <button th:if="${session.zf104005_query}==1" type="button"  class="btn btn-primary" id="searchformbutton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="pull-left">
+                                <div class="alert m-t-sm" id="warmSection"></div>
+                            </div>
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs checkbox"  role="group" id="operate_button">
+                                        <!--<button type="button" class="btn btn-outline btn-warning m-l-xs" id="add"> <i class="fa fa-plus" aria-hidden="true"></i> 新增 </button>-->
+                                        <button th:if="${session.zf104005_import}==1" type="button" class="btn btn-outline btn-primary m-l-xs import" data-toggle="modal" data-target="#leadto"><i class="fa fa fa-plus"></i> 导入</button>
+                                        <a th:if="${session.zf104005_export}==1" class="btn btn-success" id = "exportData" ><i class="fa fa fa-download"></i> 导出</a>
+                                        <button th:if="${session.zf104005_delete}==1" type="button" class="btn btn-outline btn-danger deleteButton"> <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+                                        <button th:if="${session.zf104005_create}==1" type="button" id="createAndSend"  class="btn btn-outline btn-primary m-l-xs">生成文件并下发</button>
+                                        <button th:if="${session.zf104005_query}==1" type="button" id="getDetail" class="btn btn-outline btn-primary m-l-xs" data-toggle="modal" data-target="#fileDetail">文件下发详情</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs">
+                                    <li id = "domain_white" class="active"><a data-toggle="tab" href="#info_domain_white">域名白名单</a> </li>
+                                    <li id = "domain_black"><a data-toggle="tab" href="#info_domain_black">域名黑名单</a> </li>
+                                    <li id = "url_black"><a data-toggle="tab" href="#info_url_black">URL黑名单</a> </li>
+                                </ul>
+                                <div class="tab-content ">
+                                    <div id="info_domain_white" class="tab-pane active">
+                                        <table id="domain_white_table" data-mobile-responsive="true" class="text-left"></table>
+                                    </div>
+                                    <div id="info_domain_black" class="tab-pane">
+                                        <table id="domain_black_table" data-mobile-responsive="true" class="text-left"></table>
+                                    </div>
+                                    <div id="info_url_black" class="tab-pane">
+                                        <table id="url_black_table" data-mobile-responsive="true" class="text-left"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--导入-->
+<div class="modal inmodal modaladd fade" id="leadto" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="ibox-title">
+                <h5>导入</h5>
+            </div>
+            <form class="form-horizontal" id="importForm">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">名单类型</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="type" id="typeId">
+                                        <option value="">请选择</option>
+                                        <option value="0">域名白名单</option>
+                                        <option value="1">域名黑名单</option>
+                                        <option value="2">URL黑名单</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">操作类型</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="operatetype" id="operatetypeId">
+                                        <option value="">请选择</option>
+                                        <option value="0">全量</option>
+                                        <option value="1">增量</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" id="fileImport">
+                                <label class="col-md-2 control-label">文件</label>
+                                <div class="col-md-6">
+                                    <input type="file" class="form-control" id ="importFile" name="importFile">
+                                </div>
+
+                                <div class="col-md-3 help-block">
+                                    <a href="#" onclick='exportTemplate()' target="_self">下载导入模板</a>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <div class="col-md-offset-2 col-md-6">
+                                    <button type="button" class="btn btn-primary" id="importFormButton" >保存</button>
+                                    <a class="m-l-sm" data-dismiss="modal">取消</a> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--生成并下发，选择服务器-->
+<div class="modal inmodal modaladd fade" id="sendSnippet" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="ibox-title">
+                <h5>生成文件并下发</h5>
+            </div>
+            <form class="form-horizontal" id="SendForm">
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">生成列表服务器</label>
+                                <div class="col-md-3">
+                                    <select class="form-control" name="destIp" id="destIp">
+                                        <option value="">请选择</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <div class="col-md-offset-2 col-md-6">
+                                    <button type="button" class="btn btn-primary" id="SendButton" >保存</button>
+                                    <a class="m-l-sm" data-dismiss="modal">取消</a> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--生成并下发，选择服务器-->
+<div class="modal inmodal modaladd fade" id="modifySnippet" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="ibox-title">
+                <h5>修改</h5>
+            </div>
+            <form class="form-horizontal" id="modifyForm">
+                <input type="hidden" name="id">
+                <input type="hidden" name="type">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">类型</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id ="type">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">域名/URL</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id ="domain" name="domain">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <div class="col-md-offset-2 col-md-6">
+                                    <button type="button" class="btn btn-primary" id="modifyButton" >保存</button>
+                                    <a class="m-l-sm" data-dismiss="modal">取消</a> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:include="/common/role_permission :: rolePermission"></div>
+<div th:include="/common/file_detail_snippet :: fileDetail"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+<div th:include="/common/footer :: #httpgetlist"></div>
+</body>
+</html>

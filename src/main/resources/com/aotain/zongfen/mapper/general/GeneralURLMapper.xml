@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.GeneralURLMapper">
+  <resultMap id="WebCategoryMap" type="com.aotain.zongfen.model.general.GeneralURL">
+    <id column="URL_ID" jdbcType="BIGINT" property="urlId" />
+    <result column="HOST_NAME" jdbcType="VARCHAR" property="hostName" />
+    <result column="WEB_TYPE" jdbcType="BIGINT" property="webType" />
+    <result column="WEB_NAME" jdbcType="VARCHAR" property="webName" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.URL_ID, a.HOST_NAME, a.WEB_TYPE, a.UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="WebCategoryMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_url
+    where URL_ID = #{urlId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from zf_v2_gen_url
+    where URL_ID = #{urlId,jdbcType=BIGINT}
+  </delete>
+   <insert id="insertList" parameterType="java.util.List">
+   	insert into zf_v2_gen_url (HOST_NAME, WEB_TYPE, UPDATE_TIME)
+    values 
+    <foreach collection="list" item="item" separator="," index="index">
+    	( #{item.hostName,jdbcType=VARCHAR}, #{item.webType,jdbcType=BIGINT}, #{item.updateTime,jdbcType=TIMESTAMP})
+    </foreach>
+   </insert>
+   
+   <select id="getIndexList" parameterType="java.util.Map" resultMap="WebCategoryMap">
+   	SELECT <include refid="Base_Column_List"/>,
+   			b.WEB_NAME webName
+   	FROM zf_v2_gen_url a,
+   		 zf_dict_webtype b
+   	WHERE a.WEB_TYPE = b.WEB_TYPE
+   	<if test="webType!=null and webType!=''">
+   		AND a.WEB_TYPE = #{webType}
+   	</if>
+   	<if test="hostName!=null and hostName!=''">
+   		AND HOST_NAME LIKE CONCAT('%',#{hostName},'%')
+   	</if>
+   </select>
+     
+   <delete id="deleteAll">
+   	DELETE FROM zf_v2_gen_url
+   </delete>
+</mapper>

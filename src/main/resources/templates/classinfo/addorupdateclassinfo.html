@@ -1,0 +1,111 @@
+<div th:fragment="addorupdateclassinfo">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">新增</h4>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <input type="hidden" name="classId">
+                                <input type="hidden" name="createTimeStr">
+                                <div class="form-group" id="className">
+                                    <label class="col-md-1 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="className" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="classTypeDIV">
+                                    <label class="col-md-1 control-label p-n">类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="classType" name="classType">
+                                            <option selected="" value="">请选择</option>
+                                            <option value="1">协议特征库</option>
+                                            <option value="2">URL分类库</option>
+                                            <option value="3">IP地址库</option>
+                                            <option value="4">应用名称对应表</option>
+                                            <option value="5">HTTP GET 清洗名单</option>
+                                            <!--<option value="6">HTTP GET 报文清洗域名黑名单</option>-->
+                                            <!--<option value="7">HTTP GET 报文清洗URL黑名单</option>-->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="classFileNameDIV">
+                                    <label class="col-md-1 control-label p-n">文件名</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="classFileName" id="classFileName" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div id="httpGetDetail" style="display: none">
+                                    <div class="form-group" id="domainBlackDiv">
+                                        <label class="col-md-1 control-label p-n">域名黑名单</label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="domainBlack" id="domainBlack" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="domainWriteDiv">
+                                        <label class="col-md-1 control-label p-n">域名白名单</label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="domainWrite" id="domainWrite" class="form-control"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="urlBlackDiv">
+                                        <label class="col-md-1 control-label p-n">URL黑名单</label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="urlBlack" id="urlBlack" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="serverIp">
+                                    <label class="col-md-1 control-label p-n">服务器IP</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="serverIp" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="serverPort">
+                                    <label class="col-md-1 control-label p-n">服务器端口</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="serverPort" class="form-control"/>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="sftpUsername">
+                                    <label class="col-md-1 control-label p-n">Sftp用户名</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="sftpUsername" class="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="sftpPassword">
+                                    <label class="col-md-1 control-label p-n">sftp密码</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="sftpPassword" class="form-control"/>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.policy.PolicyStatusMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.policy.PolicyStatus">
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <result column="DPI_IP" jdbcType="VARCHAR" property="dpiIp" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.MESSAGE_NO, a.MESSAGE_TYPE, a.DPI_IP, a.CREATE_TIME, a.STATUS
+  </sql>
+  
+  <select id="getCountFailForMain" parameterType="com.aotain.zongfen.model.policy.PolicyStatus" resultType="com.aotain.zongfen.model.policy.PolicyStatus">
+  	SELECT CONCAT(SUM( CASE WHEN a.STATUS=1 THEN 1 ELSE 0 END),"/",SUM( CASE WHEN a.STATUS!=1 THEN 1 ELSE 0 END)) AS mainCount
+    FROM (zf_v2_policy_status a INNER JOIN 
+		 ( zf_v2_dev_dpi_rec_info b INNER JOIN 
+		 zf_v2_policy_messageno c ON b.MESSAGE_NO = c.MESSAGE_NO AND c.OPERATE_TYPE !=3 AND c.MESSAGE_TYPE= 192 ) ON a.DPI_IP = b.DPI_IP ) INNER JOIN 
+		 zf_v2_policy_messageno d ON a.MESSAGE_NO = d.MESSAGE_NO AND a.MESSAGE_TYPE = d.MESSAGE_TYPE	
+	WHERE a.MESSAGE_NO = #{messageNo} AND a.MESSAGE_TYPE = #{messageType}
+  </select>
+  
+  <select id="getCountTotalAndFail" parameterType="com.aotain.zongfen.model.policy.PolicyStatus" resultType="com.aotain.zongfen.model.policy.PolicyStatus">
+	  	SELECT mainTable.countA mainCount,bindTable.countB bindCount
+		FROM (SELECT CONCAT(SUM( CASE WHEN a.STATUS=1 THEN 1 ELSE 0 END),"/",SUM( CASE WHEN a.STATUS!=1 THEN 1 ELSE 0 END)) AS countA
+				FROM 	(zf_v2_policy_status a INNER JOIN 
+						( zf_v2_dev_dpi_rec_info b INNER JOIN 
+						zf_v2_policy_messageno c ON b.MESSAGE_NO = c.MESSAGE_NO AND 	c.OPERATE_TYPE !=3 AND 	c.MESSAGE_TYPE= 192 ) ON a.DPI_IP = b.DPI_IP ) INNER JOIN 
+						zf_v2_policy_messageno d ON a.MESSAGE_NO = d.MESSAGE_NO AND a.MESSAGE_TYPE = d.MESSAGE_TYPE	
+				WHERE   a.MESSAGE_NO = #{messageNo}
+				AND     a.MESSAGE_TYPE = #{messageType}) mainTable,
+			(SELECT CONCAT(SUM( CASE WHEN a.STATUS=1 THEN 1 ELSE 0 END),"/",SUM( CASE WHEN a.STATUS!=1 THEN 1 ELSE 0 END)) AS countB
+		 		FROM 	(zf_v2_policy_messageno d INNER JOIN zf_v2_policy_userpolicy_bind e 
+						ON d.MESSAGE_NO = e.BIND_MESSAGE_NO AND d.MESSAGE_TYPE = e.BIND_MESSAGE_TYPE AND e.OPERATE_TYPE!=3) INNER JOIN (zf_v2_policy_status a INNER JOIN ( zf_v2_dev_dpi_rec_info b INNER JOIN zf_v2_policy_messageno c 
+						ON b.MESSAGE_NO = c.MESSAGE_NO AND 	c.OPERATE_TYPE !=3 AND 	c.MESSAGE_TYPE= 192 ) 
+						ON a.DPI_IP = b.DPI_IP )
+						ON a.MESSAGE_NO = e.MESSAGE_NO AND a.MESSAGE_TYPE = 133
+				WHERE   d.MESSAGE_NO = #{messageNo}
+	  			AND     d.MESSAGE_TYPE = #{messageType}) bindTable
+  </select>
+  
+  <select id="getPolicyDetailList" parameterType="java.util.List" resultType="com.aotain.zongfen.dto.common.PolicyStatusDto">
+  	SELECT a.MESSAGE_TYPE messageType,
+  			a.MESSAGE_NO messageNo,
+  			a.DPI_IP dpiIp,
+  			a.STATUS status,
+  			d.area_name areaName,
+	        e.USER_TYPE userType,
+			e.USER_NAME userGroupName,
+		    b.DPI_DEV_NAME deviceName,
+		    a.CREATE_TIME createTime,
+		    CASE WHEN a.STATUS = 0 THEN 0
+		    	 WHEN a.STATUS = 1 THEN 2
+		    	 WHEN a.STATUS = 2 THEN 1
+		    END AS SORT 	
+  	FROM 	zf_v2_policy_status a ,
+			zf_v2_dev_dpi_rec_info b,
+			zf_v2_policy_messageno c,
+			zf_dict_chinaarea d ,
+			zf_v2_policy_userpolicy_bind e
+	WHERE  	a.DPI_IP = b.DPI_IP
+	AND 	b.MESSAGE_NO = c.MESSAGE_NO 
+	AND 	c.OPERATE_TYPE !=3
+	AND 	b.AREA_CODE = d.area_code
+	AND 	c.MESSAGE_TYPE= 192
+	AND    (
+	<foreach collection="list" item="item" separator=" or ">
+   	 (	
+   	      	a.MESSAGE_NO = #{item.messageNo}
+   	AND   	a.MESSAGE_TYPE =  #{item.messageType}
+   	<if test="item.status!=null">
+   	AND   	a.STATUS = #{item.status}
+   	</if>
+   	<if test="item.searchType==2">
+   	AND 	a.MESSAGE_NO = e.MESSAGE_NO
+   	AND     e.OPERATE_TYPE != 3
+   	</if>
+   	<if test="item.userType!=null">
+   	AND   	e.USER_TYPE = #{item.userType}
+   	</if>
+   	) 
+   	</foreach>
+   	)
+	GROUP BY a.MESSAGE_TYPE,a.MESSAGE_NO,a.DPI_IP
+	ORDER BY SORT ASC
+  </select>
+  
+</mapper>

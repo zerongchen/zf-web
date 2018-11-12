@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='SHB'"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+          <canvas id="canvas" height="300" width="1174" ></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                            <div class="tabs-container">
+				                <ul class="nav nav-tabs">
+				                  <li class="active"><a data-toggle="tab" id="zongfendevs" href="#zongfendev">综分设备管理</a> </li>
+				                  <li><a data-toggle="tab" id="dpirecdevs" href="#dpirecdev">DPI信息接收设备管理</a> </li>
+				                  <li><a data-toggle="tab" id="dpiupldevs" href="#dpiupldev">DPI信息上报设备管理</a> </li>
+				                </ul>
+				                <div class="tab-content ">
+			                  		<div id="zongfendev" class="tab-pane active">
+			                  		<div class="col-sm-12" style="height: 10px"></div>
+						              <div class="col-sm-12">
+									        <div class="text-right">
+									            <form role="form" class="form-inline" id="searchForm">
+									                <div class="form-group m-r-sm">
+									                    <label>设备名称</label>
+									                    <input type="text" class="form-control" id="zonfenName"/>
+									                </div>
+									                <div class="checkbox">
+									                    <button type="button" th:if="${session.zf301001_query}==1" class="btn btn-primary" id="searchZongFen" >查询</button>
+									                    <button type="button" th:if="${session.zf301001_add}==1" id="zongfenAdd" class="btn btn-outline btn-warning m-l-xs" data-toggle="modal" data-target="#zongfenModal"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+									                </div>
+									            </form>
+									        </div>
+									    </div>
+			                  			<div class="example-wrap text-right">
+						                  <table id="zongFenTable" data-mobile-responsive="true" class="text-left">
+						                  </table>
+						              </div>
+			                  		</div>
+			                  		
+			                  		<div id="dpirecdev" class="tab-pane">
+			                  			<div class="col-sm-12" style="height: 10px"></div>
+			                  			<div class="col-sm-12">
+									        <div class="text-right">
+									            <form role="form" class="form-inline" id="searchRepDev">
+									                <div class="form-group m-r-sm">
+									                    <label>设备名称</label>
+									                    <input type="text" class="form-control" id="dpiRecName"/>
+									                </div>
+									                <div class="checkbox">
+									                    <button type="button" th:if="${session.zf301001_query}==1" class="btn btn-primary" id="searchDPIRec" >查询</button>
+									                    <button type="button" th:if="${session.zf301001_add}==1" id="dpiRecAdd" class="btn btn-outline btn-warning m-l-xs" data-toggle="modal" data-target="#dpiRecModal"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+									                </div>
+									            </form>
+									        </div>
+									    </div>
+			                  			<div class="example-wrap text-right">
+						                <div class="example">
+						                  <table id="dpiRecTable" data-mobile-responsive="true" class="text-left">
+						                  </table>
+						                </div>
+						              </div>
+			                  		</div>
+			                  		
+			                  		<div id="dpiupldev" class="tab-pane">
+			                  			<div class="col-sm-12" style="height: 10px"></div>
+			                  			<div class="col-sm-12">
+									        <div class="text-right">
+									            <form role="form" class="form-inline">
+									                <div class="form-group m-r-sm">
+									                    <label>设备类型</label>
+									                    <select class="form-control" id="deviceTypeSea">
+					                                        <option selected="" value="">请选择</option>
+					                                        <option value="0">DPI</option>
+					                                        <option value="1">EU</option>
+					                                    </select>
+									                </div>
+									                <div class="form-group m-r-sm">
+									                	<label>开始IP</label>
+									                    <input type="text" class="form-control" id="startIpSea"/>
+									                </div>
+									                <div class="form-group m-r-sm">
+									                	<label>结束IP</label>
+									                    <input type="text" class="form-control" id="endIpSea"/>
+									                </div>
+									                <div class="checkbox">
+					                                    <input type="hidden" id="deleteFlag" th:value="${session.zf301001_delete}">
+					                                    <input type="hidden" id="modifyFlag" th:value="${session.zf301001_modify}">
+									                    <button type="button" th:if="${session.zf301001_query}==1" class="btn btn-primary" id="searchDPIUpl" >查询</button>
+									                    <button type="button" th:if="${session.zf301001_add}==1" id="dpiUplAdd" class="btn btn-outline btn-warning m-l-xs" data-toggle="modal" data-target="#dpiUplModal"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+									                </div>
+									            </form>
+									        </div>
+									    </div>
+			                  			<div class="example-wrap text-right">
+						                  <table id="dpiUplTable" data-mobile-responsive="true" class="text-left">
+						                  </table>
+						              </div>
+			                  		</div>
+			                  		
+			                  	  </div>
+				              </div>
+				         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--新增-->
+<div th:include="/devicemanage/deviceManage/addorupdate :: myaddorupdate"></div>
+<!--详情-->
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #device"></div>
+</body>
+</html>

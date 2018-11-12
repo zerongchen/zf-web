@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchform">
+                <div class="form-group m-r-sm">
+                    <label>策略名称</label>
+                    <input type="text" id='listName' class="form-control" name="listName"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label >创建时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="searchStart">
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label >到</label>
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="searchEnd">
+                </div>
+                <div th:if="${session.zf104001_query}==1" class="checkbox">
+                    <button type="button"  class="btn btn-primary" id="searchformbutton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs"  role="group" id="operate_button">
+                                        <!--<button type="button" class="btn btn-outline btn-success m-l-xs detailButton" data-toggle="modal" data-target=""> <i class="fa fa-file-text" aria-hidden="true"></i> 详情</button>-->
+                                        <button th:if="${session.zf104001_import}==1" type="button" class="btn btn-outline btn-primary m-l-xs import" data-toggle="modal" data-target="#leadto"><i class="fa fa fa-plus"></i> 导入</button>
+                                        <a  th:if="${session.zf104001_export}==1" class="btn btn-success" id = "exportData" ><i class="fa fa fa-download"></i> 导出</a>
+                                        <button th:if="${session.zf104001_delete}==1" type="button" class="btn btn-outline btn-danger deleteButton"> <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+
+                                        <!--<button type="button" class="btn btn-outline btn-primary m-l-xs">生成列表并下发</button>-->
+                                    </div>
+                                    <form id="paramForm">
+                                        <input type="hidden" name="infoType" value="1"/>
+                                    </form>
+                                    <div class="tabs-container">
+                                        <ul class="nav nav-tabs">
+                                            <li id = "ws_click" class="active"><a data-toggle="tab" href="#info_ws">信息推送触发网站</a> </li>
+                                            <li id = "kw_click"><a data-toggle="tab" href="#info_kw">信息推送触发关键字</a> </li>
+                                            <li id = "wl_click"><a data-toggle="tab" href="#info_wl">白名单</a> </li>
+
+                                        </ul>
+                                        <div class="tab-content ">
+                                            <div id="info_ws" class="tab-pane active">
+                                                <table id="info_ws_table" data-mobile-responsive="true" class="text-left"></table>
+                                            </div>
+                                            <div id="info_kw" class="tab-pane">
+                                                <table id="info_kw_table" data-mobile-responsive="true" class="text-left"></table>
+                                            </div>
+                                            <div id="info_wl" class="tab-pane">
+                                                <table id="info_wl_table" data-mobile-responsive="true" class="text-left"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--导入-->
+<div th:include="/informationpush/importsnippet :: importsnippet"></div>
+<!--点击详情里面的新增-->
+<div th:include="/informationpush/addorupdate :: myaddorupdate"></div>
+<!--详情-->
+<div th:include="/informationpush/triggerlibdetailsnippet :: detailsnippet"></div>
+
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+
+<div th:include="/common/role_permission :: rolePermission"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #infolibrary"></div>
+</body>
+</html>

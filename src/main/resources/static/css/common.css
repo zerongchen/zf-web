@@ -1,0 +1,5 @@
+.btn-boostrap-sl{ background-color: #ffffff ; border-color: #e8e8e8; color: #454541
+}
+.btn-boostrap-sl.active, .btn-boostrap-sl:active, .btn-boostrap-sl:focus, .btn-boostrap-sl:hover, .open .dropdown-toggle.btn-boostrap-sl{ background-color: #ffffff; border-color: #e7e7e7; color: #464642 }
+.btn-boostrap-sl.active, .btn-boostrap-sl:active, .open .dropdown-toggle.btn-boostrap-sl{ background-image: none}
+.btn-boostrap-sl.active[disabled], .btn-boostrap-sl.disabled, .btn-boostrap-sl.disabled.active, .btn-boostrap-sl.disabled:active, .btn-boostrap-sl.disabled:focus, .btn-boostrap-sl.disabled:hover, .btn-boostrap-sl[disabled], .btn-boostrap-sl[disabled]:active, .btn-boostrap-sl[disabled]:focus, .btn-boostrap-sl[disabled]:hover, fieldset[disabled] .btn-boostrap-sl, fieldset[disabled] .btn-boostrap-sl.active, fieldset[disabled] .btn-boostrap-sl:active, fieldset[disabled] .btn-boostrap-sl:focus, fieldset[disabled] .btn-boostrap-sl:hover{ background-color: #ccc; border-color: #ccc }

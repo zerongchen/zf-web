@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.HttpGetMonitorMapper">
+  <resultMap id="HttpGetMonitorMap" type="com.aotain.zongfen.dto.monitor.HttpGetMonitorDTO">
+    <result column="stat_time" jdbcType="BIGINT" property="statTime" />
+    <result column="upload_time" jdbcType="VARCHAR" property="uploadTime" />
+    <result column="received_time" jdbcType="VARCHAR" property="receivedTime" />
+    <result column="probe_type" jdbcType="TINYINT" property="probeType" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+    <result column="upload_file_num" jdbcType="INTEGER" property="uploadFileNum" />
+    <result column="upload_file_size" jdbcType="NUMERIC" property="uploadFileSize" />
+    <result column="received_file_num" jdbcType="NUMERIC" property="receivedFileNum" />
+    <result column="received_file_size" jdbcType="BIGINT" property="receivedFileSize" />
+    <result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+  </resultMap>
+  
+  <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.HttpGetMonitorDTO" resultMap="HttpGetMonitorMap">
+     SELECT a.stat_time,
+	     <if test="tableType == 2">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time,
+	        FROM_UNIXTIME(b.stat_time,'%Y-%m-%d %H') AS upload_time, 
+	     </if>
+	     <if test="tableType == 1">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H:%i') AS received_time, 
+	        FROM_UNIXTIME(b.stat_time,'%Y-%m-%d %H') AS upload_time, 
+	     </if>
+	     <if test="tableType == 3">
+	        FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time, 
+	        FROM_UNIXTIME(b.stat_time,'%Y-%m-%d %H') AS upload_time, 
+	     </if>
+	    <choose> 
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>  
+				a.probe_type,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>  
+				a.probe_type,a.area_id,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>  
+				a.probe_type,a.area_id, a.software_provider, 
+			</when>
+	    </choose>
+	    <if test="tableType == 2">
+	       CONVERT(SUM(a.file_size)/1024,DECIMAL(14,2)) AS received_file_size,
+	       CONVERT(SUM(b.file_size)/1024,DECIMAL(14,2)) AS upload_file_size,
+	     </if>
+	     <if test="tableType == 1">
+	        CONVERT(SUM(a.file_size)/1024,DECIMAL(14,2)) AS received_file_size,
+	       CONVERT(SUM(b.file_size)/1024,DECIMAL(14,2)) AS upload_file_size,
+	     </if>
+	     <if test="tableType == 3">
+	       CONVERT(SUM(a.file_size)/1024,DECIMAL(14,2)) AS received_file_size,
+	       CONVERT(SUM(b.file_size)/1024,DECIMAL(14,2)) AS upload_file_size,
+	     </if>
+	    SUM(a.file_num) AS received_file_num,
+		SUM(b.file_num) AS upload_file_num
+	 FROM  
+	     <if test="tableType == 2">
+	        zf_v2_monitor_receivedfile_h a LEFT JOIN zf_v2_monitor_uploaddfile_h b 
+	     </if>
+	     <if test="tableType == 1">
+	       zf_v2_monitor_receivedfile_min a LEFT JOIN zf_v2_monitor_uploaddfile_min b 
+	     </if>
+	     <if test="tableType == 3">
+	        zf_v2_monitor_receivedfile_d a LEFT JOIN zf_v2_monitor_uploaddfile_d b 
+	     </if>
+	 ON b.stat_time = a.stat_time AND b.file_type = a.file_type 
+	 AND b.probe_type = a.probe_type AND b.area_id = a.area_id AND b.software_provider = a.software_provider
+	 WHERE a.file_type = 768
+	 <if test="startTime != null and startTime != '' ">
+	    AND a.stat_time &gt;= UNIX_TIMESTAMP(#{startTime,jdbcType=VARCHAR})
+	 </if>
+	 <if test="endTime != null and endTime != '' ">
+	    AND a.stat_time &lt; UNIX_TIMESTAMP(#{endTime,jdbcType=VARCHAR})
+	 </if>
+	 <choose> 
+		<!--  设备类型DPI、EU  -->
+		<when test='level == 1'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT} 
+			GROUP BY received_time,a.probe_type
+		</when>
+		<!--  区域ID或者机房  -->
+		<when test='level == 2'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} 
+			GROUP BY received_time,a.probe_type,a.area_id
+		</when>
+		<!--  厂家  -->
+		<when test='level == 3'>  
+			AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+			GROUP BY received_time,a.probe_type,a.area_id,a.software_provider
+		</when>
+		<otherwise>   
+        	GROUP BY received_time  
+	    </otherwise>
+	 </choose> 
+	 order by received_time ${order}
+  </select>
+ 
+</mapper>

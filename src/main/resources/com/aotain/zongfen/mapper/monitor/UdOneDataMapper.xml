@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.UdOneDataMapper">
+  <resultMap id="UdOneDataMap" type="com.aotain.zongfen.dto.monitor.UdOneDataDTO">
+    <result column="stat_time" jdbcType="BIGINT" property="statTime" />
+    <result column="received_time" jdbcType="VARCHAR" property="receivedTime" />
+    <result column="packetsubtype" jdbcType="INTEGER" property="packetsubtype" />
+    <result column="receivednum" jdbcType="BIGINT" property="receivednum" />
+    <result column="validrecordernum" jdbcType="BIGINT" property="validrecordernum" />
+    <result column="invalidrecordernum" jdbcType="BIGINT" property="invalidrecordernum" />
+    <result column="writerkafkanum" jdbcType="BIGINT" property="writerkafkanum" />
+    <result column="savenum" jdbcType="BIGINT" property="savenum" />
+    <result column="probe_type" jdbcType="TINYINT" property="probeType" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+    <result column="packet_type_name" jdbcType="VARCHAR" property="packetsubname" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <resultMap id="UdOneDataMapChart" type="com.aotain.zongfen.dto.monitor.UdOneDataDTO">
+    <result column="received_time" jdbcType="VARCHAR" property="receivedTime" />
+    <result column="packetsubtype" jdbcType="INTEGER" property="packetsubtype" />
+    <result column="receivednum" jdbcType="BIGINT" property="receivednum" />
+    <result column="savenum" jdbcType="BIGINT" property="savenum" />
+    <result column="probe_type" jdbcType="TINYINT" property="probeType" />
+    <result column="area_id" jdbcType="VARCHAR" property="areaId" />
+    <result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+	  <collection property="packetsubname" ofType="java.lang.String" select="selectPacketsubname" column="{packetsubtype=packetsubtype}"  >
+		  <result column="packet_type_name" jdbcType="VARCHAR"  />
+	  </collection>
+  </resultMap>
+
+	<resultMap id="UdOneDataMap1" type="com.aotain.zongfen.dto.monitor.UdOneDataDTO">
+		<result column="stat_time" jdbcType="BIGINT" property="statTime" />
+		<result column="received_time" jdbcType="VARCHAR" property="receivedTime" />
+		<result column="packetsubtype" jdbcType="INTEGER" property="packetsubtype" />
+		<result column="receivednum" jdbcType="BIGINT" property="receivednum" />
+		<result column="invalidrecordernum" jdbcType="BIGINT" property="invalidrecordernum" />
+		<result column="writerkafkanum" jdbcType="BIGINT" property="writerkafkanum" />
+
+		<result column="probe_type" jdbcType="TINYINT" property="probeType" />
+		<result column="area_id" jdbcType="VARCHAR" property="areaId" />
+		<result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+		<result column="tableType" jdbcType="BIGINT" property="tableType" />
+
+		<collection property="savenum" ofType="java.lang.Long" select="selectSavenum" column="{tableType=tableType,stat_time=stat_time,probe_type=probe_type,area_id=area_id,software_provider=software_provider}"  >
+			<result column="savenum" jdbcType="BIGINT"  />
+		</collection>
+
+		<collection property="packetsubname" ofType="java.lang.String" select="selectPacketsubname" column="{packetsubtype=packetsubtype}"  >
+			<result column="packet_type_name" jdbcType="VARCHAR"  />
+		</collection>
+
+	</resultMap>
+
+	<select id="selectPacketsubname" parameterType="java.util.Map" resultType="String">
+		SELECT packet_type_name FROM zf_dict_packettype WHERE packet_sub_type=#{packetsubtype} AND packet_type=1
+	</select>
+
+
+
+	<select id="selectSavenum" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT IFNULL(sum(savenum),0) FROM
+		<if test="tableType == 2">
+			zf_v2_monitor_savedata_h a
+		</if>
+		<if test="tableType == 3">
+			zf_v2_monitor_savedata_d a
+		</if>
+		WHERE 1=1
+		<if test="stat_time != null and stat_time != '' ">
+			AND a.stat_time = #{stat_time}
+		</if>
+		<if test="probe_type != null and probe_type != '' ">
+			AND a.probe_type = #{probe_type}
+		</if>
+		<if test="area_id != null and area_id != '' ">
+			AND a.area_id = #{area_id}
+		</if>
+		<if test="software_provider != null and software_provider != '' ">
+			AND a.software_provider = #{software_provider}
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test="probe_type != null and probe_type != '' ">
+				GROUP BY a.stat_time,a.probe_type
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test="area_id != null and area_id != '' ">
+				GROUP BY a.stat_time,a.probe_type,a.area_id
+			</when>
+			<!--  厂家  -->
+			<when test="software_provider != null and software_provider != '' ">
+				GROUP BY a.stat_time,a.probe_type,a.area_id,a.software_provider
+			</when>
+			<otherwise>
+				GROUP BY a.stat_time
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.UdOneDataDTO" resultMap="UdOneDataMap1">
+		SELECT a.stat_time,#{tableType} as tableType,
+		<if test="tableType == 2">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time,
+		</if>
+		<if test="tableType == 3">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time,
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				a.probe_type as probe_type,'' as area_id,'' as software_provider,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				a.probe_type as probe_type,a.area_id as area_id,'' as software_provider,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				a.probe_type as probe_type,a.area_id as area_id, a.software_provider as software_provider,
+			</when>
+			<otherwise>
+				'' as probe_type,'' as area_id,'' as software_provider,
+			</otherwise>
+		</choose>
+		SUM(a.receivednum) AS receivednum,
+		SUM(a.invalidrecordernum) AS invalidrecordernum,
+		SUM(a.writerkafkanum) AS writerkafkanum,
+		a.packetsubtype
+		FROM
+		<if test="tableType == 2">
+			zf_v2_monitor_socket_received_h a
+		</if>
+		<if test="tableType == 3">
+			zf_v2_monitor_socket_received_d a
+		</if>
+		WHERE 1=1
+		<if test="startTime != null and startTime != '' ">
+			AND a.stat_time &gt;= UNIX_TIMESTAMP(CONCAT(#{startTime}," 00:00:00"))
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND a.stat_time &lt; UNIX_TIMESTAMP(CONCAT(#{endTime}," 23:59:59"))
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}
+				GROUP BY received_time,a.probe_type
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR}
+				GROUP BY received_time,a.probe_type,a.area_id
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+				GROUP BY received_time,a.probe_type,a.area_id,a.software_provider
+			</when>
+			<otherwise>
+				GROUP BY received_time
+			</otherwise>
+		</choose>
+		ORDER BY a.stat_time DESC
+	</select>
+
+<select id="selectChartListByReceived" parameterType="com.aotain.zongfen.dto.monitor.UdOneDataDTO" resultMap="UdOneDataMapChart">
+		SELECT
+		<if test="tableType == 2">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time,
+		</if>
+		<if test="tableType == 3">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time,
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				a.probe_type,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				a.probe_type,a.area_id,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				a.probe_type,a.area_id, a.software_provider,
+			</when>
+		</choose>
+		SUM(a.receivednum) AS receivednum,
+		0 AS savenum,
+		a.packetsubtype
+		FROM
+		<if test="tableType == 2">
+			zf_v2_monitor_socket_received_h a
+		</if>
+		<if test="tableType == 3">
+			zf_v2_monitor_socket_received_d a
+		</if>
+		WHERE 1=1
+		<if test="startTime != null and startTime != '' ">
+			AND a.stat_time &gt;= UNIX_TIMESTAMP(CONCAT(#{startTime}," 00:00:00"))
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND a.stat_time &lt; UNIX_TIMESTAMP(CONCAT(#{endTime}," 23:59:59"))
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}
+				GROUP BY a.packetsubtype,received_time,a.probe_type
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR}
+				GROUP BY a.packetsubtype,received_time,a.probe_type,a.area_id
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+				GROUP BY a.packetsubtype,received_time,a.probe_type,a.area_id,a.software_provider
+			</when>
+			<otherwise>
+				GROUP BY a.packetsubtype,received_time
+			</otherwise>
+		</choose>
+		ORDER BY a.stat_time
+	</select>
+
+
+	<select id="selectChartListBySave" parameterType="com.aotain.zongfen.dto.monitor.UdOneDataDTO" resultMap="UdOneDataMapChart">
+		SELECT
+		<if test="tableType == 2">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d %H') AS received_time,
+		</if>
+		<if test="tableType == 3">
+			FROM_UNIXTIME(a.stat_time,'%Y-%m-%d') AS received_time,
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				a.probe_type,
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				a.probe_type,a.area_id,
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				a.probe_type,a.area_id, a.software_provider,
+			</when>
+		</choose>
+		0 AS receivednum,
+		SUM(a.savenum) AS savenum,
+		a.packetsubtype
+		FROM
+		<if test="tableType == 2">
+			zf_v2_monitor_savedata_h a
+		</if>
+		<if test="tableType == 3">
+			zf_v2_monitor_savedata_d a
+		</if>
+		WHERE 1=1
+		<if test="startTime != null and startTime != '' ">
+			AND a.stat_time &gt;= UNIX_TIMESTAMP(CONCAT(#{startTime}," 00:00:00"))
+		</if>
+		<if test="endTime != null and endTime != '' ">
+			AND a.stat_time &lt; UNIX_TIMESTAMP(CONCAT(#{endTime}," 23:59:59"))
+		</if>
+		<choose>
+			<!--  设备类型DPI、EU  -->
+			<when test='level == 1'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}
+				GROUP BY a.packetsubtype,received_time,a.probe_type
+			</when>
+			<!--  区域ID或者机房  -->
+			<when test='level == 2'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR}
+				GROUP BY a.packetsubtype,received_time,a.probe_type,a.area_id
+			</when>
+			<!--  厂家  -->
+			<when test='level == 3'>
+				AND a.probe_type = #{probeType,jdbcType=TINYINT}  AND a.area_id = #{areaId,jdbcType=VARCHAR} AND a.software_provider = #{softwareProvider,jdbcType=VARCHAR}
+				GROUP BY a.packetsubtype,received_time,a.probe_type,a.area_id,a.software_provider
+			</when>
+			<otherwise>
+				GROUP BY a.packetsubtype,received_time
+			</otherwise>
+		</choose>
+		ORDER BY a.stat_time
+	</select>
+</mapper>

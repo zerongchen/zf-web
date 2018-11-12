@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiUploadDeviceMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.device.DpiUploadDevice">
+    <id column="DPI_ID" jdbcType="INTEGER" property="dpiId" />
+    <result column="START_IP" jdbcType="VARCHAR" property="startIp" />
+    <result column="END_IP" jdbcType="VARCHAR" property="endIp" />
+    <result column="PROBE_TYPE" jdbcType="INTEGER" property="probeType" />
+    <result column="AREA_ID" jdbcType="VARCHAR" property="areaId" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="SOFTWARE_PROVIDER" jdbcType="VARCHAR" property="softwareProvider" />
+    <result column="SOFTWARE_PROVIDER_NAME" jdbcType="VARCHAR" property="factoryName" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="FACTORY_NAME" jdbcType="VARCHAR" property="factoryName" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    a.DPI_ID, a.START_IP, a.END_IP, a.PROBE_TYPE, a.AREA_ID, a.SOFTWARE_PROVIDER, a.CREATE_OPER, a.MODIFY_OPER, a.CREATE_TIME, 
+    a.MODIFY_TIME
+  </sql>
+  
+  <select id="selectAllTree" resultMap="BaseResultMap">
+  	SELECT DISTINCT a.PROBE_TYPE,a.AREA_ID,a.SOFTWARE_PROVIDER,b.AREA_NAME AS AREA_NAME,c.SOFTWARE_PROVIDER_NAME FROM zf_v2_dev_dpi_upload_info a 
+	LEFT JOIN zf_dict_chinaarea b ON b.AREA_CODE = a.AREA_ID 
+	LEFT JOIN zf_dict_software_provider c ON c.software_provider = a.SOFTWARE_PROVIDER
+	WHERE a.PROBE_TYPE = 0
+	UNION 
+	SELECT DISTINCT a.PROBE_TYPE,a.AREA_ID,a.SOFTWARE_PROVIDER,b.HOUSE_NAME AS AREA_NAME,c.SOFTWARE_PROVIDER_NAME FROM zf_v2_dev_dpi_upload_info a 
+	LEFT JOIN idc_isms_base_house b ON b.HOUSE_ID = a.AREA_ID 
+	LEFT JOIN zf_dict_software_provider c ON c.software_provider = a.SOFTWARE_PROVIDER
+	WHERE a.PROBE_TYPE = 1
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from zf_v2_dev_dpi_upload_info
+    where DPI_ID = #{dpiId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.DpiUploadDevice" useGeneratedKeys="true" keyProperty="dpiId">
+    insert into zf_v2_dev_dpi_upload_info ( START_IP, 
+      END_IP, PROBE_TYPE, AREA_ID, SOFTWARE_PROVIDER,CREATE_OPER, 
+      MODIFY_OPER, CREATE_TIME, MODIFY_TIME
+      )
+    values ( #{startIp,jdbcType=INTEGER}, #{endIp,jdbcType=VARCHAR}, #{probeType,jdbcType=INTEGER}, 
+      #{areaId,jdbcType=VARCHAR}, #{softwareProvider,jdbcType=VARCHAR}, #{createOper,jdbcType=VARCHAR}, 
+      #{modifyOper,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  
+  <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="dpiId">
+  	insert into zf_v2_dev_dpi_upload_info ( START_IP, 
+      END_IP, PROBE_TYPE, AREA_ID, SOFTWARE_PROVIDER,CREATE_OPER, 
+      MODIFY_OPER, CREATE_TIME, MODIFY_TIME
+      )
+    values <foreach collection="list" item="item" separator=",">
+    	(#{item.startIp,jdbcType=INTEGER}, #{item.endIp,jdbcType=VARCHAR}, #{item.probeType,jdbcType=INTEGER}, 
+      #{item.areaId,jdbcType=VARCHAR}, #{item.softwareProvider,jdbcType=VARCHAR}, #{item.createOper,jdbcType=VARCHAR}, 
+      #{item.modifyOper,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.modifyTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.device.DpiUploadDevice">
+    update zf_v2_dev_dpi_upload_info
+    <set>
+      <if test="startIp != null">
+        START_IP = #{startIp,jdbcType=VARCHAR},
+      </if>
+      <if test="endIp != null">
+        END_IP = #{endIp,jdbcType=VARCHAR},
+      </if>
+      <if test="probeType != null">
+        PROBE_TYPE = #{probeType,jdbcType=INTEGER},
+      </if>
+      <if test="areaId != null">
+        AREA_ID = #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="softwareProvider != null">
+        SOFTWARE_PROVIDER = #{softwareProvider,jdbcType=INTEGER},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where DPI_ID = #{dpiId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getUplDpiList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List"/>,
+  		CASE WHEN a.PROBE_TYPE = 0 
+  		THEN ( select b.AREA_NAME from zf_dict_chinaarea b where a.AREA_ID = b.AREA_CODE )
+  		ELSE ( select c.house_name from idc_isms_base_house c WHERE a.AREA_ID = c.house_id ) END as AREA_NAME,
+  		d.SOFTWARE_PROVIDER_NAME FACTORY_NAME
+  	FROM zf_v2_dev_dpi_upload_info a,
+	  zf_dict_software_provider d
+  	WHERE a.SOFTWARE_PROVIDER = d.SOFTWARE_PROVIDER
+  	<if test="dpiType!=null and dpiType!=''">
+  		AND a.PROBE_TYPE = #{dpiType}
+  	</if>
+  	<if test="startIp!=null and startIp!=''">
+  		AND a.START_IP LIKE CONCAT('%',#{startIp},'%')
+  	</if>
+  	<if test="endIp!=null and endIp!=''">
+  		AND a.END_IP LIKE CONCAT('%',#{endIp},'%')
+  	</if>
+  	<if test="dpiId!=null and dpiId!=''">
+  		AND a.DPI_ID != #{dpiId}
+  	</if>
+  	ORDER BY a.MODIFY_TIME DESC
+  </select>
+  
+  <select id="getUplDpiInfoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+ 		SELECT <include refid="Base_Column_List"/>
+ 		FROM zf_v2_dev_dpi_upload_info a
+ 		WHERE a.DPI_ID = #{dpiId}
+  </select>
+</mapper>

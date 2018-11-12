@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.common.DictFactoryMapper">
+  <resultMap id="FactoryResultMap" type="com.aotain.zongfen.model.common.DictFactory">
+    <result column="SOFTWARE_PROVIDER" jdbcType="VARCHAR" property="facotryCode" />
+    <result column="SOFTWARE_PROVIDER_NAME" jdbcType="VARCHAR" property="facotryName" />
+  </resultMap>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.common.DictFactory">
+    insert into zf_dict_software_provider (SOFTWARE_PROVIDER, SOFTWARE_PROVIDER_NAME)
+    values (#{facotryCode,jdbcType=VARCHAR}, #{facotryName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.common.DictFactory">
+    insert into zf_dict_software_provider
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="facotryCode != null">
+        SOFTWARE_PROVIDER,
+      </if>
+      <if test="facotryName != null">
+        SOFTWARE_PROVIDER_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="facotryCode != null">
+        #{facotryCode,jdbcType=VARCHAR},
+      </if>
+      <if test="facotryName != null">
+        #{facotryName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="select" resultMap="FactoryResultMap">
+  	SELECT  SOFTWARE_PROVIDER facotryCode,
+  			SOFTWARE_PROVIDER_NAME facotryName
+  	FROM 	zf_dict_software_provider
+  	where SOFTWARE_PROVIDER = #{facotryCode,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getDictFactoryList" resultMap="FactoryResultMap">
+  	SELECT  SOFTWARE_PROVIDER facotryCode,
+  			SOFTWARE_PROVIDER_NAME facotryName
+  	FROM 	zf_dict_software_provider
+  </select>
+</mapper>

@@ -1,0 +1,42 @@
+<div th:fragment="myaddorupdatesnippet">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="h5title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <div class="form-group" >
+                                    <label class="col-md-2 control-label p-n">机房编号 : 机房名称  </label>
+                                    <div class="col-md-2">
+                                        <input type="text" id="houseId_0"name="houseId" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" id="houseName_0" name="houseName" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <span class="help-block m-b-none tips">
+                                            <a class="m-l-n m-r-sm"><i class="fa fa-plus" id="idcHouseAdd" aria-hidden="true"></i></a>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-1 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut" >确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.appdefined.AppDefinedQuintetMapper">
+
+    <insert id="insertSelective" useGeneratedKeys="true" keyProperty="quintetId" parameterType="com.aotain.common.policyapi.model.AppDefinedQuintet">
+        insert into zf_v2_policy_appdefined_quintet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="definedId != null">
+                DEFINED_ID,
+            </if>
+            <if test="protocol != null">
+                U_PROTOCOL,
+            </if>
+            <if test="sourceIp != null">
+                U_SOURCEIP,
+            </if>
+            <if test="sourcePort != null">
+                U_SOURCEPORT,
+            </if>
+            <if test="destIp != null">
+                U_DESTIP,
+            </if>
+            <if test="destPort != null">
+                U_DESTPORT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="definedId != null">
+                #{definedId,jdbcType=DECIMAL},
+            </if>
+            <if test="protocol != null">
+                #{protocol,jdbcType=DECIMAL},
+            </if>
+            <if test="sourceIp != null">
+                #{sourceIp,jdbcType=VARCHAR},
+            </if>
+            <if test="sourcePort != null">
+                #{sourcePort,jdbcType=DECIMAL},
+            </if>
+            <if test="destIp != null">
+                #{destIp,jdbcType=VARCHAR},
+            </if>
+            <if test="destPort != null">
+                #{destPort,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="deleteByDefinedId" parameterType="long">
+        DELETE FROM zf_v2_policy_appdefined_quintet
+        WHERE DEFINED_ID = #{definedId}
+    </delete>
+
+    <select id="selectByDefinedId" parameterType="long" resultMap="com.aotain.zongfen.mapper.apppolicy.appdefined.AppDefinedMapper.appDefinedQuintetMap">
+        SELECT
+        <include refid="com.aotain.zongfen.mapper.apppolicy.appdefined.AppDefinedMapper.appDefinedQuintet"/>,
+        <include refid="com.aotain.zongfen.mapper.apppolicy.appdefined.AppDefinedMapper.appDefinedKey"/>
+        from zf_v2_policy_appdefined_quintet b
+        INNER JOIN zf_v2_policy_appdefined_key c
+        ON b.QUINTET_ID = c.QUINTET_ID
+        WHERE b.DEFINED_ID = #{definedId}
+    </select>
+
+</mapper>

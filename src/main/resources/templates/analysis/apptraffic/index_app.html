@@ -1,0 +1,38 @@
+<div th:fragment="appDetail">
+    <div class="modal inmodal fade modaladd collapse overflow-auto" id="appJump" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ibox ">
+                                <div class="ibox-content  p-n no-borders">
+                                    <div class="form-group text-right">
+                                        <form role="form" id="appSearchForm">
+                                            <input type="hidden" name="areaType">
+                                            <input type="hidden" name="destArea">
+                                        </form>
+                                        <div class="btn-group modal-tab">
+                                            <button class="btn btn-outline btn-w-s btn-success active" id="trend" type="button">趋势分析</button>
+                                            <button class="btn btn-outline btn-w-s btn-success m-r" id="ranking" type="button">排名分析</button>
+                                            <button type="button" class="btn btn-success" data-dismiss="modal"><i class="fa fa-reply-all"></i> 返回上一级</button>
+                                        </div>
+                                    </div>
+                                    <div class="content-tab">
+                                        <div>
+
+                                            <div class="ibox-content h250" id="appEchart" style="height: 400px;border: 0;text-align: center" ></div>
+                                            <table id="appTable" data-mobile-responsive="true">
+                                            </table>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.TriggerHostListMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.TriggerHostList">
+    <result column="HOST_ID" jdbcType="INTEGER" property="hostId" />
+    <result column="TRIGGER_HOST_LISTID" jdbcType="DECIMAL" property="triggerHostListid" />
+    <result column="HOST_NAME" jdbcType="VARCHAR" property="hostName" />
+
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="DATE" property="modifyTime" />
+  </resultMap>
+  
+  <resultMap id="TriggerHostListDtoMap" type="com.aotain.zongfen.dto.general.TriggerHostListDTO">
+    <result column="TRIGGER_HOST_LISTID" jdbcType="DECIMAL" property="triggerHostListid" />
+    <result column="HOST_ID" jdbcType="INTEGER" property="hostId" />
+    <result column="HOST_NAME" jdbcType="VARCHAR" property="hostName" />
+    <result column="TRIGGER_HOST_LISTNAME" jdbcType="VARCHAR" property="triggerHostListname" />
+
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="DATE" property="modifyTime" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.TriggerHostList">
+    insert into zf_v2_gen_trigger_host_list (TRIGGER_HOST_LISTID, HOST_NAME,OPERATE_TYPE,
+    CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME)
+    values (#{triggerHostListid,jdbcType=DECIMAL}, #{hostName,jdbcType=VARCHAR},
+            #{operateType,jdbcType=DECIMAL},#{createOper,jdbcType=VARCHAR},
+            #{modifyOper,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},
+            #{modifyTime,jdbcType=DATE})
+  </insert>
+  
+  <update id="deleteById" parameterType="com.aotain.zongfen.model.general.TriggerHostList">
+    UPDATE zf_v2_gen_trigger_host_list
+    SET OPERATE_TYPE = 3
+    WHERE HOST_ID = #{hostId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="deleteByIds" >
+    UPDATE zf_v2_gen_trigger_host_list
+    SET OPERATE_TYPE = 3
+    WHERE HOST_ID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+  
+  <update id="deleteByListIds">
+    UPDATE zf_v2_gen_trigger_host_list
+    SET OPERATE_TYPE = 3
+    WHERE TRIGGER_HOST_LISTID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+  
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.TriggerHostList">
+    insert into zf_v2_gen_trigger_host_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="triggerHostListid != null">
+        TRIGGER_HOST_LISTID,
+      </if>
+      <if test="hostName != null">
+        HOST_NAME,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="triggerHostListid != null">
+        #{triggerHostListid,jdbcType=DECIMAL},
+      </if>
+      <if test="hostName != null">
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime}
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getTriggerHostList" parameterType="java.lang.Long" resultMap="TriggerHostListDtoMap">
+    select t1.TRIGGER_HOST_LISTID, HOST_NAME ,HOST_ID ,t2.TRIGGER_HOST_LISTNAME
+    From zf_v2_gen_trigger_host_list t1,zf_v2_gen_trigger_host t2
+    WHERE t1.TRIGGER_HOST_LISTID=t2.TRIGGER_HOST_LISTID
+    <if test="triggerHostListid!=null ">
+      AND t1.TRIGGER_HOST_LISTID=#{triggerHostListid}
+    </if>
+    AND t1.OPERATE_TYPE != 3
+    order by HOST_ID Desc
+  </select>
+
+
+  <select id="getTriggerHostName" parameterType="com.aotain.zongfen.model.general.TriggerHost" resultType="string">
+    select HOST_NAME
+    FROM zf_v2_gen_trigger_host_list
+    WHERE OPERATE_TYPE != 3
+    <if test="triggerHostListid!=null">
+      AND TRIGGER_HOST_LISTID = #{triggerHostListid}
+    </if>
+    order by HOST_ID Desc
+  </select>
+
+  <insert id="insertHostList" parameterType="java.util.List">
+  insert into zf_v2_gen_trigger_host_list (TRIGGER_HOST_LISTID, HOST_NAME,OPERATE_TYPE,
+    CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME)VALUES
+    <foreach collection="list" index="index" item="item" separator=",">
+    (#{triggerHost.triggerHostListid},#{item},#{triggerHost.operationType},#{triggerHost.createOper},
+      #{triggerHost.modifyOper},#{triggerHost.createTime},#{triggerHost.modifyTime})
+    </foreach>
+  </insert>
+  
+  <select id="countHostName" parameterType="com.aotain.zongfen.model.general.TriggerHostList" resultType="java.lang.Integer">
+    select count(1) from zf_v2_gen_trigger_host_list
+    WHERE HOST_NAME = #{hostName}
+    AND TRIGGER_HOST_LISTID = #{triggerHostListid}
+    AND OPERATE_TYPE != 3
+  </select>
+  
+  <select id="getNumByListId" resultType="java.lang.Long">
+    select count(TRIGGER_HOST_LISTID)
+    FROM zf_v2_gen_trigger_host_list
+    WHERE TRIGGER_HOST_LISTID = #{id}
+    AND OPERATE_TYPE != 3
+  </select>
+  
+</mapper>

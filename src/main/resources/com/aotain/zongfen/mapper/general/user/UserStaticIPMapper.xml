@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.user.UserStaticIPMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.user.UserStaticIP">
+    <id column="IP_ID" jdbcType="BIGINT" property="ipId" />
+    <result column="USER_ID" jdbcType="BIGINT" property="userid" />
+    <result column="USERIP" jdbcType="VARCHAR" property="userip" />
+    <result column="USERIP_PREFIX" jdbcType="DECIMAL" property="useripPrefix" />
+    <result column="MESSAGE_SEQUENCENO" jdbcType="DECIMAL" property="messageSequenceno" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="common_field">
+    IP_ID,USER_ID, USERIP, USERIP_PREFIX, MESSAGE_SEQUENCENO, OPERATE_TYPE, CREATE_OPER,MODIFY_OPER, CREATE_TIME, MODIFY_TIME
+  </sql>
+  
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.user.UserStaticIP">
+    insert into zf_v2_policy_ipuser_ip
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ipId!=null">
+        IP_ID
+      </if>
+      <if test="userid != null">
+        USER_ID,
+      </if>
+      <if test="userip != null">
+        USERIP,
+      </if>
+      <if test="useripPrefix != null">
+        USERIP_PREFIX,
+      </if>
+      <if test="messageSequenceno != null">
+        MESSAGE_SEQUENCENO,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ipId!=null">
+        #{ipId,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="userip != null">
+        #{userip,jdbcType=VARCHAR},
+      </if>
+      <if test="useripPrefix != null">
+        #{useripPrefix,jdbcType=DECIMAL},
+      </if>
+      <if test="messageSequenceno != null">
+        #{messageSequenceno,jdbcType=DECIMAL},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insertSelectiveList" parameterType="java.util.List">
+
+  
+      insert into zf_v2_policy_ipuser_ip(IP_ID,USER_ID,USERIP,USERIP_PREFIX,MESSAGE_SEQUENCENO,OPERATE_TYPE,CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME) values
+    <foreach collection="list" item="item" separator=",">
+      (
+          #{item.ipId,jdbcType=BIGINT},
+          #{item.userid,jdbcType=BIGINT},
+          #{item.userip,jdbcType=VARCHAR},
+          #{item.useripPrefix,jdbcType=DECIMAL},
+          #{item.messageSequenceno,jdbcType=DECIMAL},
+          #{item.operateType,jdbcType=DECIMAL},
+          #{item.createOper,jdbcType=VARCHAR},
+          #{item.modifyOper,jdbcType=VARCHAR},
+          #{item.createTime,jdbcType=TIMESTAMP},
+          #{item.modifyTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+  
+  <update id="updateOrDelete" parameterType="java.util.List">
+    <foreach collection="list" item="item" separator=";">
+    UPDATE zf_v2_policy_ipuser_ip
+      <set>
+        <if test="item.operateType!=null">
+          OPERATE_TYPE = #{item.operateType},
+        </if>
+        <if test="item.modifyOper!=null">
+          MODIFY_OPER = #{item.modifyOper},
+        </if>
+        <if test="item.modifyTime!=null">
+          MODIFY_TIME = #{item.modifyTime},
+        </if>
+        <if test="item.messageSequenceno!=null">
+          MESSAGE_SEQUENCENO = #{item.messageSequenceno}
+        </if>
+        WHERE 1=1
+        <if test="item.ipId!=null">
+          AND IP_ID = #{item.ipId}
+        </if>
+        <if test="item.userid!=null">
+          AND USER_ID = #{item.userid}
+        </if>
+        <if test="item.userip!=null">
+          AND USERIP = #{item.userip}
+        </if>
+        <if test="item.useripPrefix!=null">
+          AND USERIP_PREFIX = #{item.useripPrefix}
+        </if>
+      </set>
+    </foreach>
+  </update>
+  
+  <select id="getExitList" resultMap="BaseResultMap" parameterType="com.aotain.zongfen.model.general.user.UserStaticIP">
+    SELECT USER_ID , USERIP, USERIP_PREFIX ,MESSAGE_SEQUENCENO FROM zf_v2_policy_ipuser_ip WHERE OPERATE_TYPE!=3
+    <if test="userid != null">
+      AND USER_ID = #{userid,jdbcType=BIGINT}
+    </if>
+    <if test="userip != null">
+      AND USERIP = #{userip,jdbcType=VARCHAR}
+    </if>
+    <if test="useripPrefix != null">
+      AND USERIP_PREFIX = #{useripPrefix,jdbcType=DECIMAL}
+    </if>
+    <if test="messageSequenceno != null">
+      AND MESSAGE_SEQUENCENO = #{messageSequenceno,jdbcType=DECIMAL}
+    </if>
+  </select>
+  
+  <select id="selectOne" parameterType="java.lang.Long" resultType="com.aotain.zongfen.dto.general.user.UserStaticIPDTO">
+    SELECT
+    t.IP_ID as ipId,
+    m.MESSAGE_NO as messageNo,
+    t.USER_ID as userid,
+    t.USERIP as userip,
+    t.USERIP_PREFIX as useripPrefix,
+    m.USER_NAME as userName
+     from zf_v2_policy_ipuser_ip t LEFT JOIN zf_v2_policy_ipuser m on t.USER_ID = m.USER_ID
+     WHERE t.IP_ID = #{ipId}
+  </select>
+  
+  
+  <select id="getUserIpInfo" parameterType="java.lang.Long" resultType="com.aotain.zongfen.dto.general.user.UserStaticIPDTO">
+    SELECT
+    t.USER_ID as userid,
+    t.IP_ID as ipId,
+    t.USERIP as userip,
+    t.USERIP_PREFIX as useripPrefix,
+    f.USER_NAME as userName
+    FROM zf_v2_policy_ipuser_ip t LEFT JOIN zf_v2_policy_ipuser f ON t.USER_ID = f.USER_ID
+    WHERE t.USER_ID = #{userid} AND t.OPERATE_TYPE!=3 ORDER BY MODIFY_TIME DESC
+  </select>
+  
+</mapper>

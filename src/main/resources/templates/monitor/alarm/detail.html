@@ -1,0 +1,37 @@
+<div th:fragment="mydetail">
+
+<div class="modal inmodal fade modaladd overflow-auto" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog ">
+  <div class="wrapper wrapper-content">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+          <div class="ibox-content">
+            <div class="pull-right">
+              <button type="button" class="btn btn-success" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+            </div>
+            <h4><span class="text-success" id="paramTitle"></span>-参数详情：</h4>
+            <form role="form" id="detailParam"></form>
+            <h4><span class="text-success" id="tracingTitle"></span>-跟踪详情：</h4>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="overflow-auto text-center">
+                  <ol class="timeline" id="detailTracing"></ol>
+
+                   <input id="monitorTaskId" name="monitorTaskId" type="hidden"  />
+                   <input id="count" name="count" type="hidden" />
+                   <input id="title" name="title" type="hidden" />
+                   <input id="content" name="content" type="hidden" />
+                   <input id="params" name="params" type="hidden" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>

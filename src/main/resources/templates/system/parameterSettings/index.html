@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+
+                <div class="form-group m-r-sm">
+                    <label>参数名称</label>
+                    <input type="text" class="form-control" name="configDesc"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>key值</label>
+                    <input type="text" class="form-control" name="configKey"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>value值</label>
+                    <input type="text" class="form-control" name="configValue"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>所属模块</label>
+                    <select class="form-control" name="modelType">
+                        <option value="0">请选择</option>
+                        <option value="1">系统参数</option>
+                        <option value="2">告警参数</option>
+                        <option value="3">radius-relay参数</option>
+                        <option value="4">policy参数</option>
+                    </select>
+                </div>
+                <div class="checkbox">
+                    <button th:if="${session.zf501002_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- example toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <div th:include="/common/top_button::commonbutton (add=true,singleadd=false,update=false,delete=true,detail=false,export=false)"></div>
+                                    </div>
+                                    <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                            <!-- end example toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增-->
+<div th:include="/common/role_permission :: rolePermission"></div>
+
+<div th:include="/system/parameterSettings/addorupdatesnippet :: myaddorupdatesnippet"></div>
+<!--详情-->
+<!--<div th:include="/userGroupManager/detailsnippet :: mydetailsnippet"></div>-->
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #parameterSetting"></div>
+</body>
+</html>

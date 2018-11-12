@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiDynamicPortMapper">
+  <resultMap id="DpiDynamicPortMap" type="com.aotain.zongfen.model.device.DpiDynamicPort">
+    <result column="PortNo" jdbcType="DECIMAL" property="portno" />
+    <result column="PortInfo" jdbcType="VARCHAR" property="portinfo" />
+    <result column="PortUsage" jdbcType="DECIMAL" property="portusage" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="CREATE_TIME_STR" jdbcType="VARCHAR" property="createTimeStr" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    PortNo, PortInfo, PortUsage, DATE_FORMAT(CREATE_TIME,"%Y-%m-%d %H:%i:%s") as CREATE_TIME_STR
+  </sql>
+  
+  <select id="selectPort" resultMap="DpiDynamicPortMap">
+  	SELECT DISTINCT(PortNo),PortInfo FROM zf_v2_dev_dpi_dynamic_port
+  </select>
+  
+  <select id="selectByPort" resultMap="DpiDynamicPortMap">
+  	select <include refid="Base_Column_List" /> from zf_v2_dev_dpi_dynamic_port
+  	where PortNo = #{portno,jdbcType=DECIMAL}
+  	AND DATE_SUB(CURDATE(), INTERVAL 6 DAY) &lt;= CREATE_TIME
+  	 order by CREATE_TIME asc
+  </select>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.device.DpiDynamicPort">
+    insert into zf_v2_dev_dpi_dynamic_port (PortNo, PortInfo, PortUsage, 
+      CREATE_TIME)
+    values (#{portno,jdbcType=DECIMAL}, #{portinfo,jdbcType=VARCHAR}, #{portusage,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.device.DpiDynamicPort">
+    insert into zf_v2_dev_dpi_dynamic_port
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="portno != null">
+        PortNo,
+      </if>
+      <if test="portinfo != null">
+        PortInfo,
+      </if>
+      <if test="portusage != null">
+        PortUsage,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="portno != null">
+        #{portno,jdbcType=DECIMAL},
+      </if>
+      <if test="portinfo != null">
+        #{portinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="portusage != null">
+        #{portusage,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

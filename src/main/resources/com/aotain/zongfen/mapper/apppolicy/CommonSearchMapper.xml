@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.CommonSearchMapper">
+  <resultMap id="SearchMap" type="com.aotain.zongfen.model.apppolicy.CommonSearch">
+    <id column="SE_ID" jdbcType="BIGINT" property="seId" />
+    <result column="MESSAGE_NO" jdbcType="INTEGER" property="messageNo" />
+    <result column="SENAME" jdbcType="VARCHAR" property="sename" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    SE_ID, SENAME, MESSAGE_NO,OPERATE_TYPE, MODIFY_TIME,CREATE_TIME,CREATE_OPER,MODIFY_OPER
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="SearchMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_policy_common_se
+    where SE_ID = #{seId,jdbcType=BIGINT}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update zf_v2_policy_common_se set OPERATE_TYPE = 3
+    where SE_ID = #{seId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.apppolicy.CommonSearch">
+    update zf_v2_policy_common_se
+    <set>
+      <if test="sename != null">
+        SENAME = #{sename,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE = #{operateType,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where SE_ID = #{seId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.apppolicy.CommonSearch">
+    update zf_v2_policy_common_se
+    set SENAME = #{sename,jdbcType=VARCHAR},
+      	MODIFY_TIME = #{operateType,jdbcType=VARCHAR},
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+        OPERATE_TYPE = #{operateType}
+    where SE_ID = #{seId,jdbcType=BIGINT}
+  </update>
+  
+  <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="seId">
+    insert into zf_v2_policy_common_se (SENAME, MESSAGE_NO,OPERATE_TYPE,CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME)
+    values 
+    <foreach collection="list" item="item" separator=","  index="index">
+    	( #{item.sename},#{item.messageNo},#{item.operateType},#{item.createOper},#{item.modifyOper},#{item.createTime},#{item.modifyTime} )
+    </foreach>
+  </insert>
+  
+  <select id="getAllSearch" resultMap="SearchMap">
+  	SELECT <include refid="Base_Column_List"/>
+  	FROM zf_v2_policy_common_se
+  	WHERE OPERATE_TYPE != 3
+  	ORDER BY MODIFY_TIME DESC
+  </select>
+  
+  <select id="getRecordByname" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	SELECT COUNT(SE_ID)
+  	FROM zf_v2_policy_common_se
+  	WHERE SENAME = #{seName}
+  	AND OPERATE_TYPE != 3
+  </select>
+  
+   <select id="isSameRecord" parameterType="com.aotain.zongfen.model.apppolicy.CommonSearch" resultType="java.lang.Integer">
+  	SELECT COUNT(SE_ID)
+  	FROM zf_v2_policy_common_se
+  	WHERE SENAME = #{sename,jdbcType=VARCHAR}
+    AND SE_ID != #{seId,jdbcType=BIGINT}
+    AND OPERATE_TYPE != 3
+  </select>
+  
+  <update id="deleteByIds" parameterType="java.util.List">
+  	update zf_v2_policy_common_se
+    set OPERATE_TYPE = 3
+  	WHERE SE_ID IN
+  	<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+  		#{item}
+  	</foreach>
+  </update>
+  
+    <select id="getAllSearchName" resultType="java.lang.String">
+  	SELECT SENAME
+  	FROM zf_v2_policy_common_se
+  	WHERE OPERATE_TYPE != 3
+  </select>
+  
+</mapper>

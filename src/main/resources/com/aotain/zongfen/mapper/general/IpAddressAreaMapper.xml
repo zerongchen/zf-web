@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.IpAddressAreaMapper">
+  <resultMap id="IpAddressAreaMap" type="com.aotain.common.policyapi.model.IpAddressArea">
+    <id column="AREA_TYPE" jdbcType="TINYINT" property="areaType" />
+    <id column="AREA_ID" jdbcType="VARCHAR" property="areaId" />
+    <result column="P_AREA_ID" jdbcType="VARCHAR" property="pareaId" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="IS_PARENT" jdbcType="BIT" property="isParent" />
+  </resultMap>
+ 
+  <sql id="Base_Column_List">
+     AREA_TYPE, AREA_ID, P_AREA_ID, AREA_NAME, IS_PARENT
+  </sql>
+  
+<select id="selectByPrimaryKey" parameterType="com.aotain.common.policyapi.model.IpAddressAreaKey" resultMap="IpAddressAreaMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_ip_area
+    where AREA_TYPE = #{areaType,jdbcType=TINYINT}
+      and AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="IpAddressAreaMap">
+   	select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_ip_area 
+  </select>
+  
+  <select id="selectByType" resultMap="IpAddressAreaMap">
+  	SELECT a.* FROM zf_v2_gen_ip_area a WHERE a.AREA_TYPE= #{areaType,jdbcType=TINYINT}
+	UNION 
+	SELECT b.* FROM zf_v2_gen_ip_area b LEFT JOIN zf_v2_gen_ip_area c ON c.P_AREA_ID = b.AREA_ID WHERE c.AREA_TYPE= #{areaType,jdbcType=TINYINT}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="com.aotain.common.policyapi.model.IpAddressAreaKey">
+    delete from zf_v2_gen_ip_area
+    where AREA_TYPE = #{areaType,jdbcType=TINYINT}
+    and AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteAll">
+  	delete from zf_v2_gen_ip_area
+  </delete>
+  
+  <insert id="insert" parameterType="com.aotain.common.policyapi.model.IpAddressArea">
+    insert into zf_v2_gen_ip_area (AREA_TYPE, AREA_ID, P_AREA_ID, AREA_NAME, IS_PARENT)
+    values (#{areaType,jdbcType=TINYINT}, #{areaId,jdbcType=VARCHAR}, #{pareaId,jdbcType=VARCHAR}, 
+      #{areaName,jdbcType=VARCHAR}, #{isParent,jdbcType=BIT})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.IpAddressArea">
+    insert into zf_v2_gen_ip_area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areaType != null">
+        AREA_TYPE,
+      </if>
+      <if test="areaId != null">
+        AREA_ID,
+      </if>
+      <if test="pareaId != null">
+        P_AREA_ID,
+      </if>
+      <if test="areaName != null">
+        AREA_NAME,
+      </if>
+      <if test="isParent != null">
+        IS_PARENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areaType != null">
+        #{areaType,jdbcType=TINYINT},
+      </if>
+      <if test="areaId != null">
+        #{areaId,jdbcType=VARCHAR},
+      </if>
+      <if test="pareaId != null">
+        #{pareaId,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null">
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="isParent != null">
+        #{isParent,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.common.policyapi.model.IpAddressArea">
+    update zf_v2_gen_ip_area
+    <set>
+      <if test="pareaId != null">
+        P_AREA_ID = #{pareaId,jdbcType=VARCHAR},
+      </if>
+      <if test="areaName != null">
+        AREA_NAME = #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="isParent != null">
+        IS_PARENT = #{isParent,jdbcType=BIT},
+      </if>
+    </set>
+    where AREA_TYPE = #{areaType,jdbcType=TINYINT}
+      and AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.common.policyapi.model.IpAddressArea">
+    update zf_v2_gen_ip_area
+    set P_AREA_ID = #{pareaId,jdbcType=VARCHAR},
+      AREA_NAME = #{areaName,jdbcType=VARCHAR},
+      IS_PARENT = #{isParent,jdbcType=BIT}
+    where AREA_TYPE = #{areaType,jdbcType=TINYINT}
+      and AREA_ID = #{areaId,jdbcType=VARCHAR}
+  </update>
+  
+   <insert id="insertList" parameterType="java.util.List" >
+    insert into zf_v2_gen_ip_area (AREA_TYPE, AREA_ID, P_AREA_ID, AREA_NAME, IS_PARENT)
+    values <foreach collection="list" item="it" index="index" separator=",">
+    	(#{it.areaType,jdbcType=TINYINT}, #{it.areaId,jdbcType=VARCHAR}, #{it.pareaId,jdbcType=VARCHAR}, 
+      #{it.areaName,jdbcType=VARCHAR}, #{it.isParent,jdbcType=BIT})
+    </foreach>
+  </insert>
+  
+  <select id="selectByName" parameterType="java.lang.String" resultType="java.lang.String">
+  SELECT a.AREA_ID
+  FROM zf_v2_gen_ip_area a
+  WHERE a.AREA_TYPE=1
+  AND a.AREA_NAME LIKE CONCAT("%",#{name},"%")
+  </select>
+  
+</mapper>

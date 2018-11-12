@@ -1,0 +1,262 @@
+<!-- 首页 -->
+<!--<div th:fragment="home" xmlns:th="http://www.w3.org/1999/xhtml">
+    <ul class="nav" id="side-menu">
+	&lt;!&ndash; 左边top &ndash;&gt;
+	  <li class="nav-header">
+		<div class="dropdown profile-element">
+			<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+			<a  href="home.html">
+				 <span class="clear">
+					<span class="block m-t-xs">
+						<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+					</span>
+				 </span>
+			</a>
+		 </div>
+		<div class="logo-element">省汇聚平台</div>
+	  </li>
+	  <li> <a href="#"> <i class="fa fa-bars"></i> <span class="nav-label">首页</span> <span class="fa arrow"></span> </a></li>
+    </ul>
+</div>-->
+
+<!-- 策略管理 -->
+<div th:fragment="strategymanage">
+	<ul class="nav side-menu" id="side-menu-1">
+		<!-- 左边top -->
+<!--		<li class="nav-header">
+			<div class="dropdown profile-element">
+				<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+				<a  href="home.html">
+					 <span class="clear">
+						<span class="block m-t-xs">
+							<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+						</span>
+					 </span>
+				</a>
+			</div>
+			<div class="logo-element">省汇聚平台</div>
+		</li>-->
+
+		<li th:authorized="流量上报策略" > <a href="#"> <i class="fa fa-cloud-upload"></i> <span class="nav-label">流量上报策略</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level collapse in" aria-expanded="true">
+				<li th:authorized="通用类流量"> <a class="J_menuItem" th:href="@{/upload/generalFlow}">通用类流量</a> </li>
+				<li th:authorized="指定应用用户"> <a class="J_menuItem" th:href="@{/upload/pointAppFlow}">指定应用用户</a> </li>
+				<li th:authorized="Web类流量"> <a class="J_menuItem" th:href="@{/upload/webFlow}">Web类流量</a> </li>
+				<li th:authorized="应用流量流向"> <a class="J_menuItem" th:href="@{/upload/flowDirection}">应用流量流向</a> </li>
+				<li th:authorized="非法路由检测"> <a class="J_menuItem" th:href="@{/upload/illegalFlow}">非法路由检测</a> </li>
+				<li th:authorized="1拖N检测"> <a class="J_menuItem" th:href="@{/upload/oneByNFlow}">1拖N检测</a> </li>
+				<li th:authorized="Web推送结果"> <a class="J_menuItem" th:href="@{/upload/webPushNFlow}">Web推送结果</a> </li>
+				<li th:authorized="CP/SP服务器"> <a class="J_menuItem" th:href="@{/upload/cpspUpload}">CP/SP服务器</a> </li>
+				<li th:authorized="DDoS异常流量"> <a class="J_menuItem" th:href="@{/upload/ddosFlow}">DDoS异常流量</a> </li>
+				<li th:authorized="特有协议信息"> <a class="J_menuItem" th:href="@{/upload/protocolUpload}">特有协议信息</a> </li>
+				<li th:authorized="HTTPGET数据"> <a class="J_menuItem" th:href="@{/upload/htppgetUpload}">HTTPGET数据</a> </li>
+				<li th:authorized="移动终端"> <a class="J_menuItem" th:href="@{/upload/wlanUpload}">移动终端</a> </li>
+				<li th:authorized="Voip类流量"> <a class="J_menuItem" th:href="@{/upload/voipFlow}">Voip类流量</a> </li>
+				<li th:authorized="Download类"> <a class="J_menuItem" th:href="@{/upload/downloadFlow}">Download类</a> </li>
+				<li th:authorized="用户偏好"> <a class="J_menuItem" th:href="@{/upload/userPreferenceFlow}">用户偏好</a> </li>
+				<li th:authorized="P2P应用流量流向"> <a class="J_menuItem" th:href="@{/upload/p2pFlowAnalyseUpload}">P2P应用流量流向</a> </li>
+				<li th:authorized="IP地址流量TOPN流量"> <a class="J_menuItem" th:href="@{/upload/ipAddressTopnUpload}">IP地址流量TOPN流量</a> </li>
+			</ul>
+		</li>
+		<li th:authorized="应用管理策略"> <a href="#"> <i class="fa fa-adn"></i> <span class="nav-label">应用管理策略</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level">
+				<li th:authorized="参数设置"> <a class="J_menuItem" th:href="@{/param/index}">参数设置</a> </li>
+				<li th:authorized="通用流量管理"> <a class="J_menuItem" th:href="@{/flowmanager/index}">通用流量管理</a> </li>
+				<li th:authorized="Web流量管理"> <a class="J_menuItem" th:href="@{/webflow/index}">web流量管理</a> </li>
+				<li th:authorized="Voip流量管理"> <a class="J_menuItem" th:href="@{/apppolicy/voipflow/index}">voip流量管理</a> </li>
+				<li th:authorized="流量流向管理"> <a class="J_menuItem" th:href="@{/flowDirection/index}">流量流向管理</a> </li>
+				<li th:authorized="流量标记"> <a class="J_menuItem" th:href="@{/apppolicy/flowmark/index}">流量标记</a> </li>
+				<li th:authorized="指定应用用户管理"> <a class="J_menuItem" th:href="@{/apppolicy/appuser/index}">指定应用用户统计</a> </li>
+				<li th:authorized="1拖N用户管理"> <a class="J_menuItem" th:href="@{/apppolicy/sharemanage/index}">1拖N用户管理</a> </li>
+				<li th:authorized="Web信息推送管理"> <a class="J_menuItem" th:href="@{/apppolicy/webpush/index}">web信息推送管理</a> </li>
+				<li th:authorized="DDoS异常流量管理"> <a class="J_menuItem" th:href="@{/apppolicy/ddosflow/index}">ddos异常流量</a> </li>
+				<li th:authorized="流量镜像"> <a class="J_menuItem" th:href="@{/apppolicy/flowmirror/index}">流量镜像</a> </li>
+				<li th:authorized="应用特征自定义"> <a class="J_menuItem" th:href="@{/apppolicy/customfeatures/index}">应用特征自定义</a> </li>
+			</ul>
+		</li>
+		<li th:authorized="用户管理策略"> <a href="#"> <i class="fa fa-user-plus"></i> <span class="nav-label">用户管理策略</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level">
+				<li th:authorized="用户组管理"> <a class="J_menuItem" th:href="@{/userGroupManager/index}">用户组管理</a> </li>
+				<li th:authorized="用户组策略绑定"> <a class="J_menuItem" th:href="@{/userGroupBind/index}">用户组策略绑定</a> </li>
+				<li th:authorized="IP地址用户信息"> <a class="J_menuItem" th:href="@{/userip/index}">IP地址用户信息</a> </li>
+			</ul>
+		</li>
+		<li th:if="${session.generalManageStrategy}"> <a href="#"> <i class="fa fa-copyright"></i> <span class="nav-label">通用管理策略</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level">
+				<!--<li> <a class="J_menuItem" th:href="@{/classinfo/index}">分类库更新通知</a> </li>-->
+				<!--<li> <a class="J_menuItem" th:href="@{/trigger/index}">信息推送触发条件</a> </li>-->
+				<li> <a th:if="${session.informationPushLibrary}" class="J_menuItem" th:href="@{/infoLibrary/index}">信息推送触发库</a> </li>
+				<li> <a th:if="${session.webClassifyLibrary}" class="J_menuItem" th:href="@{/generalWEBCategory/index}">WEB分类库</a> </li>
+				<li> <a th:if="${session.ipAddressLibrary}" class="J_menuItem" th:href="@{/generalIPAddress/index}">IP地址库</a> </li>
+				<li> <a th:if="${session.appNameLibrary}" class="J_menuItem" th:href="@{/generalAppName/index}">应用名称对应库</a> </li>
+				<li> <a th:if="${session.httpGetLibrary}" class="J_menuItem" th:href="@{/httpget/index}">HTTP GET 黑白名单</a> </li>
+				<li> <a th:if="${session.brasInformationLibrary}" class="J_menuItem" th:href="@{/bras/index}">BRAS信息管理</a> </li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+
+<!-- 用户行为分析 -->
+<div th:fragment="userbehavioranalysis">
+	<ul class="nav side-menu" id="side-menu-2">
+		<!-- 左边top -->
+<!--		<li class="nav-header">
+			<div class="dropdown profile-element">
+				<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+				<a  href="home.html">
+					 <span class="clear">
+						<span class="block m-t-xs">
+							<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+						</span>
+					 </span>
+				</a>
+			</div>
+			<div class="logo-element">省汇聚平台</div>
+		</li>-->
+
+		<li th:authorized="城域网分析"> <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">城域网分析</span> <span class="fa arrow"></span> </a>
+		<ul class="nav nav-second-level collapse in" aria-expanded="true">
+			<li th:authorized="全应用流量分析"><a class="J_menuItem" th:href="@{/userbehavioranalysis/apptraffic/index}">全应用流量分析</a> </li>
+			<li th:authorized="应用流量流向分析"><a class="J_menuItem" th:href="@{/analysis/apptraffic/index}">应用流量流向分析</a> </li>
+			<li th:authorized="Web应用站点分析"><a class="J_menuItem" th:href="@{/userbehavioranalysis/webappsite/index}">Web应用站点分析</a> </li>
+			<li th:authorized="访问指定应用用户分析"><a class="J_menuItem" th:href="@{/analysis/appuser/index}">指定应用访问用户分析</a> </li>
+			<li th:authorized="非法路由检测分析"><a class="J_menuItem" th:href="@{/analysis/illegalroute/index}">非法路由用户分析</a> </li>
+			<li th:authorized="WLAN终端分析"><a class="J_menuItem" th:href="@{/analysis/wlan/index}">WLAN终端分析</a> </li>
+			<li th:authorized="1拖N用户分析"><a class="J_menuItem" th:href="@{/analysis/share/index}">1拖N用户分析</a> </li>
+		</ul>
+		</li>
+
+		<li th:authorized="IDC机房分析"> <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">IDC机房分析</span> <span class="fa arrow"></span> </a>
+		<ul class="nav nav-second-level">
+			<li th:authorized="IDC全应用流量分析"><a class="J_menuItem" th:href="@{/userbehavioranalysis/apptraffic/idcindex}">IDC全应用流量分析</a> </li>
+			<li th:authorized="IDC应用流量流向分析"><a class="J_menuItem" th:href="@{/analysis/apptraffic/indexIdc}">IDC应用流量流向分析</a> </li>
+			<li th:authorized="网站流量分析"><a class="J_menuItem" th:href="@{/userbehavioranalysis/webflowanalysis/index}">网站流量分析</a> </li>
+			<li th:authorized="假接入真互联分析"><a class="J_menuItem" th:href="@{/analysis/share/idcindex}">假接入真互联分析</a> </li>
+		</ul>
+		</li>
+
+		<li th:authorized="安全检测分析"> <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">安全检测分析</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level">
+				<li th:authorized="DDoS异常流量分析"><a class="J_menuItem" th:href="@{/userbehavioranalysis/ddosirregular/index}">DDoS异常流量分析</a> </li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<!-- 机房管理 -->
+<div th:fragment="housemanage">
+	<ul class="nav side-menu" id="side-menu-3">
+		<!-- 左边top -->
+	<!--	<li class="nav-header">
+			<div class="dropdown profile-element">
+				<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+				<a  href="home.html">
+		                   	 <span class="clear">
+		                   	 	<span class="block m-t-xs">
+		                   	 		<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+		                   	 	</span>
+		                   	 </span>
+				</a>
+			</div>
+			<div class="logo-element">省汇聚平台</div>
+		</li>-->
+
+
+		<li th:authorized="设备管理"> <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">设备管理</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level collapse in" aria-expanded="true">
+				<li th:authorized="设备信息管理"><a class="J_menuItem" th:href="@{/device/devicemanage/index}">设备信息管理</a> </li>
+				<li th:authorized="DPI设备升级管理"><a class="J_menuItem" th:href="@{/device/dpiUpgrade/index}">DPI设备升级管理</a> </li>
+				<li th:authorized="DPI设备静态信息"><a class="J_menuItem" th:href="@{/device/dpiStatic/index}">DPI设备静态信息</a> </li>
+				<li th:authorized="DPI设备动态信息"><a class="J_menuItem" th:href="@{/device/dpiDynamic/index}">DPI设备动态信息</a> </li>
+			</ul>
+		</li>
+
+        <li th:authorized="机房管理"> <a href="#"><i class="fa fa-building-o"></i> <span class="nav-label">机房管理</span> <span class="fa arrow"></span> </a>
+            <ul class="nav nav-second-level" aria-expanded="true">
+                <li th:authorized="机房信息管理"><a class="J_menuItem" th:href="@{/device/housemanage/index}">机房信息管理</a> </li>
+            </ul>
+        </li>
+
+	</ul>
+</div>
+
+
+<!-- 告警管理 -->
+<div th:fragment="alarmmanage">
+	<ul class="nav side-menu" id="side-menu-4">
+		<!-- 左边top -->
+		<!--<li class="nav-header">
+			<div class="dropdown profile-element">
+				<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+				<a  href="home.html">
+                  	 <span class="clear">
+                  	 	<span class="block m-t-xs">
+                  	 		<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+                  	 	</span>
+                  	 </span>
+				</a>
+			</div>
+			<div class="logo-element">省汇聚平台</div>
+		</li>-->
+
+		<li th:authorized="告警管理"> <a href="#"><i class="fa fa-warning"></i> <span class="nav-label">告警管理</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level collapse in" aria-expanded="true">
+				<li th:authorized="告警监控"><a class="J_menuItem" th:href="@{/monitor/alarm/index}">告警监控</a> </li>
+				<li th:authorized="任务监控管理"><a class="J_menuItem" th:href="@{/monitor/task/index}">任务监控管理</a> </li>
+			</ul>
+		</li>
+
+		<li th:authorized="数据监控管理"> <a href="#"><i class="fa fa-bar-chart-o"></i> <span class="nav-label">数据监控管理</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level">
+				<li th:authorized="数据上报监控"><a class="J_menuItem" th:href="@{/monitor/dataupload/index}">数据上报监控	</a> </li>
+				<li th:authorized="AAA数据监控"><a class="J_menuItem" th:href="@{/aaa/index}">AAA数据监控	</a> </li>
+				<!--<li><a class="J_menuItem" th:href="@{/monitor/httpget/index}">HTTP GET数据监控</a> </li>-->
+				<li th:authorized="流量流向文件生成监控"><a class="J_menuItem" th:href="@{/monitor/appflowdirec/index}">流量流向文件生成监控</a> </li>
+				<li th:authorized="全业务流量文件生成监控"><a class="J_menuItem" th:href="@{/monitor/appflow/index}">全业务流量文件生成监控</a> </li>
+				<li th:authorized="Socket数据接收监控"><a class="J_menuItem" th:href="@{/monitor/ud1/index}">Socket数据接收监控</a> </li>
+				<li th:authorized="SFTP数据接收监控"><a class="J_menuItem" th:href="@{/monitor/sftp/index}">SFTP数据接收监控</a> </li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+
+<!-- 系统管理 -->
+<div th:fragment="systemmanage">
+	<ul class="nav side-menu" id="side-menu-5">
+		<!-- 左边top -->
+		<!--<li class="nav-header">
+			<div class="dropdown profile-element">
+				<span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}" /></span>
+				<a  href="home.html">
+		                   	 <span class="clear">
+		                   	 	<span class="block m-t-xs">
+		                   	 		<strong class="font-bold">DPI汇聚分析平台 V2.0</strong>
+		                   	 	</span>
+		                   	 </span>
+				</a>
+			</div>
+			<div class="logo-element">省汇聚平台</div>
+		</li>-->
+
+		<!--<li> <a href="#"> <i class="fa fa-gears"></i> <span class="nav-label">系统设置</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level collapse in" aria-expanded="true">
+				<li> <a class="J_menuItem" th:href="@{/system/log/index}">操作日志</a> </li>
+				<li> <a class="J_menuItem" th:href="@{/system/parameter/index}">系统参数设置</a> </li>
+				<li> <a class="J_menuItem" th:href="@{/system/area/index}">区域管理</a> </li>
+			</ul>
+		</li>-->
+
+		<li th:if="${session.systemManage}"> <a href="#"> <i class="fa fa-gears"></i> <span class="nav-label">系统设置</span> <span class="fa arrow"></span> </a>
+			<ul class="nav nav-second-level collapse in" aria-expanded="true">
+				<li> <a th:if="${session.operationLog}" class="J_menuItem" th:href="@{/system/log/index}">操作日志</a> </li>
+				<li> <a th:if="${session.systemParameter}" class="J_menuItem" th:href="@{/system/parameter/index}">系统参数设置</a> </li>
+				<li> <a th:if="${session.areaManager}" class="J_menuItem" th:href="@{/system/area/index}">地区管理</a> </li>
+				<li> <a th:if="${session.areaManager}" class="J_menuItem" th:href="@{/system/softwareprovidermanage/index}">DPI厂家管理</a> </li>
+			</ul>
+		</li>
+
+	</ul>
+</div>
+

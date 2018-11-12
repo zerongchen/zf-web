@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.common.ChinaAreaMapper">
+  <resultMap id="ChinaAreaMap" type="com.aotain.zongfen.model.common.ChinaArea">
+    <result column="AREA_CODE" jdbcType="DECIMAL" property="areaCode" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="PARENT" jdbcType="DECIMAL" property="parent" />
+    <result column="AREA_TYPE" jdbcType="VARCHAR" property="areaType" />
+    <result column="AREA_SHORT" jdbcType="VARCHAR" property="areaShort" />
+    <result column="type" jdbcType="DECIMAL" property="type" />
+  </resultMap>
+  <sql id="chinaArea">
+  	AREA_CODE, AREA_NAME, PARENT, AREA_TYPE, AREA_SHORT
+  </sql>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.common.ChinaArea">
+    insert into zf_dict_chinaarea (AREA_CODE, AREA_NAME, PARENT, 
+      AREA_TYPE, AREA_SHORT)
+    values (#{areaCode,jdbcType=DECIMAL}, #{areaName,jdbcType=VARCHAR}, #{parent,jdbcType=DECIMAL}, 
+      #{areaType,jdbcType=VARCHAR}, #{areaShort,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.common.ChinaArea">
+    insert into zf_dict_chinaarea
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areaCode != null">
+        AREA_CODE,
+      </if>
+      <if test="areaName != null">
+        AREA_NAME,
+      </if>
+      <if test="parent != null">
+        PARENT,
+      </if>
+      <if test="areaType != null">
+        AREA_TYPE,
+      </if>
+      <if test="areaShort != null">
+        AREA_SHORT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=DECIMAL},
+      </if>
+      <if test="areaName != null">
+        #{areaName,jdbcType=VARCHAR},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=DECIMAL},
+      </if>
+      <if test="areaType != null">
+        #{areaType,jdbcType=VARCHAR},
+      </if>
+      <if test="areaShort != null">
+        #{areaShort,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getAreaByCode" parameterType="java.lang.Long" resultMap="ChinaAreaMap">
+  		SELECT * 
+  		FROM zf_dict_chinaarea 
+  		WHERE AREA_CODE = #{areaCode,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="getList" resultMap="ChinaAreaMap">
+	SELECT a.* FROM zf_dict_chinaarea a
+		WHERE 1=1
+	    <if test="areaCode != null areaCode > 0">
+		  AND a.area_code =  #{parent,jdbcType=DECIMAL}
+		</if> 
+	UNION  
+	SELECT b.* FROM zf_dict_chinaarea b
+	    WHERE 1=1
+  	    <if test="areaCode != null areaCode > 0">
+  		   AND a.parent =  #{parent,jdbcType=DECIMAL}
+  		</if> 
+  </select>
+  
+  <select id="getAreaList" parameterType="java.lang.Integer" resultMap="ChinaAreaMap">
+  		SELECT * 
+  		FROM zf_dict_chinaarea
+  		WHERE 1=1
+  		<if test="type==0">
+  		AND AREA_CODE = PARENT
+  		</if> 
+  		<if test="type==1">
+  		AND AREA_CODE != PARENT
+  		</if>
+  		AND PARENT = #{parentCode}
+  </select>
+  
+  <select id="getIndexList" parameterType="java.util.HashMap" resultMap="ChinaAreaMap">
+  	SELECT <include refid="chinaArea"/>,
+  	case when AREA_CODE = PARENT then 1 
+  	when AREA_CODE != PARENT then 0 end type
+  	FROM zf_dict_chinaarea
+  	WHERE PARENT = #{provinceCode}
+  	<if test="areaName!=null and areaName!=''">
+  	AND AREA_NAME LIKE concat("%",#{areaName},"%") 
+  	</if>
+  	ORDER BY AREA_CODE ASC
+  </select>
+  
+    <insert id="insertList" parameterType="java.util.List">
+    insert into zf_dict_chinaarea (AREA_CODE, AREA_NAME, PARENT, 
+      AREA_TYPE, AREA_SHORT)
+    values 
+    <foreach collection="list" item="item" separator=",">
+    	 (#{item.areaCode,jdbcType=DECIMAL}, #{item.areaName,jdbcType=VARCHAR}, #{item.parent,jdbcType=DECIMAL}, 
+      #{item.areaType,jdbcType=VARCHAR}, #{item.areaShort,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <select id="isDuplicateArea" parameterType="java.util.List" resultType="java.lang.Integer">
+  	SELECT COUNT(AREA_CODE)
+  	FROM zf_dict_chinaarea
+  	WHERE 
+  	<foreach collection="list" item="item" separator=" or ">
+  	 (( AREA_CODE = #{item.areaCode} or AREA_NAME=#{item.areaName} ) and PARENT = #{item.parent} ) 
+  	</foreach>
+  </select>
+  
+  <select id="isSameArea" parameterType="com.aotain.zongfen.model.common.ChinaArea" resultType="java.lang.Integer">
+  	SELECT COUNT(AREA_CODE)
+  	FROM zf_dict_chinaarea
+  	WHERE AREA_NAME=#{areaName} 
+  	AND PARENT = #{parent} 
+  	AND AREA_CODE != #{areaCode}
+  </select>
+  
+  <update id="update" parameterType="com.aotain.zongfen.model.common.ChinaArea">
+  UPDATE zf_dict_chinaarea SET 
+  	AREA_NAME=#{areaName} ,
+  	AREA_SHORT=#{areaShort}
+  WHERE AREA_CODE= #{areaCode}
+  </update>
+  
+  <delete id="deleteByIds" parameterType="java.util.List">
+  DELETE FROM zf_dict_chinaarea
+  WHERE AREA_CODE IN (
+  <foreach collection="list" item="item" separator=",">
+  	#{item}
+  </foreach>
+  )
+  </delete>
+  
+  <select id="getProvinceList" resultMap="ChinaAreaMap">
+  SELECT <include refid="chinaArea"/>
+  FROM zf_dict_chinaarea
+  WHERE AREA_CODE = PARENT
+  </select>
+</mapper>

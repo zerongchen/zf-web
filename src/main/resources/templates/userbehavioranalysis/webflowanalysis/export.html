@@ -1,0 +1,81 @@
+<div th:fragment="myExport">
+    <div class="modal inmodal fade" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="ibox-title">
+                    <h5>导出任务</h5>
+                    <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal"
+                            name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级
+                    </button>
+                </div>
+                <div class="modal-body form-inline">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form role="form" class="form-inline" id="exportForm">
+                                <div class="form-group m-r-sm ">
+                                    <label>地区</label>
+                                    <select id="export_areaId" name="export_areaId" class="form-control" style="width:80px;">
+                                    </select>
+                                </div>
+                                <div class="form-group m-r-sm">
+                                    <label>用户组</label>
+                                    <select id="export_userGroupNo" name="export_userGroupNo" class="form-control"
+                                            style="width:160px;">
+                                    </select>
+                                </div>
+                                <div class="form-group m-r-sm ">
+                                    <label>网站类型</label>
+                                    <select id="export_siteType" name="export_siteType" class="form-control" style="width:80px;">
+                                    </select>
+                                </div>
+
+                                <div class="form-group m-r-sm ">
+                                    <label>网站名称</label>
+                                    <input class="form-control" id="export_siteName" th:name="export_siteName" />
+                                </div>
+                                <div class="form-group m-r-sm" id="export_dateTypeSelect">
+                                    <label>时间粒度</label>
+                                    <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="1">按小时</button>
+                                    <button name="dateType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按天</button>
+                                    <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按周</button>
+                                    <button name="dateType" class="btn btn-sm btn-white btn-primary" type="button" value="4">按月</button>
+                                </div>
+                                <div class="form-group m-r-sm">
+                                    <label>统计时间</label>
+                                    <input placeholder="开始日期" class="form-control layer-date" name="export_startTime" id="export_startTime">
+                                </div>
+
+                                <div class="checkbox">
+                                    <button th:authorized="zf202003_export" type="button" id="export_exportButton"
+                                            class="btn btn-success dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <!--<i class="fa fa-download"></i> 创建导出任务 <span class="caret"></span>-->
+                                        创建导出任务
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="text-left">
+                                <form role="form" class="form-inline" id="taskForm">
+                                    <div class="form-group m-r-sm" id="downStatus">
+                                        <label>任务清单</label>
+                                        <input name="downloadType" checked="checked" value="0" type="radio">未下载</input>
+                                        <input name="downloadType" value="1" type="radio">已下载</input>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="example-wrap text-right ">
+                            <div class="example">
+                                <table id="table_export" data-mobile-responsive="true" class="text-left text-nowrap">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

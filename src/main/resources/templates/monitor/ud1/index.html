@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>上报时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="start" th:value="${startTime}">
+                    到
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="end" th:value="${endTime}">
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>时间粒度</label>
+                    <button name="btnType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按小时</button>
+                    <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按天</button>
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label for="chartTypeId1">接收</label>
+                    <input type="radio" id="chartTypeId1" value="1" name="chartType" checked="">
+                </div>
+                <div class="form-group m-r-sm">
+                    <label for="chartTypeId2">入库</label>
+                    <input type="radio" id="chartTypeId2" value="2" name="chartType">
+                </div>
+
+                <!-- ud1 -->
+                <input id="tableType" name="tableType" type="hidden" th:value="${tableType}" />
+                <input id="level" name="level" type="hidden" th:value="${level}" />
+                <input id="probeType" name="probeType" type="hidden" />
+                <input id="areaId" name="areaId" type="hidden" />
+                <input id="softwareProvider" name="softwareProvider" type="hidden" />
+
+                <div class="checkbox">
+                    <button th:if="${session.zf402006_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--左侧目录树内容-->
+<div class="pull-left  m-t-sm m-l-sm" id="treeWidthFixed">
+    <!--Mytree5-->
+    <div id="MyTree5" class="tree tree-plus-minus tree-no-line tree-unselectable white-bg">
+        <div class="tree-item" style="display: block;"> <i class="tree-dot"></i>
+            <ul id="areaTree" class="ztree no-borders"></ul>
+        </div>
+    </div>
+    <!--Mytree5 end-->
+</div>
+
+<!--右侧内容-->
+<div class="pull-right" id="containWidthFixed">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12 m-b-sm p-l-n p-r-sm">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-content ">
+                        <!-- <div class="h250"><img src="img/u29134.png" height="100%" width="100%"/></div>-->
+                        <div class="ibox-content h250 no-borders" id="mychart" style="height: 320px" ></div>
+                        <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #monitorUdOne"></div>
+</body>
+</html>

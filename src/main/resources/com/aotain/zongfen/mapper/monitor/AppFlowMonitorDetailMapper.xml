@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.AppFlowMonitorDetailMapper">
+  <resultMap id="AppFlowMonitorDetailMap" type="com.aotain.zongfen.dto.monitor.AppFlowMonitorDetailDTO">
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="upload_ip" jdbcType="VARCHAR" property="uploadIp" />
+    <result column="filecreate_time" jdbcType="VARCHAR" property="filecreateTime" />
+    <result column="fileupload_time" jdbcType="VARCHAR" property="fileuploadTime" />  
+    <result column="create_file_size" property="createfileSize" />
+    <result column="upload_file_size" property="uploadfileSize" />
+    <result column="upload_ip" jdbcType="VARCHAR" property="dpiIp" />
+  </resultMap>
+  
+  <select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.AppFlowMonitorDetailDTO" resultMap="AppFlowMonitorDetailMap">
+  SELECT a.file_name,a.server_ip AS upload_ip,
+	b.create_time AS filecreate_time,
+	FROM_UNIXTIME(a.fileupload_time,'%Y-%m-%d %H:%i:%S') AS fileupload_time,
+	FORMAT(b.file_size/1024,2) as create_file_size,
+	FORMAT(a.file_size/1024,2) as upload_file_size
+	FROM zf_v2_monitor_uploaddfile_detail a
+	LEFT JOIN zf_v2_monitor_createfile_detail b ON b.file_name=a.file_name
+	AND  a.file_type = b.file_type
+	WHERE a.file_type = 258
+	 <if test="startTime != null and startTime > 0 ">
+	    AND a.fileupload_time &gt;= (#{startTime,jdbcType=BIGINT})
+	 </if>
+	 <if test="endTime != null and endTime > 0 ">
+	    AND a.fileupload_time &lt; (#{endTime,jdbcType=BIGINT})
+	 </if>
+	<if test="order!=null">
+			ORDER BY filecreate_time ${order}
+	</if>
+  </select>
+ 
+</mapper>

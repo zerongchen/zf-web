@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<!--<style>
+div.mycontent_wrap {width: 600px;}
+</style>-->
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>上报时间</label>
+                    <input placeholder="开始日期" name="startTime" class="form-control" id="start" th:value="${startTime}">
+                    到
+                    <input placeholder="结束日期" name="endTime" class="form-control" id="end" th:value="${endTime}">
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label>时间粒度</label>
+                    <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="1">按分钟</button>
+                    <button name="btnType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按小时</button>
+                    <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按天</button>
+                </div>
+                <!-- sftp -->
+                <!-- 时间粒度  1=分钟，2=小时，3=天。默认为2 -->
+                <input id="tableType" name="tableType" type="hidden" th:value="${tableType}" />
+                <input id="level" name="level" type="hidden" th:value="${level}" />
+                <input id="probeType" name="probeType" type="hidden" />
+                <input id="areaId" name="areaId" type="hidden" />
+                <input id="softwareProvider" name="softwareProvider" type="hidden" />
+
+
+                <input id="chartList" name="chartList" type="hidden" value="mychart768:mychart512:mychart513:mychart514"/>
+                <input id="chartListPage" name="chartList" type="hidden" value="1"/>
+
+                <div class="checkbox">
+                    <button th:if="${session.zf402007_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--左侧目录树内容-->
+<div class="pull-left  m-t-sm m-l-sm" id="treeWidthFixed">
+    <!--Mytree5-->
+    <div id="MyTree5" class="tree tree-plus-minus tree-no-line tree-unselectable white-bg">
+        <div class="tree-item" style="display: block;"> <i class="tree-dot"></i>
+                <ul id="areaTree" class="ztree no-borders"></ul>
+        </div>
+    </div>
+    <!--Mytree5 end-->
+</div>
+
+<!--右侧内容-->
+<div class="pull-right" id="containWidthFixed">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="httpGet">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >HTTP GET报文关键字接收监控</h5>
+                        <div class="ibox-tools" id="httpGetDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart768" value="768"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="http">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >HTTP接收监控</h5>
+                        <div class="ibox-tools" id="httpDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart512" value="512"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="rtsp">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >RTSP接收监控</h5>
+                        <div class="ibox-tools" id="rtspDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart513" value="513"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="voip">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >VoIP接收监控</h5>
+                        <div class="ibox-tools" id="voipDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart514" value="514"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!---==========================================================================================-->
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="wlan" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >WLAN 终端类型上报</h5>
+                        <div class="ibox-tools" id="wlanDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart769" value="769"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="im" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >IM接收监控</h5>
+                        <div class="ibox-tools" id="imDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart522" value="522"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="game" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >Game接收监控</h5>
+                        <div class="ibox-tools" id="gameDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart521" value="521"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="p2p" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >P2P接收监控</h5>
+                        <div class="ibox-tools" id="p2pDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart520" value="520"></div>
+                    </div>
+                </div>
+            </div>
+            <!---==========================================================================================-->
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="dns" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >DNS接收监控</h5>
+                        <div class="ibox-tools" id="dnsDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart519" value="519"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="imap" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >IMAP接收监控</h5>
+                        <div class="ibox-tools" id="imapDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart518" value="518"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="pop3" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >POP3接收监控</h5>
+                        <div class="ibox-tools" id="pop3DataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart517" value="517"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="smtp" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >SMTP接收监控</h5>
+                        <div class="ibox-tools" id="smtpDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart516" value="516"></div>
+                    </div>
+                </div>
+            </div>
+            <!---==========================================================================================-->
+            <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="ftp" style="display: none;">
+                <div class="ibox float-e-margins m-b-none">
+                    <div class="ibox-title no-borders">
+                        <h5 >FTP接收监控</h5>
+                        <div class="ibox-tools" id="ftpDataDetail" > <a data-toggle="modal" > <i class="fa fa-expand"></i> </a> </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="h250" id="mychart515" value="515"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 m-b-sm p-l-n p-r-sm" id="loadMore">
+                <div class="ibox float-e-margins m-b-none">
+<!--                    <div class="ibox-title no-borders" style="text-align: center">
+                        <a>加载更多...</a>
+                    </div>-->
+                    <div class="text-center blue m-b-xs"><a><i class="fa fa-chevron-down"></i> 加载更多</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal inmodal fade" id="moreDetail" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title" >
+                <h5 >详情</h5>
+                <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+            </div>
+            <div class="modal-body form-horizontal p-t-n">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox ">
+                            <div class="ibox-content no-borders p-n">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="example-wrap text-right">
+                                            <div class="example">
+                                                <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal inmodal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title" >
+                <h5 >文件详情</h5>
+                <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+            </div>
+            <div class="modal-body form-horizontal p-t-n">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox ">
+                            <div class="ibox-content no-borders p-n">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="example-wrap text-right">
+                                            <div class="example">
+                                                <table id="detailTable" data-mobile-responsive="true" class="text-left"></table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+<!--
+详情页面
+<div th:include="/monitor/sftp/detail :: mydetail"></div>
+-->
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #monitorSftp"></div>
+</body>
+</html>

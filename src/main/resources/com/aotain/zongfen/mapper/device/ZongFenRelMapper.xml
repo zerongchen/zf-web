@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.ZongFenRelMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.device.ZongFenRel">
+    <id column="ZONGFEN_ID" jdbcType="INTEGER" property="zongfenId" />
+    <result column="IP" jdbcType="VARCHAR" property="zongfenIp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ZONGFEN_ID, IP
+  </sql>
+  <insert id="insertList" parameterType="java.util.List">
+    insert into zf_v2_dev_zongfen_rel (ZONGFEN_ID, IP)
+    values <foreach collection="list" item="item" separator="," >
+    	(#{item.zongfenId,jdbcType=INTEGER}, #{item.ip,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+    <insert id="insert" parameterType="com.aotain.zongfen.model.device.ZongFenRel">
+    insert into zf_v2_dev_zongfen_rel (ZONGFEN_ID, IP)
+    values (#{zongfenId,jdbcType=INTEGER}, #{ip,jdbcType=VARCHAR})
+  </insert>
+  
+  <update id="updateByZfId" parameterType="com.aotain.zongfen.model.device.ZongFenRel">
+  	UPDATE zf_v2_dev_zongfen_rel
+  	SET IP = #{ip}
+  	WHERE ZONGFEN_ID = #{zongfenId}
+  </update>
+  
+  <select id="selectListById" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	SELECT IP
+  	FROM zf_v2_dev_zongfen_rel
+  	WHERE ZONGFEN_ID = #{zongFenId}
+  </select>
+  
+  <select id="selectCountByIp" parameterType="java.lang.String" resultType="java.lang.Integer">
+  	SELECT count(ZONGFEN_ID)
+  	FROM zf_v2_dev_zongfen_rel
+  	WHERE IP = #{ip}
+  </select>
+  
+  <delete id="deleteByZfId" parameterType="java.lang.Integer">
+  	DELETE FROM zf_v2_dev_zongfen_rel
+  	WHERE ZONGFEN_ID = #{deviceId}
+  </delete>
+</mapper>

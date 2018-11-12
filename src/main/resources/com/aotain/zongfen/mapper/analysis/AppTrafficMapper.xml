@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.analysis.AppTrafficMapper">
+  
+  <select id="getLinks" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficResult">
+  
+    SELECT * FROM (
+      SELECT 10001 AS sourceVal ,"运营商流量流向" as source,
+      t.dst_areasubid2 AS targetVal,
+      IFNULL(a.AREA_NAME,"UNKNOW_OPERATOR") as target,
+      round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+      round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+      round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+      FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.dst_areasubid2 = a.AREA_ID and a.AREA_TYPE=4
+    
+      WHERE 1=1
+      <if test="currentAreaCode!=null">
+        AND t.src_areasubid3 = #{currentAreaCode}
+      </if>
+      <if test="srcUbasDataTypeRight!=null">
+        AND t.src_areasubid1 = #{srcUbasDataTypeRight}
+      </if>
+      <if test="srcAreaTypeRight!=null">
+        AND t.src_areasubid2 = #{srcAreaTypeRight}
+      </if>
+      <if test="dstUbasDataTypeRight!=null">
+        AND t.dst_areasubid1 = #{dstUbasDataTypeRight}
+      </if>
+      <if test="dstAreaTypeRight!=null">
+        AND t.dst_areasubid2 = #{dstAreaTypeRight}
+      </if>
+      
+      <if test="stateTime!=null">
+        AND stat_time = #{stateTime}
+      </if>
+      <if test="appType!=null">
+        AND t.apptype=#{appType}
+      </if>
+      GROUP BY t.dst_areasubid2
+      UNION ALL
+      SELECT 10002 AS sourceVal ,"区域流量流向" as source,
+      t.dst_areasubid3 AS targetVal,
+      IFNULL(a.AREA_NAME,"UNKNOW_AREA") as target,
+      round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+      round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+      round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+      FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.dst_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+      WHERE 1=1
+      <if test="currentAreaCode!=null" >
+        AND t.src_areasubid3 = #{currentAreaCode}
+      </if>
+      <if test="srcUbasDataTypeLeft!=null">
+        AND t.src_areasubid1 = #{srcUbasDataTypeLeft}
+      </if>
+      <if test="srcAreaTypeLeft!=null">
+        AND t.src_areasubid2 = #{srcAreaTypeLeft}
+      </if>
+      <if test="dstUbasDataTypeLeft!=null">
+        AND t.dst_areasubid1 = #{dstUbasDataTypeLeft}
+      </if>
+      <if test="dstAreaTypeLeft!=null">
+        AND t.dst_areasubid2 = #{dstAreaTypeLeft}
+      </if>
+      <if test="stateTime!=null">
+        AND stat_time = ${stateTime}
+      </if>
+      <if test="appType!=null">
+        AND t.apptype=#{appType}
+      </if>
+      GROUP BY t.dst_areasubid3
+    )C WHERE 1=1
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  
+  
+  <select id="getEchartRankingAreaData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+      SELECT
+      t.appid as appId,
+      IF(IFNULL(a.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(a.APP_ZH_NAME, t.appname),'unknow')
+      as appName,
+      round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+      round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+      round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+      FROM ${table} t
+      LEFT JOIN zf_v2_gen_app a on t.apptype = a.APP_TYPE and t.appid = a.APP_ID
+      WHERE 1=1
+      <if test="srcUbasDataTypeLeft!=null">
+        AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+      </if>
+      <if test="srcAreaTypeLeft!=null">
+        AND t.src_areasubid2=#{srcAreaTypeLeft}
+      </if>
+      <if test="currentAreaCode!=null">
+        AND t.src_areasubid3=#{currentAreaCode}
+      </if>
+      <if test="dstUbasDataTypeLeft!=null">
+        AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+      </if>
+      <if test="dstAreaTypeLeft!=null">
+        AND t.dst_areasubid2=#{dstAreaTypeLeft}
+      </if>
+      <if test="destArea!=null">
+        AND t.dst_areasubid3=#{destArea}
+      </if>
+      <if test="appType!=null">
+        AND t.apptype=#{appType}
+      </if>
+      <if test="startTime!=null">
+        AND t.stat_time &gt;= ${startTime}
+      </if>
+      <if test="endTime!=null">
+        AND t.stat_time &lt;= ${endTime}
+      </if>
+      GROUP BY t.apptype,t.appid,t.appname
+    ) A ORDER BY totalFlow DESC limit 10
+    
+  </select>
+  
+  
+  <select id="getEchartRankingOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    ifnull(a.AREA_NAME,"unknow") as dstAreasub3,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    LEFT JOIN zf_v2_gen_ip_area a on t.dst_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid2=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.dst_areasubid3
+    ) A ORDER BY totalFlow DESC limit 10
+  
+  </select>
+  
+  <select id="getTableRankingAreaData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+      SELECT
+      ifnull(a.AREA_NAME,"unkown") as srcAreasub4,
+      t.appid as appId,
+      IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+      round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+      round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+      round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+      ifnull(b.AREA_NAME,"unknow") as dstAreasub4
+      FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid4 = a.AREA_ID and a.AREA_TYPE=2 and a.P_AREA_ID=t.src_areasubid3
+      LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=2 and b.P_AREA_ID=t.dst_areasubid3
+      LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+      WHERE 1=1
+      <if test="srcUbasDataTypeLeft!=null">
+        AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+      </if>
+      <if test="srcAreaTypeLeft!=null">
+        AND t.src_areasubid2=#{srcAreaTypeLeft}
+      </if>
+      <if test="currentAreaCode!=null">
+        AND t.src_areasubid3=#{currentAreaCode}
+      </if>
+      <if test="dstUbasDataTypeLeft!=null">
+        AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+      </if>
+      <if test="dstAreaTypeLeft!=null">
+        AND t.dst_areasubid2=#{dstAreaTypeLeft}
+      </if>
+      <if test="destArea!=null">
+        AND t.dst_areasubid3=#{destArea}
+      </if>
+      <if test="appType!=null">
+        AND t.apptype=#{appType}
+      </if>
+      <if test="startTime!=null">
+        AND t.stat_time &gt;= ${startTime}
+      </if>
+      <if test="endTime!=null">
+        AND t.stat_time &lt;= ${endTime}
+      </if>
+      GROUP BY t.apptype,t.appid ,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  <select id="getTableRankingOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    ifnull(a.AREA_NAME,"unkown") as srcAreasub4,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(bb.AREA_NAME,"unknow") as dstAreasub3,
+    ifnull(b.AREA_NAME,"unknow") as dstAreasub4
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid4 = a.AREA_ID and a.AREA_TYPE=2 AND a.P_AREA_ID=t.src_areasubid3
+    LEFT JOIN zf_v2_gen_ip_area bb ON t.dst_areasubid3 = bb.AREA_ID and bb.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=2 AND b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid2=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.apptype,t.appid,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  <select id="getEchartTrendAreaData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    
+    SELECT
+    t.stat_time as stateTime,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid3=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time
+    ORDER BY t.stat_time ASC
+  </select>
+  
+  <select id="getTableTrendAreaData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    t.stat_time as stateTime,
+    ifnull(a.AREA_NAME,"unkown") as srcAreasub4,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(b.AREA_NAME,"unknow") as dstAreasub4
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid4 = a.AREA_ID and a.AREA_TYPE=2 AND a.P_AREA_ID=t.src_areasubid3
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=2 AND b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid3=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time,t.apptype,t.appid,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  <select id="getEchartTrendOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT
+    t.stat_time as stateTime,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid2=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time
+    ORDER BY t.stat_time ASC
+  
+  </select>
+  
+  
+  <select id="getTableTrendOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    t.stat_time AS stateTime,
+    ifnull(a.AREA_NAME,"unkown") as srcAreasub4,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(bb.AREA_NAME,"unknow") as dstAreasub3,
+    ifnull(b.AREA_NAME,"unknow") as dstAreasub4
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid4 = a.AREA_ID and a.AREA_TYPE=2 AND a.P_AREA_ID=t.src_areasubid3
+    LEFT JOIN zf_v2_gen_ip_area bb ON t.dst_areasubid3 = bb.AREA_ID and bb.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=2 AND b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.src_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="destArea!=null">
+      AND t.dst_areasubid2=#{destArea}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time,t.apptype,t.appid,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  <select id="getIDCLinks" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficResult">
+    
+    SELECT * FROM (
+    SELECT t.src_areasubid3 AS sourceVal ,IFNULL(a.AREA_NAME,"UNKNOW_AREA") as source,
+    10003 AS targetVal,"省内IDC" as target,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    
+    WHERE 1=1
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3 = #{currentAreaCode}
+    </if>
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1 = #{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2 = #{srcAreaTypeLeft}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1 = #{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2 = #{dstAreaTypeLeft}
+    </if>
+    
+    <if test="stateTime!=null">
+      AND stat_time = #{stateTime}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    GROUP BY t.src_areasubid3
+    UNION ALL
+    SELECT t.src_areasubid2 AS sourceVal ,IFNULL(a.AREA_NAME,"UNKNOW_OPERATOR") as source,
+    10004 AS targetVal,"省内IDC" as target,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid2 = a.AREA_ID and a.AREA_TYPE=4
+    WHERE 1=1
+    <if test="currentAreaCode!=null" >
+      AND t.dst_areasubid3 = #{currentAreaCode}
+    </if>
+    <if test="srcUbasDataTypeRight!=null">
+      AND t.src_areasubid1 = #{srcUbasDataTypeRight}
+    </if>
+    <if test="srcAreaTypeRight!=null">
+      AND t.src_areasubid2 = #{srcAreaTypeRight}
+    </if>
+    <if test="dstUbasDataTypeRight!=null">
+      AND t.dst_areasubid1 = #{dstUbasDataTypeRight}
+    </if>
+    <if test="dstAreaTypeRight!=null">
+      AND t.dst_areasubid2 = #{dstAreaTypeRight}
+    </if>
+    <if test="stateTime!=null">
+      AND stat_time = ${stateTime}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    GROUP BY t.src_areasubid2
+    )C WHERE 1=1
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  
+  <select id="getEchartRankingIDCData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    t.appid as appId,
+    IF(IFNULL(a.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(a.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    LEFT JOIN zf_v2_gen_app a on t.apptype = a.APP_TYPE and t.appid = a.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid3=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.apptype,t.appid,t.appname
+    ) A ORDER BY totalFlow DESC limit 10
+  
+  </select>
+  
+  
+  <select id="getEchartRankingIDCOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    ifnull(a.AREA_NAME,"unknow") as srcAreasub3,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    LEFT JOIN zf_v2_gen_ip_area a on t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.src_areasubid3
+    ) A ORDER BY totalFlow DESC limit 10
+  
+  </select>
+  
+  <select id="getTableRankingIDCData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    ifnull(a.AREA_NAME,"unkown") as srcAreasub3,
+    ifnull(aa.AREA_NAME,"unkown") as srcAreasub4,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(b.AREA_NAME,"unkownIDC") dstAreaDesc
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area aa ON t.src_areasubid4 = aa.AREA_ID and aa.AREA_TYPE=2 AND aa.P_AREA_ID=t.src_areasubid3
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=3 AND b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid3=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.apptype,t.appid,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  <select id="getTableRankingIDCOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    ifnull(a.AREA_NAME,"unkown") as srcAreaDesc,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(b.AREA_NAME,"unkownIDC") dstAreaDesc
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=3 AND  b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid2=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.apptype,t.appid,t.src_areasubid3,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+  <select id="getEchartTrendIDCData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    
+    SELECT
+    t.stat_time as stateTime,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid3=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time
+    ORDER BY t.stat_time ASC
+  </select>
+  
+  <select id="getTableTrendIDCData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    t.stat_time as stateTime,
+    ifnull(a.AREA_NAME,"unkown") as srcAreasub3,
+    ifnull(aa.AREA_NAME,"unkown") as srcAreasub4,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(b.AREA_NAME,"unkownIDC") dstAreaDesc
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area aa ON t.src_areasubid4 = aa.AREA_ID and aa.AREA_TYPE=2 and aa.P_AREA_ID=t.src_areasubid3
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=3 and b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcAreaTypeLeft!=null">
+      AND t.src_areasubid2=#{srcAreaTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid3=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time,t.apptype,t.appid,t.src_areasubid4,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  <select id="getEchartTrendIDCOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT
+    t.stat_time as stateTime,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn
+    FROM ${table} t
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid2=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time
+    ORDER BY t.stat_time ASC
+  
+  </select>
+  
+  
+  <select id="getTableTrendIDCOperateData" parameterType="com.aotain.zongfen.model.analysis.Params" resultType="com.aotain.zongfen.dto.analysis.AppTrafficDetailResult" >
+    SELECT * FROM (
+    SELECT
+    t.stat_time AS stateTime,
+    ifnull(a.AREA_NAME,"unkown") as srcAreaDesc,
+    t.appid as appId,
+    IF(IFNULL(c.APP_ZH_NAME, t.appname)&lt;&gt;'',IFNULL(c.APP_ZH_NAME, t.appname),'unknow') as appName,
+    round(SUM(t.apptraffic_up+t.apptraffic_dn)/1024/1024,2) AS totalFlow,
+    round(SUM(t.apptraffic_up/1024/1024),2) AS flowUp,
+    round(SUM(t.apptraffic_dn/1024/1024),2) AS flowDn,
+    ifnull(b.AREA_NAME,"unknow") as dstAreasub4
+    FROM ${table} t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+    LEFT JOIN zf_v2_gen_ip_area b ON t.dst_areasubid4 = b.AREA_ID and b.AREA_TYPE=3 AND b.P_AREA_ID=t.dst_areasubid3
+    LEFT JOIN zf_v2_gen_app c on t.apptype = c.APP_TYPE and t.appid = c.APP_ID
+    WHERE 1=1
+    <if test="srcUbasDataTypeLeft!=null">
+      AND t.src_areasubid1=#{srcUbasDataTypeLeft}
+    </if>
+    <if test="srcArea!=null">
+      AND t.src_areasubid2=#{srcArea}
+    </if>
+    <if test="dstUbasDataTypeLeft!=null">
+      AND t.dst_areasubid1=#{dstUbasDataTypeLeft}
+    </if>
+    <if test="dstAreaTypeLeft!=null">
+      AND t.dst_areasubid2=#{dstAreaTypeLeft}
+    </if>
+    <if test="currentAreaCode!=null">
+      AND t.dst_areasubid3=#{currentAreaCode}
+    </if>
+    <if test="appType!=null">
+      AND t.apptype=#{appType}
+    </if>
+    <if test="startTime!=null">
+      AND t.stat_time &gt;= ${startTime}
+    </if>
+    <if test="endTime!=null">
+      AND t.stat_time &lt;= ${endTime}
+    </if>
+    GROUP BY t.stat_time,t.apptype,t.appid,t.src_areasubid3,t.dst_areasubid4
+    ) A
+    <choose>
+      <when test="sort!=null">
+        ORDER BY ${sort} ${order}
+      </when>
+      <otherwise>
+        ORDER BY totalFlow DESC
+      </otherwise>
+    </choose>
+  </select>
+  
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.device.DpiStatusQueryMapper">
+
+  <resultMap id="DpiStatusQueryMap" type="com.aotain.common.policyapi.model.DpiDeviceStatusStrategy">
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="R_TYPE" jdbcType="DECIMAL" property="rType" />
+    <result column="R_FREQ" jdbcType="DECIMAL" property="rFreq" />
+  </resultMap>
+  
+  <sql id="DpiStatusQuery">
+  	  MESSAGE_NO, R_TYPE, R_FREQ
+  </sql>
+  
+  <insert id="insert" parameterType="com.aotain.common.policyapi.model.DpiDeviceStatusStrategy">
+    insert into zf_v2_dev_dpi_query (MESSAGE_NO, R_TYPE, R_FREQ)
+    values (#{messageNo,jdbcType=DECIMAL}, #{rType,jdbcType=DECIMAL}, #{rFreq,jdbcType=DECIMAL} )
+  </insert>
+  
+  <select id="get" resultMap="DpiStatusQueryMap" >
+  	SELECT <include refid="DpiStatusQuery" /> 
+  	FROM zf_v2_dev_dpi_query
+  </select>
+  
+  <select id="getOne" resultMap="DpiStatusQueryMap">
+  	SELECT <include refid="DpiStatusQuery" /> 
+  	FROM zf_v2_dev_dpi_query where R_TYPE = #{rType,jdbcType=DECIMAL}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.DpiDeviceStatusStrategy">
+    insert into zf_v2_dev_dpi_query
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        MESSAGE_NO,
+      </if>
+      <if test="rType != null">
+        R_TYPE,
+      </if>
+      <if test="rFreq != null">
+        R_FREQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageNo != null">
+        #{messageNo,jdbcType=DECIMAL},
+      </if>
+      <if test="rType != null">
+        #{rType,jdbcType=DECIMAL},
+      </if>
+      <if test="rFreq != null">
+        #{rFreq,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.aotain.common.policyapi.model.DpiDeviceStatusStrategy">
+  		UPDATE zf_v2_dev_dpi_query
+		<set>
+			<if test="rFreq != null">
+				R_FREQ = #{rFreq,jdbcType=DECIMAL},
+			</if>
+		</set>
+		<where>
+			R_TYPE = #{rType,jdbcType=DECIMAL}
+		</where>
+  </update>
+</mapper>

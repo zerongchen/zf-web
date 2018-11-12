@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<style>
+div.mycontent_wrap {width: 600px;}
+</style>
+<!--<div class="contain-right">-->
+<div class="wrapper p-t animated fadeInRight">
+    <div class="row">
+      <div class="col-md-3">
+		<div id="MyTree" class="mycontent_wrap">
+			<ul id="areaTree" class="ztree"></ul>
+		</div>
+     </div>
+     <div class="col-sm-9">
+        <div class="ibox ">
+          <div class="ibox-content">
+            <div class="row">
+              <div class="col-sm-12"> 
+                <!-- Example Toolbar -->
+                <div class="example-wrap text-right">
+                  <div class="example">
+                   <div class="hidden-xs" id="exampleToolbar4" role="group">
+                     <form role="form" class="form-inline" id="searchForm">
+                        <div class="form-group m-r-sm">
+		                     <label class="form-group col-md-4 control-label p-n ">接收时间</label>
+		                     <div class="col-md-3">
+		                   		<input placeholder="开始日期" name="startTime" class="form-control" id="start" th:value="${startTime}">
+		                    </div>
+		                </div>
+                        <div class="form-group m-r-sm">
+		                    <label class="form-group col-md-1 control-label p-n ">到</label>
+		                    <div class="col-md-3">
+		                   		<input placeholder="结束日期" name="endTime" class="form-control" id="end" th:value="${endTime}">
+		                   </div>
+		                </div>
+                            
+                       <div class="checkbox">
+                            <label class="form-group control-label p-n ">时间粒度</label>
+                            <div class="btn-group">
+                               <button name="btnType" class="btn btn-sm btn-white btn-rounded" type="button" value="1">按分钟</button>
+                               <button name="btnType" class="btn btn-sm btn-success btn-rounded" type="button" value="2">按小时</button>
+                               <button name="btnType" class="btn btn-sm btn-white btn-rounded" type="button" value="3">按天</button>
+                           </div>
+							<!-- httpget -->
+                            <input id="tableType" name="tableType" type="hidden" th:value="${tableType}" />
+                            <input id="level" name="level" type="hidden" th:value="${level}" />
+                            <input id="probeType" name="probeType" type="hidden" />
+                            <input id="areaId" name="areaId" type="hidden" />
+                            <input id="softwareProvider" name="softwareProvider" type="hidden" />
+                            
+		                    <button type="button" class="btn btn-primary" id="searchFormButton" >查询</button>
+		                </div>
+		              </form>
+                    </div>
+                    <div class="ibox-content h250" id="mychart" style="height: 320px" ></div>
+                    <table id="table" data-mobile-responsive="true" class="text-left"></table>    
+                   </div>
+                </div>
+                <!-- End Example Toolbar --> 
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+
+<!--详情页面 -->
+<div th:include="/monitor/httpget/detail :: mydetail"></div>
+
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #monitorHttpGet"></div>
+</body>
+</html>

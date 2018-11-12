@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.RadiusFileDetailMapper">
+
+
+  <select id="getFileDetailList" parameterType="com.aotain.zongfen.dto.monitor.RadiusParamDTO" resultType="com.aotain.zongfen.dto.monitor.RadiusFileDetailDTO">
+  
+    SELECT
+    a.file_name AS fileName,
+    FROM_UNIXTIME(a.file_time, '%Y-%m-%d %H:%i:%S') AS fileCreatedTime,
+    FROM_UNIXTIME(b.fileupload_time,'%Y-%m-%d %H:%i:%S') AS fileUploadTime,
+    ROUND(b.file_size/1024, 2) AS fileUploadSize,
+    ROUND(a.file_size/1024, 2) AS fileCreateSize,
+    IFNULL(w.warn_type, - 1) AS warnType,
+    a.server_ip AS serverUploadIp
+    FROM
+    zf_v2_monitor_createfile_detail a
+      LEFT JOIN zf_v2_monitor_uploaddfile_detail b
+      ON a.file_name = b.file_name
+      AND a.file_type = b.file_type
+      LEFT JOIN zf_v2_monitor_uploaddfile_warn_detail w
+      ON a.file_name = w.file_name
+      AND a.file_type = w.file_type
+    WHERE
+      a.file_type = 1023
+      AND a.file_time &gt;= UNIX_TIMESTAMP(#{startTime})
+      AND a.file_time &lt;= UNIX_TIMESTAMP(CONCAT(#{endTime}, ' 23:59:59'))
+      <choose>
+        <when test="order!=null">
+          ORDER BY a.file_time ${order}
+        </when>
+        <otherwise>
+          ORDER BY a.file_time DESC
+        </otherwise>
+      </choose>
+      
+      
+  </select>
+ 
+</mapper>

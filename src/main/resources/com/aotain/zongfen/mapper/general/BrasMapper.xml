@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.BrasMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.Bras">
+    <result column="BRAS_IP" jdbcType="VARCHAR" property="brasIp" />
+    <result column="BRAS_NAME" jdbcType="VARCHAR" property="brasName" />
+    <result column="FIRST_TIME" jdbcType="TIMESTAMP" property="firstTime" />
+    <result column="LAST_TIME" jdbcType="TIMESTAMP" property="lastTime" />
+  </resultMap>
+  
+  <resultMap id="BaseResultDTOMap" type="com.aotain.zongfen.dto.general.BrasDTO">
+    <result column="BRAS_IP" jdbcType="VARCHAR" property="brasIp" />
+    <result column="BRAS_NAME" jdbcType="VARCHAR" property="brasName" />
+    <result column="FIRST_TIME" jdbcType="TIMESTAMP" property="firstTime" />
+    <result column="LAST_TIME" jdbcType="TIMESTAMP" property="lastTime" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.Bras">
+    insert into zf_v2_gen_bras ( BRAS_IP, BRAS_NAME, 
+      FIRST_TIME, LAST_TIME)
+    values (#{brasIp,jdbcType=VARCHAR}, #{brasName,jdbcType=VARCHAR}, 
+      #{firstTime,jdbcType=TIMESTAMP}, #{lastTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.Bras">
+    insert into zf_v2_gen_bras
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="brasIp != null">
+        BRAS_IP,
+      </if>
+      <if test="brasName != null">
+        BRAS_NAME,
+      </if>
+      <if test="firstTime != null">
+        FIRST_TIME,
+      </if>
+      <if test="lastTime != null">
+        LAST_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="brasIp != null">
+        #{brasIp,jdbcType=VARCHAR},
+      </if>
+      <if test="brasName != null">
+        #{brasName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstTime != null">
+        #{firstTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastTime != null">
+        #{lastTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="getBrase"  parameterType="com.aotain.zongfen.model.general.Bras" resultMap="BaseResultDTOMap" >
+    SELECT  BRAS_IP, BRAS_NAME, FIRST_TIME, LAST_TIME FROM zf_v2_gen_bras
+    WHERE 1=1
+    <if test="brasIp!=null">
+      AND BRAS_IP LIKE CONCAT('%', #{brasIp}, '%')
+    </if>
+    
+  </select>
+
+  <select id="selectDistinctBrasList" resultMap="BaseResultMap">
+    select DISTINCT BRAS_IP, BRAS_NAME from zf_v2_gen_bras;
+  </select>
+  
+</mapper>

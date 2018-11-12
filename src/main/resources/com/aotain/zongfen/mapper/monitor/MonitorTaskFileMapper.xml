@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.MonitorTaskFileMapper">
+  <resultMap id="MonitorTaskFileMap" type="com.aotain.zongfen.model.monitor.MonitorTaskFile">
+    <id column="FILE_ID" jdbcType="BIGINT" property="fileId" />
+    <result column="MONITOR_TASK_ID" jdbcType="BIGINT" property="monitorTaskId" />
+    <result column="TASK_ID" jdbcType="BIGINT" property="taskId" />
+    <result column="RECORD_NUM1" jdbcType="INTEGER" property="recordNum1" />
+    <result column="RECORD_NUM2" jdbcType="INTEGER" property="recordNum2" />
+    <result column="RECORD_NUM3" jdbcType="INTEGER" property="recordNum3" />
+    <result column="RECORD_NUM4" jdbcType="INTEGER" property="recordNum4" />
+    <result column="SERVER_IP" jdbcType="VARCHAR" property="serverIp" />
+    <result column="FILE_NAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="STATUS" jdbcType="SMALLINT" property="status" />
+    <result column="TIMEOUT_FLAG" jdbcType="SMALLINT" property="timeoutFlag" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="TIMEOUT_TIME" jdbcType="TIMESTAMP" property="timeoutTime" /> 
+    
+    <result column="CREATE_TIME_STR" jdbcType="VARCHAR" property="createTimeStr" />
+    <result column="MODIFY_TIME_STR" jdbcType="VARCHAR" property="modifyTimeStr" />
+    <result column="TIMEOUT_TIME_STR" jdbcType="VARCHAR" property="timeoutTimeStr" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    FILE_ID, MONITOR_TASK_ID, TASK_ID, RECORD_NUM1, RECORD_NUM2, RECORD_NUM3, RECORD_NUM4, 
+    SERVER_IP, FILE_NAME, STATUS, TIMEOUT_FLAG,
+    date_format(CREATE_TIME,'%Y-%m-%d %H:%i:%s') as CREATE_TIME_STR, 
+    date_format(MODIFY_TIME,'%Y-%m-%d %H:%i:%s') as MODIFY_TIME_STR,
+    date_format(TIMEOUT_TIME,'%Y-%m-%d %H:%i:%s') as TIMEOUT_TIME_STR
+  </sql>
+  
+  <select id="select" parameterType="java.lang.Long" resultMap="MonitorTaskFileMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_monitor_task_file
+    where FILE_ID = #{fileId,jdbcType=BIGINT}
+  </select>
+ 
+ <select id="countNum" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskFile" resultType="java.lang.Integer">
+    select 
+    count(RECORD_NUM1) as num
+    from zf_v2_monitor_task_file
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT} and TASK_ID = #{taskId,jdbcType=BIGINT} and STATUS = #{status,jdbcType=SMALLINT}
+    GROUP BY MONITOR_TASK_ID,TASK_ID,STATUS
+  </select>
+  
+ <select id="selectList" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskFile" resultMap="MonitorTaskFileMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_monitor_task_file
+    where MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT} and TASK_ID = #{taskId,jdbcType=BIGINT}
+    <if test="status != null and status &gt;= 0">
+       and STATUS = #{status,jdbcType=SMALLINT}
+    </if>
+  </select>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskFile">
+    insert into zf_v2_monitor_task_file
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        FILE_ID,
+      </if>
+      <if test="monitorTaskId != null">
+        MONITOR_TASK_ID,
+      </if>
+      <if test="taskId != null">
+        TASK_ID,
+      </if>
+      <if test="recordNum1 != null">
+        RECORD_NUM1,
+      </if>
+      <if test="recordNum2 != null">
+        RECORD_NUM2,
+      </if>
+      <if test="recordNum3 != null">
+        RECORD_NUM3,
+      </if>
+      <if test="recordNum4 != null">
+        RECORD_NUM4,
+      </if>
+      <if test="serverIp != null">
+        SERVER_IP,
+      </if>
+      <if test="fileName != null">
+        FILE_NAME,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+      <if test="timeoutFlag != null">
+        TIMEOUT_FLAG,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+      <if test="timeoutTime != null">
+        TIMEOUT_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        #{fileId,jdbcType=BIGINT},
+      </if>
+      <if test="monitorTaskId != null">
+        #{monitorTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskId != null">
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="recordNum1 != null">
+        #{recordNum1,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum2 != null">
+        #{recordNum2,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum3 != null">
+        #{recordNum3,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum4 != null">
+        #{recordNum4,jdbcType=INTEGER},
+      </if>
+      <if test="serverIp != null">
+        #{serverIp,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="timeoutFlag != null">
+        #{timeoutFlag,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeoutTime != null">
+        #{timeoutTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.aotain.zongfen.model.monitor.MonitorTaskFile">
+    update zf_v2_monitor_task_file
+    <set>
+      <if test="monitorTaskId != null">
+        MONITOR_TASK_ID = #{monitorTaskId,jdbcType=BIGINT},
+      </if>
+      <if test="taskId != null">
+        TASK_ID = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="recordNum1 != null">
+        RECORD_NUM1 = #{recordNum1,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum2 != null">
+        RECORD_NUM2 = #{recordNum2,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum3 != null">
+        RECORD_NUM3 = #{recordNum3,jdbcType=INTEGER},
+      </if>
+      <if test="recordNum4 != null">
+        RECORD_NUM4 = #{recordNum4,jdbcType=INTEGER},
+      </if>
+      <if test="serverIp != null">
+        SERVER_IP = #{serverIp,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null">
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="timeoutFlag != null">
+        TIMEOUT_FLAG = #{timeoutFlag,jdbcType=SMALLINT},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="timeoutTime != null">
+        TIMEOUT_TIME = #{timeoutTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where FILE_ID = #{fileId,jdbcType=BIGINT}
+  </update>
+  
+</mapper>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+ <html lang="zh-CN"
+    xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- <head th:include="/common/header :: myheader" th:with="title='SHB'"></head>  -->
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title th:text="DPI汇聚分析平台"></title>
+    <meta name="keywords" th:content="DPI汇聚分析平台" />
+    <meta name="description" th:content="DPI汇聚分析平台" />
+    <link rel="shortcut icon" th:href="@{/static/img/profile_small.png}"/>
+<!-- <meta name="_csrf" th:content="${_csrf.token}"/> -->
+<!-- <meta name="_csrf_header" th:content="${_csrf.headerName}"/> -->
+
+<!-- basic styles -->
+ <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link th:href="@{{path}/static/css/bootstrap.min14ed.css?v=3.3.6(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/font-awesome.min93e3.css?v=4.4.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/animate.min.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/style.min862f.css?v=4.1.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/plugins/bootstrap-table/bootstrap-table.min.css(path=${contextPath})}" rel="stylesheet" />
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+
+        <!--logo-->
+        <div class="nav-header">
+            <div class="dropdown profile-element"> <span><img alt="image" class="img-circle" th:src="@{/static/img/profile_small.png}"></span> <a href="index.html"> <span class="clear"> <span class="block m-t-xs"><strong class="font-bold">DPI汇聚分析平台 V2.0</strong></span> </span> </a> </div>
+            <div class="logo-element">DPI</div>
+        </div>
+
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i></div>
+            
+			<!-- 首页 -->
+            <!--<div id='sider-0' class="sidebar-collapse " th:include="/common/sider :: home"></div>-->
+            <!-- 策略管理  -->
+            <div id='sider-1' th:authorized="策略管理" class="sidebar-collapse " th:include="/common/sider :: strategymanage"></div>
+            <!-- 用户行为分析-->
+            <div id='sider-2' th:authorized="用户行为分析" class="sidebar-collapse " th:include="/common/sider :: userbehavioranalysis"></div>
+            <!-- 机房设备管理  -->
+            <div id='sider-3' th:authorized="机房设备管理" class="sidebar-collapse " th:include="/common/sider :: housemanage"></div>
+            <!-- 监控告警管理  -->
+            <div id='sider-4' th:authorized="监控告警管理" class="sidebar-collapse " th:include="/common/sider :: alarmmanage"></div>
+            <!-- 系统管理  -->
+            <div id='sider-5' th:authorized="系统管理" class="sidebar-collapse " th:include="/common/sider :: systemmanage"></div>
+        </nav>
+        <!--左侧导航结束-->
+        
+         <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <i class="fa fa-bars navbar-minimalize minimalize-styl-2"></i>
+                    <ul class="nav navbar-top-links navbar-left m-l-md menubar">
+                        <!--<li class="text-active"><i class="fa fa-cogs"></i><p><strong>首页</strong></p></li>-->
+                        <li th:authorized="策略管理"><i class="fa fa-cogs"></i><p><strong>策略管理</strong></p></li>
+                        <li th:authorized="用户行为分析"><i class="fa fa-line-chart"></i><p><strong>用户行为分析</strong></p></li>
+                        <li th:authorized="机房设备管理"><i class="fa fa-building-o"></i><p><strong>机房设备管理</strong></p></li>
+                        <li th:authorized="监控告警管理"><i class="fa fa-warning"></i><p><strong>监控告警管理</strong></p></li>
+                        <li th:authorized="系统管理"><i class="fa fa-gear"></i><p><strong>系统管理</strong></p></li>
+                    </ul>
+                    <ul class="nav navbar-top-links navbar-right m-t-xs">
+                        <!--<li class="text-success m-r-sm"> <strong> 2017-08-19 17:56:35 </strong> </li>-->
+                        <li>欢迎您：<strong id="userName"></strong></li>
+                        <!--<li > <a href="#"> </a> </li>-->
+                        <!--<li style="display: none" > <a href="#"> 元数据管理系统 </a> </li>
+                        <li style="display: none" > <a href="#"> 任务管理系统 </a> </li> -->
+                        <li> <a th:href="${@authorityInterceptConfig.getAuthPath()}" target="_blank"> 权限系统 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- 右边top -->
+            <div class="row content-tabs" th:include="/common/r-top :: myr-top"></div>
+            <!-- 右边content-->
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" th:src="@{/index.html}" frameborder="0" data-id="@{/index.html}" seamless="seamless"></iframe>
+            </div>
+             
+        </div>
+        <!--右侧部分结束-->
+       
+    </div>
+
+
+    
+<!--javascript加载 -->
+ <div th:include="/common/footer :: myfooter"></div>
+   
+ <script type="text/javascript" th:inline="javascript">
+ function timeShow(){
+		var time = new Date();
+		var year = time.getFullYear();
+		var month = time.getMonth()+1;
+		if(month<10){
+			month='0'+month;
+		}
+		var day = time.getDate();
+		if(day<10){
+			day='0'+day;
+		}
+		var hours=time.getHours();
+		if(hours<10){
+			hours='0'+hours;
+		}
+		var minutes=time.getMinutes(); 
+		if(minutes<10){
+			minutes='0'+minutes;
+		}
+		var seconds=time.getSeconds(); 
+		if(seconds<10){
+			seconds='0'+seconds;
+		}
+		var showTime =year+"-"+month+"-"+day+ "&nbsp; &nbsp;"+hours+":"+minutes+":"+seconds;
+		$("#timeShow").html(showTime);
+	}
+	window.setInterval("timeShow()",1000);
+	
+ 	 $(function(){
+ 		timeShow();
+ 		/* $.post("/menus.html", function(data) {
+ 			 console.log(data);
+ 			  $("#hello").html(data);
+ 			}); */
+ 		
+ 	 });
+ </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $.ajax({
+                url: "/getLoginUser",
+                type: 'GET',
+                data:{},
+                dataType:"json",
+                success: function (data) {
+                    $("#userName").html(data.userName);
+                },
+                error:function () {
+                    $("#userName").html("admin");
+                }
+            });
+        });
+
+        //菜单栏的点击事件
+        $(".menubar>li").each(function(index, element) {
+            $(".menubar>li").eq(index).click(function() {
+                if($(this).hasClass("text-active")) {
+                    $(this).siblings().removeClass("text-active");
+                } else {
+                    $(this).addClass("text-active").siblings().removeClass("text-active")
+                    $(".sidebar-collapse").eq(index).find("ul.nav.nav-second-level:eq(0)").addClass("collapse in");
+                    $(".sidebar-collapse").eq(index).find("ul.nav.nav-second-level:gt(0)").removeClass("in");
+                    $(".sidebar-collapse").eq(index).find("ul.nav.nav-second-level:eq(0)").attr("aria-expanded",true);
+                    $(".sidebar-collapse").eq(index).find("ul.nav.nav-second-level:gt(0)").attr("aria-expanded",false);
+                };
+                //菜单栏与菜单栏内容的联动效果
+                $(".sidebar-collapse").eq(index).parent().show().siblings().hide();
+            });
+        });
+
+        //滚动条父元素的高度
+//        $(".navbar-default").css("height",$(window).height()-70);
+    </script>
+
+</body>
+</html>

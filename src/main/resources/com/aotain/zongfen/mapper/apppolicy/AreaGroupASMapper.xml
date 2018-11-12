@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.apppolicy.AreaGroupASMapper">
+  <resultMap id="AreaGroupASMap" type="com.aotain.common.policyapi.model.msg.AreaGroupAS">
+    <result column="AREAGROUP_ID" jdbcType="BIGINT" property="areagroupId" />
+    <result column="AS_TYPE" jdbcType="DECIMAL" property="asType" />
+    <result column="AS_AREA_ID" jdbcType="VARCHAR" property="asAreaId" />
+    <result column="AREA_NAME" jdbcType="VARCHAR" property="areaName" />
+    <result column="AREA_ID" jdbcType="BIGINT" property="areaId" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.aotain.common.policyapi.model.msg.AreaGroupAS">
+    insert into zf_v2_policy_areagroup_as (AREAGROUP_ID, AS_TYPE, AS_AREA_ID
+      )
+    values (#{areagroupId,jdbcType=BIGINT}, #{asType,jdbcType=DECIMAL}, #{asAreaId,jdbcType=VARCHAR}
+      )
+  </insert>
+ 
+ <delete id="deleteByMessageNo">
+ 	DELETE a FROM zf_v2_policy_areagroup_as a 
+	LEFT JOIN zf_v2_policy_areagroup b ON b.AREAGROUP_ID=a.AREAGROUP_ID
+	WHERE b.MESSAGE_NO = #{messageNo,jdbcType=DECIMAL}
+ </delete>
+ 
+  <insert id="insertList" parameterType="java.util.List" >
+    insert into zf_v2_policy_areagroup_as (AREAGROUP_ID, AS_TYPE, AS_AREA_ID)
+    values <foreach collection="list" item="it" index="index" separator=",">
+    	(#{it.areagroupId,jdbcType=BIGINT}, #{it.asType,jdbcType=DECIMAL}, #{it.asAreaId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+   
+  <select id="selectByGroup" resultMap="AreaGroupASMap" >
+  	 SELECT a.AREAGROUP_ID AS AREAGROUP_ID ,a.AS_AREA_ID AS AS_ID, b.AS_AREA_ID AS AS_NAME 
+  	 FROM zf_v2_policy_areagroup_as a LEFT JOIN zf_v2_policy_areagroup_as b 
+  	 ON b.AREAGROUP_ID = a.AREAGROUP_ID 
+	 WHERE a.AS_TYPE = 0 AND b.AS_TYPE=1 AND a.AREAGROUP_ID = #{areagroupId,jdbcType=BIGINT}
+  </select>
+  
+  <insert id="insertSelective" parameterType="com.aotain.common.policyapi.model.msg.AreaGroupAS">
+    insert into zf_v2_policy_areagroup_as
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areagroupId != null">
+        AREAGROUP_ID,
+      </if>
+      <if test="asType != null">
+        AS_TYPE,
+      </if>
+      <if test="asAreaId != null">
+        AS_AREA_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areagroupId != null">
+        #{areagroupId,jdbcType=BIGINT},
+      </if>
+      <if test="asType != null">
+        #{asType,jdbcType=DECIMAL},
+      </if>
+      <if test="asAreaId != null">
+        #{asAreaId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

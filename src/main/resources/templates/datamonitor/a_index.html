@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+
+                <div class="form-group m-r-sm">
+                    <label>统计时间</label>
+                    <input placeholder="开始日期" class="form-control layer-date" name="startTime" id="start">
+                    <label>到</label>
+                    <input placeholder="结束日期" class="form-control layer-date" name="endTime"  id="end">
+                </div>
+                <!--<div class="form-group m-r-sm">
+                    <label>时间粒度</label>
+                    <div class="btn-group" id="dateTypeSelect">
+                        <button class="btn btn-white btn-rounded" name="dateType" value="1" id="dateTypeMin" type="button">按分钟</button>
+                        <button class="btn btn-success btn-rounded" name="dateType" value="2" id="dateTypeH" type="button">按小时</button>
+                        <button class="btn btn-white btn-rounded" name="dateType" value="3" id="dateTypeD" type="button">按天</button>
+                    </div>
+
+                </div>-->
+                <div class="form-group m-r-sm" id="dateTypeSelect">
+                    <label>时间粒度</label>
+                    <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="1">按分钟</button>
+                    <button name="btnType" class="btn btn-sm btn-success btn-primary" type="button" value="2">按小时</button>
+                    <button name="btnType" class="btn btn-sm btn-white btn-primary" type="button" value="3">按天</button>
+                </div>
+                <div class="checkbox">
+                    <button th:if="${session.zf402002_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div th:authorized="zf402002_query"  class="example-wrap text-right ">
+                                <div class="example">
+                                    <div class="form-group" id="staticSelect" style="text-align:center">
+                                    <input  name="staticType"  checked="checked" value="2" id="dataReportType" type="radio">数据上报监控分析</input>
+                                    <input  name="staticType"  value="3" id="onlineType" type="radio">在线用户分析</input>
+                                </div>
+                                    <div id="userOnline" style="display: none">
+                                        <div class="ibox-content h250" id="aaaechart" style="height: 400px;border: 0;" ></div>
+                                        <table id="table" data-mobile-responsive="true" class="text-left text-nowrap">
+                                        </table>
+                                    </div>
+                                    <div  id="radiusDetail">
+                                        <div class="center" id="containWidthFixed">
+                                            <div class="wrapper wrapper-content animated fadeInRight">
+                                                <div class="row">
+                                                    <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="radiusPcap">
+                                                        <div class="ibox float-e-margins m-b-none">
+                                                            <div class="ibox-title no-borders">
+                                                                <h5>采集包监控</h5>
+                                                                <div class="ibox-tools " id="pcapDetail"> <a data-toggle="modal" data-target="#pcapModal"> <i class="fa fa-expand"></i> </a> </div>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="h250" id="radiusPcapEcharts"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 m-b-sm p-l-n p-r-sm" id="radiusRelay">
+                                                        <div class="ibox float-e-margins m-b-none">
+                                                            <div class="ibox-title no-borders">
+                                                                <h5>中转包监控</h5>
+                                                                <div class="ibox-tools " id="relayDetail"> <a data-toggle="modal" data-target="#relayModal"> <i class="fa fa-expand"></i> </a> </div>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="h250" id="radiusRelayEcharts"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 p-l-n p-r-sm" id="radiusPolicy">
+                                                        <div class="ibox float-e-margins m-b-none">
+                                                            <div class="ibox-title no-borders">
+                                                                <h5>policy发送包监控</h5>
+                                                                <div class="ibox-tools " id="policyDetail"> <a data-toggle="modal" data-target="#policyModal"> <i class="fa fa-expand"></i> </a> </div>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="h250" id="radiusPolicyEcharts"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6 p-l-n p-r-sm" id="radiusCreate">
+                                                        <div class="ibox float-e-margins m-b-none">
+                                                            <div class="ibox-title no-borders">
+                                                                <h5>生成文件监控</h5>
+                                                                <div class="ibox-tools " id="createFileDetail"> <a data-toggle="modal" data-target="#createFileModal"> <i class="fa fa-expand"></i> </a> </div>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="h250" id="radiusCreateEcharts"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <input type="hidden" id="createFileTimeStr"/>
+</div>
+<div th:include="/datamonitor/raduis_detail :: detail"></div>
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #3amonitor"></div>
+</body>
+</html>

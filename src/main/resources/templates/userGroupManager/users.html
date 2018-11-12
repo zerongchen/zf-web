@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='SHB'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <input type="hidden" name="userGroupId" th:value=${userGroupId} />
+                <input type="hidden" name="userGroupName" th:value=${userGroupName} />
+                <div class="form-group m-r-sm">
+                    <label>用户账号</label>
+                    <input type="text" class="form-control" name="userName" id="userNameSelect"/>
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label>用户类型</label>
+                    <select name="userType" id="userTypeSelect" class="form-control">
+                        <option selected="" value="">请选择</option>
+                        <option value="1">账号用户</option>
+                        <option value="2">IP地址段用户</option>
+                        <option value="3">DPI链路分组</option>
+                        <option value="4">BRAS IP地址段用户组</option>
+                    </select>
+                </div>
+
+                <div class="checkbox">
+                    <button th:if="${session.zf103001_query}==1" type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <button type="button" th:if="${session.zf103001_add}==1" id="commonButtonNewAdd" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" data-target="#myModaladd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+                                        <button type="button" th:if="${session.zf103001_delete}==1" id="commonButtonDelete"class="btn btn-outline btn-danger deleteButton" > <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+                                        <button  class="btn btn-success m-l-xs" id="returnUserGroup" type="button"><i class="fa fa-reply-all"></i> 返回上一级</button>
+                                    </div>
+                                    <form id="form">
+                                        <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal inmodal fade" id="addUserSnippet" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" >
+            <div class="ibox-title">
+                <h5 id="title">新增</h5>
+            </div>
+            <div class="modal-body form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form id="insertForm">
+                            <input type="hidden" name="userGroupId" />
+                                <!--<div class="form-group userDetail" id="insertUsersDIV">
+                                    <label class="col-md-1 control-label p-n">用户名</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="userName" id="userNameInput" class="form-control" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select name="userType" id="userType" class="form-control">
+                                            <option selected="" value="">请选择</option>
+                                            <option value="1">账号用户</option>
+                                            <option value="2">IP地址段用户</option>
+                                            <option value="3">DPI链路分组</option>
+                                            <option value="4">BRAS IP地址段用户组</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                            <span class="help-block m-b-none">
+                                                <a class="m-l-n m-r-sm addUsersPlush" id ='addUsersPlush'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i></a>
+                                            </span>
+                                    </div>
+                                </div>-->
+                            <div id="detailUsrTypeDiv">
+                                <div class="form-group" >
+                                    <label class="col-md-1 control-label p-n">用户类型</label>
+                                    <div class="col-md-3">
+                                        <select name="user_type" id="detailUsrGroupType" class="form-control user-group">
+                                            <!--<option selected="" value="">请选择</option>-->
+                                            <option value="1" selected="true">账号用户</option>
+                                            <option value="2">IP地址段用户</option>
+                                            <option value="3">DPI链路分组</option>
+                                            <option value="4">BRAS IP地址段用户组</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-md-2 control-label p-n">用户名  </label>
+                                    <div class="col-md-2" name="userNameDiv">
+                                        <input type="text" id="userName_0"name="userName" class="form-control"/>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <span class="help-block m-b-none tips">
+                                            <a class="m-l-n m-r-sm"><i class="fa fa-plus" id="detailUserAddBtn" aria-hidden="true"></i></a>
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </form>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group m-t">
+                            <label class="col-md-1 control-label"></label>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary" id = "addSubmitBut">确定</button>
+                                <button type="button" class="btn btn-white m-l-sm" id="dismissDetailUsrModal" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <input type="hidden" id="zf103001_delete" th:value="${session.zf103001_delete}" />
+</div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #userlist"></div>
+</body>
+</html>

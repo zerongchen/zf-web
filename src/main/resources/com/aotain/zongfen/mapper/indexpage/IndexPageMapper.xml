@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.indexpage.IndexPageMapper">
+
+
+    <select id="getIdcTraffic" parameterType="java.util.Map"
+            resultType="com.aotain.zongfen.dto.analysis.AppTrafficResult">
+
+   SELECT
+   t.src_areasubid3 AS sourceVal
+   ,IFNULL(a.AREA_NAME,"UNKNOW_AREA") as source
+   ,SUM(t.apptraffic_up+t.apptraffic_dn) AS totalFlow
+   FROM zf_v2_ubas_traffic_d t LEFT JOIN zf_v2_gen_ip_area a ON t.src_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+   WHERE probe_type=1
+   AND
+   stat_time &gt;=#{startTime}
+   AND
+   stat_time &lt; #{endTime}
+   GROUP BY t.src_areasubid3
+  order by sum(t.apptraffic_up) + sum(t.apptraffic_dn) desc limit 10
+  </select>
+
+    <select id="getDpiTraffic" parameterType="java.util.Map"
+            resultType="com.aotain.zongfen.dto.analysis.AppTrafficResult">
+
+   SELECT
+   t.dst_areasubid3 AS targetVal
+   ,IFNULL(a.AREA_NAME,"UNKNOW_PROVINCE") as target
+   ,SUM(t.apptraffic_up+t.apptraffic_dn)*1024 AS totalFlow
+   ,SUM(t.apptraffic_up)*1024 AS flowUp
+   ,SUM(t.apptraffic_dn)*1024 AS flowDn
+   FROM zf_v2_ubas_traffic_d t LEFT JOIN zf_v2_gen_ip_area a ON t.dst_areasubid3 = a.AREA_ID and a.AREA_TYPE=1
+   WHERE probe_type=0
+   AND
+   stat_time &gt;=#{startTime}
+   AND
+   stat_time &lt; #{endTime}
+   GROUP BY t.dst_areasubid3
+   order by sum(t.apptraffic_up) + sum(t.apptraffic_dn) desc limit 10
+  </select>
+
+
+    <select id="getDpiAppflow" parameterType="java.util.Map"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTraffic">
+
+select
+sum(a.apptraffic_up) + sum(a.apptraffic_dn) as appTrafficSum
+, a.apptype as appType
+, a.stat_time as statTime
+,c.APP_TYPE_NAME as appTypeName
+from zf_v2_ubas_appflow_d a
+	inner join zf_dict_apptype c on a.appType = c.APP_TYPE
+where 1=1
+   AND
+   stat_time &gt;=#{startTime}
+   AND
+   stat_time &lt; #{endTime}
+group by a.appType
+order by sum(a.apptraffic_up) + sum(a.apptraffic_dn) desc limit 10
+
+  </select>
+
+    <select id="getAppIdAppflow" parameterType="java.util.Map"
+            resultType="com.aotain.zongfen.model.useranalysis.AppTraffic">
+SELECT
+sum(a.apptraffic_up) + sum(a.apptraffic_dn)*1024 as appTrafficSum,
+a.apptype as apptype,
+a.appid as appId,
+a.appname as appName,
+a.stat_time as statTime,
+b.APP_ZH_NAME as appNameOfId
+
+from zf_v2_ubas_appflow_d a
+	inner join ZF_V2_GEN_APP b on a.apptype = b.APP_TYPE
+		and a.appid = b.APP_ID
+where 1=1
+   AND
+   stat_time &gt;=#{startTime}
+   AND
+   stat_time &lt; #{endTime}
+group by a.apptype,a.appId
+order by sum(a.apptraffic_up) + sum(a.apptraffic_dn) desc limit 10
+  </select>
+
+</mapper>

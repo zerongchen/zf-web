@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.TriggerKWListMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.TriggerKWList">
+    <result column="TRIGGER_KW_LISTID" jdbcType="DECIMAL" property="triggerKwListid" />
+    <result column="KW_ID" jdbcType="DECIMAL" property="kwId" />
+    <result column="KW_NAME" jdbcType="VARCHAR" property="kwName" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="DATE" property="modifyTime" />
+  </resultMap>
+  
+  <resultMap id="TriggerKWListDtoMap" type="com.aotain.zongfen.dto.general.TriggerKWListDTO">
+    <result column="TRIGGER_KW_LISTID" jdbcType="DECIMAL" property="triggerKwListid" />
+    <result column="KW_ID" jdbcType="DECIMAL" property="kwId" />
+    <result column="KW_NAME" jdbcType="VARCHAR" property="kwName" />
+    <result column="TRIGGER_KW_LISTNAME" jdbcType="VARCHAR" property="triggerKwListname" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="DATE" property="modifyTime" />
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.TriggerKWList">
+    insert into zf_v2_gen_trigger_kw_list (TRIGGER_KW_LISTID, KW_NAME,OPERATE_TYPE,CREATE_OPER,
+    MODIFY_OPER,CREATE_TIME,MODIFY_TIME)
+    values (#{triggerKwListid,jdbcType=DECIMAL}, #{kwName,jdbcType=VARCHAR},
+            #{operateType,jdbcType=DECIMAL},#{createOper,jdbcType=VARCHAR},
+            #{modifyOper,jdbcType=VARCHAR},#{createTime,jdbcType=DATE},
+            #{modifyTime,jdbcType=DATE})
+  </insert>
+  
+  <update id="deleteById" parameterType="com.aotain.zongfen.model.general.TriggerKWList">
+    UPDATE zf_v2_gen_trigger_kw_list
+    SET OPERATE_TYPE = 3
+    WHERE KW_ID = #{kwId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="deleteByIds" >
+    UPDATE zf_v2_gen_trigger_kw_list
+    SET OPERATE_TYPE = 3
+    WHERE KW_ID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </update>
+  
+  <update id="deleteByListIds" >
+    UPDATE zf_v2_gen_trigger_kw_list
+    SET OPERATE_TYPE = 3
+    WHERE TRIGGER_KW_LISTID IN
+    <foreach collection="array" item="item" separator="," open="(" close=")" >
+      #{item}
+    </foreach>
+  </update>
+  
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.TriggerKWList">
+    insert into zf_v2_gen_trigger_kw_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="triggerKwListid != null">
+        TRIGGER_KW_LISTID,
+      </if>
+      <if test="kwName != null">
+        KW_NAME,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+      <if test="triggerKwListid != null">
+        #{triggerKwListid,jdbcType=DECIMAL},
+      </if>
+      <if test="kwName != null">
+        #{kwName,jdbcType=VARCHAR},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime}
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getTriggerKWList" parameterType="java.lang.Long" resultMap="TriggerKWListDtoMap">
+    select t1.TRIGGER_KW_LISTID, KW_NAME,KW_ID,t2.TRIGGER_KW_LISTNAME From zf_v2_gen_trigger_kw_list t1 ,zf_v2_gen_trigger_kw t2
+    WHERE t1.TRIGGER_KW_LISTID=t2.TRIGGER_KW_LISTID
+    <if test="triggerKwListid!=null">
+      AND t1.TRIGGER_KW_LISTID = #{triggerKwListid}
+    </if>
+    AND t1.OPERATE_TYPE != 3
+    order by KW_ID DESC
+  </select>
+
+  <select id="getTriggerKWName" parameterType="com.aotain.zongfen.model.general.TriggerKW" resultType="string">
+    select KW_NAME
+    FROM zf_v2_gen_trigger_kw_list
+    where OPERATE_TYPE != 3
+    <if test="triggerKwListid!=null">
+      AND TRIGGER_KW_LISTID = #{triggerKwListid}
+    </if>
+    order by KW_ID DESC
+  </select>
+
+  <insert id="inserKwList" parameterType="java.util.List">
+    insert into zf_v2_gen_trigger_kw_list (TRIGGER_KW_LISTID, KW_NAME,OPERATE_TYPE,
+    CREATE_OPER,MODIFY_OPER,CREATE_TIME,MODIFY_TIME)VALUES
+    <foreach collection="list" index="index" item="item" separator=",">
+      (#{triggerKW.triggerKwListid},#{item},#{triggerKW.operationType},#{triggerKW.createOper},
+      #{triggerKW.modifyOper},#{triggerKW.createTime},#{triggerKW.modifyTime})
+    </foreach>
+  </insert>
+  
+  <select id="countkwName" parameterType="com.aotain.zongfen.model.general.TriggerKWList" resultType="java.lang.Integer">
+    select count(1) from zf_v2_gen_trigger_kw_list
+    WHERE KW_NAME = #{kwName}
+    AND TRIGGER_KW_LISTID = #{triggerKwListid}
+    AND OPERATE_TYPE != 3
+  </select>
+  
+  <select id="getNumByListId" resultType="java.lang.Long">
+    select count(TRIGGER_KW_LISTID)
+    FROM zf_v2_gen_trigger_kw_list
+    WHERE TRIGGER_KW_LISTID = #{id}
+    AND OPERATE_TYPE != 3
+  </select>
+</mapper>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.ClassFileInfoMapper">
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.ClassFileInfo">
+    <id column="MESSAGE_TYPE" jdbcType="DECIMAL" property="messageType" />
+    <id column="FILE_TYPE" jdbcType="SMALLINT" property="fileType" />
+    <result column="CLASS_FILE_NAME" jdbcType="VARCHAR" property="classFileName" />
+    <result column="VERSION_NO" jdbcType="DECIMAL" property="versionNo" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    MESSAGE_TYPE, FILE_TYPE, CLASS_FILE_NAME, VERSION_NO, CREATE_OPER, MODIFY_OPER, CREATE_TIME, 
+    MODIFY_TIME
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.aotain.zongfen.model.general.ClassFileInfoKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_class_filename
+    where MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+      and FILE_TYPE = #{fileType,jdbcType=SMALLINT}
+  </select>
+  
+  <select id="selectListByPrimaryKey" parameterType="com.aotain.zongfen.model.general.ClassFileInfoKey" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from zf_v2_gen_class_filename
+    where 1=1
+    <if test="messageType!=null">
+      AND MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+    </if>
+    <if test="fileType!=null">
+      and FILE_TYPE = #{fileType,jdbcType=SMALLINT}
+    </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="com.aotain.zongfen.model.general.ClassFileInfoKey">
+    delete from zf_v2_gen_class_filename
+    where MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+      and FILE_TYPE = #{fileType,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.aotain.zongfen.model.general.ClassFileInfo">
+    insert into zf_v2_gen_class_filename (MESSAGE_TYPE, FILE_TYPE, CLASS_FILE_NAME, 
+      VERSION_NO, CREATE_OPER, MODIFY_OPER, 
+      CREATE_TIME, MODIFY_TIME)
+    values (#{messageType,jdbcType=DECIMAL}, #{fileType,jdbcType=SMALLINT}, #{classFileName,jdbcType=VARCHAR}, 
+      #{versionNo,jdbcType=DECIMAL}, #{createOper,jdbcType=VARCHAR}, #{modifyOper,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.ClassFileInfo">
+    insert into zf_v2_gen_class_filename
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageType != null">
+        MESSAGE_TYPE,
+      </if>
+      <if test="fileType != null">
+        FILE_TYPE,
+      </if>
+      <if test="classFileName != null">
+        CLASS_FILE_NAME,
+      </if>
+      <if test="versionNo != null">
+        VERSION_NO,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageType != null">
+        #{messageType,jdbcType=DECIMAL},
+      </if>
+      <if test="fileType != null">
+        #{fileType,jdbcType=SMALLINT},
+      </if>
+      <if test="classFileName != null">
+        #{classFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNo != null">
+        #{versionNo,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aotain.zongfen.model.general.ClassFileInfo">
+    update zf_v2_gen_class_filename
+    <set>
+      <if test="classFileName != null">
+        CLASS_FILE_NAME = #{classFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="versionNo != null">
+        VERSION_NO = #{versionNo,jdbcType=DECIMAL},
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+      and FILE_TYPE = #{fileType,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aotain.zongfen.model.general.ClassFileInfo">
+    update zf_v2_gen_class_filename
+    set CLASS_FILE_NAME = #{classFileName,jdbcType=VARCHAR},
+      VERSION_NO = #{versionNo,jdbcType=DECIMAL},
+      CREATE_OPER = #{createOper,jdbcType=VARCHAR},
+      MODIFY_OPER = #{modifyOper,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      MODIFY_TIME = #{modifyTime,jdbcType=TIMESTAMP}
+    where MESSAGE_TYPE = #{messageType,jdbcType=DECIMAL}
+      and FILE_TYPE = #{fileType,jdbcType=SMALLINT}
+  </update>
+  
+</mapper>

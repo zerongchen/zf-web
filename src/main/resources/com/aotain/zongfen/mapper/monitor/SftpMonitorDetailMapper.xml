@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.monitor.SftpMonitorDetailMapper">
+  <resultMap id="SftpMonitorDetailMap" type="com.aotain.zongfen.dto.monitor.SftpMonitorDetailDTO">
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+	<result column="upload_ip" jdbcType="VARCHAR" property="uploadIp" />
+	<result column="software_provider" jdbcType="VARCHAR" property="softwareProvider" />
+	  <result column="recieve_file_size" jdbcType="BIGINT" property="fileSizeStr" />
+	  <result column="upload_file_size" jdbcType="VARCHAR" property="uploadFileSize" />
+	  <result column="dpi_ip" jdbcType="VARCHAR" property="dpiIp" />
+	  <result column="filereceived_time" jdbcType="VARCHAR" property="filereceivedTime" />
+	  <result column="filecreate_time" jdbcType="VARCHAR" property="filecreateTime" />
+	  <result column="fileupload_time" jdbcType="VARCHAR" property="fileuploadTime" />
+	  <result column="warn_type" jdbcType="VARCHAR" property="warnType" />
+
+  </resultMap>
+  
+	<select id="selectList" parameterType="com.aotain.zongfen.dto.monitor.SftpMonitorDetailDTO" resultMap="SftpMonitorDetailMap">
+		SELECT
+				c.file_name  AS file_name,
+				t.server_ip AS upload_ip,
+				k.software_provider_name as software_provider,
+				FORMAT(c.file_size/1024,2) as recieve_file_size,
+				FORMAT(t.file_size/1024,2) as upload_file_size,
+				c.dpi_ip AS dpi_ip,
+				FROM_UNIXTIME(c.filereceived_time,'%Y-%m-%d %H:%i:%S') as filereceived_time,
+				FROM_UNIXTIME(c.filecreate_time,'%Y-%m-%d %H:%i:%S') as filecreate_time,
+				FROM_UNIXTIME(t.fileupload_time,'%Y-%m-%d %H:%i:%S') AS fileupload_time,
+				IFNULL(r.warn_type,-1) AS warn_type
+		FROM
+		(
+		SELECT file_name,server_ip,
+		dpi_ip,file_type,filecreate_time,filereceived_time,file_size,probe_type,area_id,software_provider
+		FROM zf_v2_monitor_receivedfile_detail
+		WHERE file_type = #{fileType,jdbcType=INTEGER}
+		<if test="probeType != null">
+			AND probe_type = #{probeType,jdbcType=TINYINT}
+		</if>
+		<if test="areaId != null and areaId != '' ">
+			AND area_id = #{areaId,jdbcType=VARCHAR}
+		</if>
+		<if test="softwareProvider != null and softwareProvider != '' ">
+			AND software_provider = #{softwareProvider,jdbcType=VARCHAR}
+		</if>
+		<if test="startTime != null and startTime &gt; 0 ">
+			AND filereceived_time &gt;= (#{startTime,jdbcType=BIGINT})
+		</if>
+		<if test="endTime != null and endTime &gt; 0 ">
+			AND filereceived_time &lt; (#{endTime,jdbcType=BIGINT})
+		</if>
+		)  c
+				left join zf_v2_monitor_uploaddfile_detail t
+				ON c.file_name=t.file_name
+				LEFT JOIN zf_v2_monitor_uploaddfile_warn_detail r
+				on c.file_name=r.file_name left join zf_dict_software_provider k
+				on c.software_provider = k.software_provider
+
+		WHERE
+		c.file_type = #{fileType}
+		AND c.filereceived_time &gt;= #{startTime}
+		AND c.filereceived_time &lt; #{endTime}
+		<if test="order!=null">
+			ORDER BY filecreate_time ${order}
+		</if>
+	</select>
+
+
+</mapper>

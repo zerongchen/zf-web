@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='SHB'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+                <div class="form-group m-r-sm">
+                    <label>策略名称</label>
+                    <input type="text" class="form-control" name="className"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label>策略状态</label>
+                    <select class="form-control" name="operateType">
+                        <option value="0">生效</option>
+                        <option value="1">失效</option>
+                        <option value="">全部</option>
+                    </select>
+                </div>
+                <div class="checkbox">
+                    <button type="button"  class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- Example Toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                        <div th:include="/common/top_button::commonbutton (add=true,singleadd=false,update=true,delete=true,detail=false,export=false)"></div>
+                                    </div>
+                                        <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增-->
+<div th:include="/classinfo/addorupdateclassinfo :: addorupdateclassinfo"></div>
+<!--<div th:include="/classinfo/addusergroupnippet :: addusergroupnippet"></div>-->
+<!--详情-->
+<div th:include="/classinfo/detailsnippet :: detailsnippet"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #classinfo"></div>
+</body>
+</html>

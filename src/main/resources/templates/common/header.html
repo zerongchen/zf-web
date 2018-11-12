@@ -1,0 +1,40 @@
+<head th:fragment="myheader">
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<!-- basic styles -->
+ <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link th:href="@{{path}/static/css/bootstrap.min14ed.css?v=3.3.6(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/font-awesome.min93e3.css?v=4.4.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/animate.min.css(path=${contextPath})}" rel="stylesheet" />
+    <!--  ztree -->
+    <link th:href="@{{path}/static/css/plugins/ztree/zTreeStyle/zTreeStyle.min.css(path=${contextPath})}" rel="stylesheet">
+    
+    <link th:href="@{{path}/static/css/style.min862f.css?v=4.1.0(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/plugins/bootstrap-table/bootstrap-table.min.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/plugins/bootstrap-select/bootstrap-select.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/plugins/bootstrap-editable/bootstrap-editable.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/common.css?v=1.1.0(path=${contextPath})}" rel="stylesheet" />
+
+    <!-- jqgrid-->
+    <link th:href="@{{path}/static/css/plugins/jqgrid/ui.jqgridffe4.css?0820(path=${contextPath})}" rel="stylesheet" />
+     <style>
+        /* Additional style to fix warning dialog position */
+        #alertmod_table_list_2 {
+            top: 900px !important;
+        }
+    </style>
+    
+     <!-- Data Tables -->
+    <link th:href="@{{path}/static/css/plugins/dataTables/dataTables.bootstrap.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/animate.min.css(path=${contextPath})}" rel="stylesheet" />
+    <link th:href="@{{path}/static/css/style.min862f.css?v=4.1.0(path=${contextPath})}" rel="stylesheet" />
+    <!--sweet alert-->
+    <link th:href="@{{path}/static/css/plugins/sweetalert/sweetalert.css(path=${contextPath})}" rel="stylesheet">
+    <!--<link th:href="@{{path}/static/css/plugins/sankey/sankey.css(path=${contextPath})}" rel="stylesheet">-->
+
+</head>

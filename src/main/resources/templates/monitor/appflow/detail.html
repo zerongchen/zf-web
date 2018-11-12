@@ -1,0 +1,33 @@
+<div th:fragment="mydetail">
+    <div class="modal inmodal fade" id="detailModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+               	<div class="ibox-title" >
+                   <h5 >全业务流量文件上报详情</h5>
+                   <input type="hidden" id="statTime"/>
+                   <button type="button" class="btn btn-success m-t-n-sm pull-right" data-dismiss="modal" name="returnBtn"><i class="fa fa-reply-all"></i> 返回上一级</button>
+               	</div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="ibox ">
+                                <div class="ibox-content no-borders">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="example-wrap text-right">
+                                                <div class="example">
+                                                   <table id="detailTable" data-mobile-responsive="true" class="text-left"></table>
+                                                   <!--<input id="statTime" name="statTime" type="hidden" /> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aotain.zongfen.mapper.general.user.UserMapper">
+  
+  <resultMap id="BaseResultMap" type="com.aotain.zongfen.model.general.user.User">
+    <result column="USER_GROUP_ID" jdbcType="DECIMAL" property="userGroupId" />
+    <result column="USER_ID" jdbcType="DECIMAL" property="userId" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_TYPE" jdbcType="DECIMAL" property="userType" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_TIME" jdbcType="DATE" property="createTime" />
+  </resultMap>
+  
+  <resultMap id="UserListMap" type="com.aotain.zongfen.dto.general.user.UserDTO">
+    <result column="USER_GROUP_ID" jdbcType="DECIMAL" property="userGroupId" />
+    <result column="MESSAGE_NO" jdbcType="DECIMAL" property="messageNo" />
+    <result column="USER_NAME" jdbcType="VARCHAR" property="userName" />
+    <result column="USER_TYPE" jdbcType="DECIMAL" property="userType" />
+    <result column="OPERATE_TYPE" jdbcType="DECIMAL" property="operateType" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="MODIFY_TIME" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="CREATE_OPER" jdbcType="VARCHAR" property="createOper" />
+    <result column="MODIFY_OPER" jdbcType="VARCHAR" property="modifyOper" />
+    <result column="USER_GROUP_NAME" jdbcType="VARCHAR" property="userGroupName" />
+  </resultMap>
+  
+  
+  <sql id="fields">
+    USER_GROUP_ID, USER_ID, USER_NAME,USER_TYPE, OPERATE_TYPE, CREATE_TIME
+  </sql>
+  
+  
+  <insert id="insertSelective" parameterType="com.aotain.zongfen.model.general.user.User">
+    insert into zf_v2_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userGroupId != null">
+        USER_GROUP_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="userType != null">
+        USER_TYPE,
+      </if>
+      <if test="operateType != null">
+        OPERATE_TYPE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="modifyTime != null">
+        MODIFY_TIME,
+      </if>
+      <if test="createOper != null">
+        CREATE_OPER,
+      </if>
+      <if test="modifyOper != null">
+        MODIFY_OPER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userGroupId != null">
+        #{userGroupId,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=DECIMAL},
+      </if>
+      <if test="operateType != null">
+        #{operateType,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime},
+      </if>
+      <if test="createOper != null">
+        #{createOper},
+      </if>
+      <if test="modifyOper != null">
+        #{modifyOper},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectSingleUser" parameterType="com.aotain.zongfen.model.general.user.User" resultType="java.lang.Integer">
+    select count(1) from zf_v2_user
+    <where>
+      <if test="userGroupId != null">
+        USER_GROUP_ID = #{userGroupId}
+      </if>
+      <if test="userName != null">
+        and USER_NAME = #{userName}
+      </if>
+    </where>
+    
+  </select>
+  
+  
+  
+  <insert id="insertUsers" parameterType="java.util.Set">
+    insert into zf_v2_user (USER_GROUP_ID, USER_NAME,
+    USER_TYPE, OPERATE_TYPE, CREATE_TIME,MODIFY_TIME,CREATE_OPER,MODIFY_OPER)VALUES
+    <foreach collection="set" index="index" item="item" separator=",">
+      (#{item.userGroupId,jdbcType=DECIMAL},
+      #{item.userName,jdbcType=VARCHAR},
+      #{item.userType,jdbcType=DECIMAL},
+      #{item.operateType,jdbcType=DECIMAL},
+      #{item.createTime,jdbcType=TIMESTAMP},
+      #{item.modifyTime,jdbcType=TIMESTAMP},
+      #{item.createOper,jdbcType=VARCHAR},
+      #{item.modifyOper,jdbcType=VARCHAR}
+      )
+    </foreach>
+  
+  </insert>
+
+	<update id="updateExitUsers" parameterType="java.util.Set">
+		<foreach collection="set" item="item" separator=";" open=""
+			close="">
+			UPDATE ZF_V2_USER t
+			<set>
+				t.OPERATE_TYPE=2,
+				<if test="item.modifyTime!=null">
+					t.MODIFY_TIME=#{item.modifyTime,jdbcType=TIMESTAMP},
+				</if>
+				<if test="item.modifyOper!=null">
+					t.MODIFY_OPER=#{item.modifyOper,jdbcType=VARCHAR},
+				</if>
+			</set>
+			WHERE 1=1
+			<if test="item.userGroupId!=null">
+				AND t.USER_GROUP_ID=#{item.userGroupId}
+			</if>
+			<if test="item.userName!=null">
+				AND t.USER_NAME=#{item.userName,jdbcType=VARCHAR}
+			</if>
+		</foreach>
+	</update>
+  
+  
+  <update id="deleteUsers" >
+    <foreach collection="set" item="item" separator=";" >
+      UPDATE ZF_V2_USER t
+      <trim prefix="set" suffixOverrides=",">
+        <if test="item.modifyTime!=null">
+          t.MODIFY_TIME=#{item.modifyTime},
+        </if>
+        <if test="item.modifyOper!=null">
+          t.MODIFY_OPER=#{item.modifyOper},
+        </if>
+          t.OPERATE_TYPE = 3,
+      </trim>
+      WHERE t.USER_GROUP_ID=#{item.userGroupId} AND t.USER_NAME=#{item.userName,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+  
+  <update id="deleteUsersByGroups" >
+    UPDATE ZF_V2_USER SET OPERATE_TYPE=3,MODIFY_TIME=SYSDATE() where USER_GROUP_ID in
+    <foreach collection="array" item="item" separator="," open="(" close=")">
+      #{item,jdbcType=DECIMAL}
+    </foreach>
+  </update>
+  
+  <update id="deleteOrUpdateUsers" parameterType="java.util.List">
+    
+    <foreach collection="list" item="item" separator=";">
+      UPDATE ZF_V2_USER
+      <set>
+        <if test="item.modifyTime!=null">
+          MODIFY_TIME = #{item.modifyTime},
+        </if>
+        <if test="item.modifyOper!=null">
+          CREATE_OPER = #{item.modifyOper},
+        </if>
+          OPERATE_TYPE=3,
+      </set>
+      where OPERATE_TYPE!=3
+      AND USER_GROUP_ID = #{item.userGroupId}
+      AND USER_TYPE = #{item.userType}
+      AND USER_NAME = #{item.userName}
+    </foreach>
+    
+  </update>
+  
+  <select id="getUsers" parameterType="com.aotain.zongfen.dto.general.user.UserDTO" resultMap="UserListMap" >
+    SELECT A.USER_GROUP_ID , A.USER_TYPE,A.USER_NAME, A.OPERATE_TYPE,A.CREATE_OPER,A.MODIFY_OPER,A.CREATE_TIME,A.MODIFY_TIME,B.USER_GROUP_NAME,B.MESSAGE_NO
+    from ZF_V2_USER A LEFT JOIN zf_v2_usergroup B ON A.USER_GROUP_ID = B.USER_GROUP_ID
+    WHERE A.OPERATE_TYPE != 3
+    <if test="userGroupId!=null and userGroupId > 0 ">
+      AND A.USER_GROUP_ID = #{userGroupId}
+    </if>
+    <if test="userName!=null and userName != '' ">
+     AND A.USER_NAME LIKE  CONCAT(CONCAT('%', #{userName}, '%'))
+    </if>
+    <if test="userType!=null">
+      AND A.USER_TYPE = #{userType}
+    </if>
+    order by A.MODIFY_TIME desc
+  </select>
+  
+</mapper>

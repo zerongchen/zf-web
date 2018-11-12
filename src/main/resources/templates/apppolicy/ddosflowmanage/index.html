@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="/common/header :: myheader" th:with="title='shb'"></head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-12">
+        <div class="text-right">
+            <form role="form" class="form-inline" id="searchForm">
+               <!-- <input type="hidden" name="userGroupId"/>-->
+
+                <div class="form-group m-r-sm">
+                    <label>策略名称</label>
+                    <input type="text" class="form-control" name="messageName"/>
+                </div>
+                <div class="form-group m-r-sm">
+                    <label >创建时间</label>
+                  <!--  <input placeholder="开始日期" name="startTime" class="form-control" id="searchStart">-->
+                    <input placeholder="开始日期" id="start" name="startTime" class="form-control">
+                </div>
+
+                <div class="form-group m-r-sm">
+                    <label >到</label>
+                  <!--  <input placeholder="结束日期" name="endTime" class="form-control" id="searchEnd">-->
+                    <input placeholder="结束日期" id="end" name="endTime" class="form-control">
+                </div>
+
+                <div class="checkbox">
+                    <button type="button" th:if="${session.zf102009_query}==1" class="btn btn-primary" id="searchFormButton" >查询</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="wrapper wrapper-content animated fadeinright">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox ">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- example toolbar -->
+                            <div class="example-wrap text-right">
+                                <div class="example">
+                                    <div class="hidden-xs" id="commonButton" role="group">
+                                    	<input type="hidden" id="redoFlag" th:value="${session.zf102009_redo}">
+	                                    <input type="hidden" id="deleteFlag" th:value="${session.zf102009_delete}">
+	                                    <input type="hidden" id="modifyFlag" th:value="${session.zf102009_modify}">
+                                        <button th:if="${session.zf102009_add}==1" type="button" class="btn btn-outline btn-warning m-l-xs newAddButton" data-toggle="modal" data-target="#myModaladd"> <i class="fa fa-plus" aria-hidden="true"></i> 新增</button>
+										<button th:if="${session.zf102009_delete}==1" type="button" class="btn btn-outline btn-danger deleteButton" > <i class="fa fa-trash-o" aria-hidden="true"></i> 批量删除</button>
+                                    </div>
+                                    <table id="table" data-mobile-responsive="true" class="text-left"></table>
+                                </div>
+                            </div>
+                            <!-- end example toolbar -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--新增-->
+<div th:include="/apppolicy/ddosflowmanage/addorupdate :: myaddorupdate"></div>
+<div th:include="/common/add-usergroup-snippet :: add-usergroup-snippet"></div>
+<div th:include="/common/policy_detail_snippet :: policyDetail"></div>
+<!--js snippet-->
+<div th:include="/common/footer :: myfooter"></div>
+<div th:include="/common/footer :: #ddosflowmanage"></div>
+</body>
+</html>

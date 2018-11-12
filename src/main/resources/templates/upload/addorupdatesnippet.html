@@ -1,0 +1,242 @@
+<div th:fragment="myaddorupdatesnippet" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+<!--                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span></button>
+                    <h4 class="modal-title">新增</h4>
+                </div>-->
+                <div class="ibox-title" >
+                    <h5 id="h5title">新增</h5> </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+                                <!--<input type="hidden" name="seqId"/>-->
+                                <input type="hidden" name="messageNo" id="hideMessageNoInp"/>
+                                <div class="form-group" id="messageNameDiv">
+                                    <label class="col-md-2 control-label p-n">策略名称</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="messageName" id= "messageName" class="form-control" />
+                                    </div>
+                                </div>
+                                <div th:if="${packetType}==1 and ${packetSubtype}==0" class="form-group " id="packetSubtypeSl0">
+                                    <div class="hr-line-dashed"></div>
+                                    <label class="col-md-2 control-label p-n">资源来源</label>
+                                    <div class="col-md-3 ">
+                                        <label class="m-t-7">
+                                        <input name="packetSubtype" id="packetSubtypeInp5" checked type="radio" value="5" />资源在网内 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </label><label class="m-t-7">
+                                        <input name="packetSubtype" id="packetSubtypeInp0" type="radio" value="0" />资源在网外
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div th:if="${packetType}==1 and ${packetSubtype}==130" class="form-group " id="packetSubtypeSl130">
+                                    <div class="hr-line-dashed"></div>
+                                    <label class="col-md-2 control-label p-n">上报类型</label>
+                                    <div class="col-md-3 ">
+                                        <label class="m-t-7">
+                                        <input name="packetSubtype" id="packetSubtypeInp131" checked type="radio" value="131" />关键字段 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </label><label class="m-t-7">
+                                        <input name="packetSubtype" id="packetSubtypeInp130" type="radio" value="130" />一拖N监测结果
+                                    </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="rFreqSlDiv">
+                                    <label class="col-md-2 control-label p-n">上报周期</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="rFreqSl" name="rfreq">
+                                            <option value="">请选择</option>
+                                            <option value="0">即时上报</option>
+                                            <option value="1">每5分钟上报(整点时间)</option>
+                                            <option value="2">每1小时上报(整点时间)</option>
+                                            <option value="3">每3小时上报(整点时间)</option>
+                                            <option value="4">每天上报</option>
+                                            <option value="5">每30秒上报</option>
+                                            <option value="6">每1分钟上报</option>
+                                            <option value="7">每3分钟上报</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div th:if="${packetType}==2 and ${packetSubtype}==100" class="form-group " id="packetSubtypeSl100">
+                                    <label class="col-md-2 control-label p-n">上报类型</label>
+                                    <div class="col-md-3 ">
+                                        <select class="form-control" name="packetSubtype" id="packetSubtype" >
+                                            <option selected="" value="">请选择</option>
+                                            <option  value="0">HTTP</option>
+                                            <option  value="1">RTSP</option>
+                                            <option  value="2">VoIP</option>
+                                            <option  value="3">FTP</option>
+                                            <option  value="4">SMTP</option>
+                                            <option  value="5">POP3</option>
+                                            <option  value="6">IMAP</option>
+                                            <option  value="7">DNS</option>
+                                            <option  value="8">P2P</option>
+                                            <option  value="9">Game</option>
+                                            <option  value="10">IM</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="rDestidSlDiv">
+                                    <label class="col-md-2 control-label p-n">服务器</label>
+                                    <div class="col-md-3">
+                                        <select name="zongfenId" id="rDestidSl" class="form-control">
+                                            <option selected="" value="">请选择</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+								<div class="hr-line-dashed" th:if="${packetType}==1 and (${packetSubtype}==132 or ${packetSubtype}==192 or ${packetSubtype}==3 or ${packetSubtype}==196 )" ></div>				
+                                <div th:if="${packetType}==1 and ${packetSubtype}==192" class="form-group " id="packetSubtypeSl192">
+                                    <label class="col-md-2 control-label p-n">ddos流量管理策略</label>
+                                    <div class="col-md-3 ">
+                                        <select class="form-control" name="ddosManageMessageNo" id="ddosManageMessageNo" >
+                                            <option selected="" value="">请选择</option>
+                                        </select>
+                                        <input name="packetSubtype" id="packetSubtypeInp192" type="hidden" value="192" />
+                                        <input name="lastDdosManageMessageNo" id="lastDdosManageMessageNo" type="hidden"  />
+                                    </div>
+                                    <div th:authorized="zf102009_add" class="col-md-3">
+										<span class="help-block m-b-none">
+										<a class="m-l-n m-r-sm" id='addDdosManage' data-toggle="modal" data-target="#ddosManageModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</a>
+										</span>
+                                    </div>
+                                </div>
+
+                                <div th:if="${packetType}==1 and ${packetSubtype}==3" class="form-group " id="packetSubtypeSl3">
+                                    <label class="col-md-2 control-label p-n">指定应用用户统计策略</label>
+                                    <div class="col-md-3 ">
+                                        <select class="form-control" name="appUserMessageNo" id="appUserMessageNo" >
+                                            <option selected="" value="">请选择</option>
+                                        </select>
+                                        <input name="packetSubtype" id="packetSubtypeInp3" type="hidden" value="3" />
+                                        <input name="lastAppUserMessageNo" id="lastAppUserMessageNo" type="hidden"  />
+                                    </div>
+                                    <div th:authorized="zf102006_add" class="col-md-3">
+										<span class="help-block m-b-none">
+										<a class="m-l-n m-r-sm" id='addAppUser' data-toggle="modal" data-target="#addAppUserModal">
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</a>
+										</span>
+                                    </div>
+                                </div>
+
+                                <div th:if="${packetType}==1 and ${packetSubtype}==196" class="form-group " id="packetSubtypeSl196">
+                                    <label class="col-md-2 control-label p-n">流量流向策略</label>
+                                    <div class="col-md-3 ">
+                                        <select class="form-control" name="areaGroupMessageNo" id="areaGroupMessageNo" >
+                                            <option selected="" value="">请选择</option>
+                                        </select>
+                                        <input name="packetSubtype" id="packetSubtypeInp196" type="hidden" value="196" />
+                                        <input name="lastAreaGroupMessageNo" id="lastAreaGroupMessageNo" type="hidden"  />
+                                    </div>
+									<div th:authorized="zf102012_add" class="col-md-3">
+										<span class="help-block m-b-none"> 
+										<a class="m-l-n m-r-sm" id='addAreaGroup' data-toggle="modal" data-target="#areaGroupModal"> 
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</a>
+										</span>
+									</div>
+								</div>
+								
+								<div th:if="${packetType}==1 and ${packetSubtype}==132" class="form-group " id="packetSubtypeSl132">
+                                    <label class="col-md-2 control-label p-n">WEB信息推送策略</label>
+                                    <div class="col-md-3 ">
+                                        <select class="form-control" name="webPushMessageNo" id="webPushMessageNo" >
+                                            <option selected="" value="">请选择</option>
+                                        </select>
+                                        <input name="packetSubtype" id="packetSubtypeInp132" type="hidden" value="132" />
+                                        <input name="lastWebPushGroupMessageNo" id="lastWebPushGroupMessageNo" type="hidden"  />
+                                    </div>
+									<div th:authorized="zf102008_add" class="col-md-3">
+										<span class="help-block m-b-none"> 
+										<a class="m-l-n m-r-sm" id='addwebPushGroup' data-toggle="modal" data-target="#webPushGroupModal"> 
+											<i class="fa fa-plus" aria-hidden="true"></i>
+										</a>
+										</span>
+									</div>
+								</div>
+								
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label p-n">上报开始时间</label>
+                                    <div class="col-md-3">
+                                        <input placeholder="开始日期" name="startTime" class="form-control" id="start">
+                                    </div>
+                                    <div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不设置日期默认立即上报</span></div>
+                                </div>
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label p-n">上报结束时间</label>
+                                    <div class="col-md-3">
+                                        <input placeholder="结束日期" name="endTime" class="form-control" id="end">
+                                    </div>
+                                    <div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 不设置日期默认一直上报</span></div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+                                <div class="form-group" id="userTypeDIV">
+                                    <label class="col-md-2 control-label p-n">绑定用户</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="userType" id="userType">
+                                            <option selected="" value="0">全用户</option>
+                                            <option value="1">账号</option>
+                                            <option value="2">IP地址</option>
+                                            <option value="3">用户组</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="userNameDiv" style="display: none;">
+                                    <div class="form-group" >
+                                        <label class="col-md-2 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <input type="text" name="userName" id="userNameInp" class="form-control">
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <span class="help-block m-b-none">
+                                                <a class="m-l-n m-r-sm" id ='addPlush'>
+                                                    <i class="fa fa-plus" aria-hidden="true"></i></a>
+
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                    <div  class="form-group" id="puserGroup" style="display: none;">
+                                        <label class="col-md-2 control-label p-n"></label>
+                                        <div class="col-md-3">
+                                            <select class="form-control selectpicker" name="puserGroup" id="puserGroupid"  multiple data-live-search="true">
+                                            </select>
+                                        </div>
+                                        <a th:authorized="zf103001_add" class="help-block" id="newAddGroup">新增组</a>
+                                    </div>
+
+
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut">确定</button>
+                                    <button type="button" id="modalDismiss" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DPI汇聚分析平台-监测分析-数据稽核</title>
+<meta name="keywords" content="DPI汇聚分析平台"/>
+<meta name="description" content="DPI汇聚分析平台"/>
+<link rel="shortcut icon" th:href="@{/static/img/profile_small.png}"/>
+<link th:href="@{{path}/static/css/bootstrap.min14ed.css?v=3.3.6(path=${contextPath})}" rel="stylesheet" />
+<link th:href="@{{path}/static/css/font-awesome.min93e3.css?v=4.4.0(path=${contextPath})}" rel="stylesheet" />
+<link th:href="@{{path}/static/css/style.min862f.css?v=4.1.0(path=${contextPath})}" rel="stylesheet" />
+<link th:href="@{{path}/static/css/plugins/jqgrid/ui.jqgridffe4.css?0820(path=${contextPath})}" rel="stylesheet"/>
+<link th:href="@{{path}/static/css/plugins/bootstrap-table/bootstrap-table.min.css(path=${contextPath})}" rel="stylesheet"/>
+<!-- Sweet Alert -->
+<link th:href="@{{path}/static/css/plugins/sweetalert/sweetalert.css(path=${contextPath})}" rel="stylesheet"/>
+<style>
+/* Additional style to fix warning dialog position */
+			
+#alertmod_table_list_2 {
+	top: 900px !important;
+}
+</style>
+</head>
+<body class="gray-bg">
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-12">
+    <div class="text-right">
+      <form role="form" class="form-inline">
+        <div class="form-group m-r-sm">
+          <label>日期</label>
+          <input placeholder="开始日期" class="form-control layer-date" id="start">
+          <input placeholder="结束日期" class="form-control layer-date" id="end">
+        </div>
+        <div class="checkbox">
+          <button class="btn btn-primary" type="submit">查询</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox ">
+        <div class="ibox-content">
+          <div class="row">
+            <div class="col-sm-12">
+             <div class="tabs-container">
+              
+                <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#tab1">HTTP GET数据</a> </li>
+                  <li><a data-toggle="tab" href="#tab2">AAA数据</a> </li>
+                  <li><a data-toggle="tab" href="#tab3">应用流量流向</a> </li>
+                  <li><a data-toggle="tab" href="#tab4">全业务</a> </li>
+                </ul>
+                <div class="tab-content ">
+                  <div id="tab1" class="tab-pane active">
+                    
+						 <!-- Example Toolbar -->
+              <div class="example-wrap text-right">
+                <div class="example">
+                  <table id="exampleTableToolbar" data-mobile-responsive="true" class="text-left">
+                    <thead>
+                      <tr>
+                        <th data-field="name">时间</th>
+                        <th data-field="star">文件数量</th>
+                        <th data-field="license">文件大小</th>
+                        <th data-field="description">完整性</th>
+                        <th data-field="url">上报及时性</th>
+                        <th data-field="url">准确性</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <!-- End Example Toolbar --> 		    
+                 
+                 
+                  </div>
+                  <div id="tab2" class="tab-pane">
+						 <!-- Example Toolbar -->
+              <div class="example-wrap text-right">
+                <div class="example">
+                  <table id="exampleTableToolbar" data-mobile-responsive="true" class="text-left">
+                    <thead>
+                      <tr>
+                        <th data-field="name">时间</th>
+                        <th data-field="star">文件数量</th>
+                        <th data-field="license">文件大小</th>
+                        <th data-field="description">完整性</th>
+                        <th data-field="url">上报及时性</th>
+                        <th data-field="url">准确性</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <!-- End Example Toolbar --> 
+					</div>
+                  <div id="tab3" class="tab-pane">
+
+                  <!-- Example Toolbar -->
+              <div class="example-wrap text-right">
+                <div class="example">
+                  <table id="exampleTableToolbar" data-mobile-responsive="true" class="text-left">
+                    <thead>
+                      <tr>
+                        <th data-field="name">时间</th>
+                        <th data-field="star">文件数量</th>
+                        <th data-field="license">文件大小</th>
+                        <th data-field="description">完整性</th>
+                        <th data-field="url">上报及时性</th>
+                        <th data-field="url">准确性</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <!-- End Example Toolbar --> 
+                 
+                 </div>
+                 
+                  <div id="tab4" class="tab-pane">
+
+                  <!-- Example Toolbar -->
+              <div class="example-wrap text-right">
+                <div class="example">
+                  <table id="exampleTableToolbar" data-mobile-responsive="true" class="text-left">
+                    <thead>
+                      <tr>
+                        <th data-field="name">时间</th>
+                        <th data-field="star">文件数量</th>
+                        <th data-field="license">文件大小</th>
+                        <th data-field="description">完整性</th>
+                        <th data-field="url">上报及时性</th>
+                        <th data-field="url">准确性</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <!-- End Example Toolbar --> 
+                 
+                 </div>
+                 
+                </div>
+             
+            </div>
+             
+              
+                
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:src="@{{path}/static/js/jquery.min.js?v=2.1.4(path=${contextPath})}"></script> 
+<script th:src="@{{path}/static/js/bootstrap.min.js?v=3.3.6(path=${contextPath})}"></script> 
+<script th:src="@{{path}/static/js/content.min.js?v=1.0.0(path=${contextPath})}"></script> 
+<script th:src="@{{path}/static/js/jquery-ui-1.10.4.min.js(path=${contextPath})}"></script> 
+<!--时间控件--> 
+<script th:src="@{{path}/static/js/plugins/layer/laydate/laydate.js(path=${contextPath})}"></script> 
+<script>
+			laydate({
+				elem: "#start",
+				event: "focus"
+			});
+			var start = {
+				elem: "#start",
+				format: "YYYY/MM/DD hh:mm:ss",
+				min: laydate.now(),
+				max: "2099-06-16 23:59:59",
+				istime: true,
+				istoday: false,
+				choose: function(datas) {
+					end.min = datas;
+					end.start = datas
+				}
+			};
+			var end = {
+				elem: "#end",
+				format: "YYYY/MM/DD hh:mm:ss",
+				min: laydate.now(),
+				max: "2099-06-16 23:59:59",
+				istime: true,
+				istoday: false,
+				choose: function(datas) {
+					start.max = datas
+				}
+			};
+			laydate(start);
+			laydate(end);
+</script> 
+<script>
+			//表中表
+	var isShow = 0;		
+	function tablelist() {
+				if(isShow == 0) {
+					$("#exampleTableToolbar>tbody>.hidetr").remove();
+					$('a.tableintable').parent().parent().after("<tr class='hidetr'><td colspan='6' class='gray-bg'><table class='table  table-bordered'><thead><tr><td>文件名称</td><td>文件大小（kb）</td><td>异常描述</td><td>生成时间</td><td>上报时间</td><td>来源</td></tr></thead><tbody><tr><td>0x01+0x0300+001+m-sn-zjb+ponshine+055+20170716142710.tar.gz</td><td>87567.43</td><td><span class='text-danger'>空文件</span></td><td>2009-02-14 22:17:35</td><td>2011-03-25 18:23:55</td><td>XIF</td></tr><tr><td>0x01+0x0300+001+m-sn-zjb+ponshine+055+20170716142710.tar.gz</td><td>87567.43</td><td><span class='text-danger'>空文件</span></td><td>2009-02-14 22:17:35</td><td>2011-03-25 18:23:55</td><td>XIF</td></tr><tr><td>0x01+0x0300+001+m-sn-zjb+ponshine+055+20170716142710.tar.gz</td><td>87567.43</td><td><span class='text-danger'>空文件</span></td><td>2009-02-14 22:17:35</td><td>2011-03-25 18:23:55</td><td>XIF</td></tr>");
+					isShow = 1;
+				} else {
+					//$("#exampleTableToolbar>tbody>.selected+.hidetr").remove()
+					$("#exampleTableToolbar>tbody>.hidetr").remove();
+					isShow = 0;
+				}
+			}
+</script> 
+<!--BootstrapTable--> 
+<script th:src="@{{path}/static/js/plugins/bootstrap-table/bootstrap-table.min.js(path=${contextPath})}"></script> 
+<script th:src="@{{path}/static/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js(path=${contextPath})}"></script> 
+<script th:src="@{{path}/static/js/demo/bootstrap-table-demo.min.js(path=${contextPath})}"></script>
+</body>
+</html>

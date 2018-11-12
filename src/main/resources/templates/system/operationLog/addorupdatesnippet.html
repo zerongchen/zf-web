@@ -1,0 +1,56 @@
+<div th:fragment="myaddorupdatesnippet">
+    <div class="modal inmodal fade" id="myModaladd" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content" >
+                <div class="ibox-title">
+                    <h5 id="h5title">新增</h5>
+                </div>
+                <div class="modal-body form-horizontal">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <form id="addOrupdateForm">
+
+                                <div class="form-group" id="operModel">
+                                    <label class="col-md-2 control-label p-n">操作模块</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="operModel" class="form-control" />
+                                    </div>
+
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+
+                                <div class="form-group" id="operType">
+                                    <label class="col-md-2 control-label p-n">操作类型</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" name="operType">
+                                            <option value="1">新增</option>
+                                            <option value="2">修改</option>
+                                            <option value="3">删除</option>
+                                        </select>
+                                    </div>
+                                    <!--<div class="col-md-3"><span class="help-block m-b-none"> <i class="fa fa-info-circle"></i> 我是提示文字</span></div>-->
+                                </div>
+                                <div class="form-group" id="dataId1">
+                                    <label class="col-md-2 control-label p-n">信息ID</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="dataId1" class="form-control" />
+                                    </div>
+                                </div>
+
+
+                            </form>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group m-t">
+                                <label class="col-md-2 control-label"></label>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" id = "addSubmitBut" >确定</button>
+                                    <button type="button" class="btn btn-white m-l-sm" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
